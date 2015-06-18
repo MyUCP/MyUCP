@@ -1,0 +1,17 @@
+# Установка кодировки
+AddDefaultCharset utf-8
+
+# Запрет листинга директории
+Options -Indexes
+
+RewriteEngine on 
+
+# Редирект с поддоменов
+#RewriteCond %{HTTP_HOST} ^domain.ru
+#RewriteRule (.*) http://domain.ru/$1 [R=301,L]
+
+# Настройки ЧПУ
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^(.*)$ index.php?action=$1 [L,QSA]

@@ -9,7 +9,7 @@
 final class mysqlDriver {
 	private $mysql;
 	private $count = 0;
-	public function __construct($hostname, $username, $password, $database) {
+	public function __construct($hostname, $username, $password, $database, $type) {
 		if (!$this->mysql = new mysqli($hostname, $username, $password, $database)) {
 	  		exit('Ошибка: Не удалось соединиться с базой данных!');
 		}

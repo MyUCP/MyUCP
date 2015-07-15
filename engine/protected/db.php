@@ -9,14 +9,14 @@
 class DB {
 	private $driver;
 	
-	public function __construct($driver, $hostname, $username, $password, $database) {
+	public function __construct($driver, $hostname, $username, $password, $database, $type) {
 		$class = $driver . 'Driver';
 		if(is_readable(ENGINE_DIR . 'protected/database/' . $driver . '.php')) {
 			require_once(ENGINE_DIR . 'protected/database/' . $driver . '.php');
 		} else {
 			exit('Ошибка: Не удалось загрузить драйвер базы данных ' . $driver . '!');
 		}
-		$this->driver = new $class($hostname, $username, $password, $database);
+		$this->driver = new $class($hostname, $username, $password, $database, $type);
 	}
 		
   	public function query($sql) {

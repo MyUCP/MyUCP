@@ -1,8 +1,8 @@
 <?php
 /*
 * MyUCP
-* File Version 4.0
-* Date: 30.03.2015
+* File Version 4.0.0.1
+* Date: 15.07.2015
 * Developed by Maksa988
 */
 
@@ -30,10 +30,15 @@ $config = array(
 	// Используется для запуска скриптов из Cron`а.
 	'token'			=>		'mytoken123',
 	
+	'index_page'	=>		'main/index'
 	
 	// Данные Базы Данных
 	'db'		=>		array(
 		
+		// Драйвер для работы с БД.
+		// По умолчанию MySQL (mysqli).
+		'db_driver'		=>		'mysql',
+
 		// Тип СУБД.
 		// По умолчанию поддерживается только СУБД MySQL (mysql).
 		'db_type'		=>		'mysql',

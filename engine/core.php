@@ -48,7 +48,7 @@ $registry->action = $action;
 if(isset($request->get['action'])) {
 	$action->make($request->get['action']);
 } else {
-	$action->make('main/index');
+	$action->make($config->index_page);
 }
 
 $response->output($action->go());

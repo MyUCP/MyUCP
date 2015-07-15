@@ -1,8 +1,8 @@
 <?php
 /*
 * MyUCP
-* File Version 4.0
-* Date: 30.03.2015
+* File Version 4.0.0.1
+* Date: 15.07.2015
 * Developed by Maksa988
 */
 
@@ -36,7 +36,7 @@ $registry->response = $response;
 $document = new Document();
 $registry->document = $document;
 
-$db = new DB($config->db['db_type'], $config->db['db_hostname'], $config->db['db_username'], $config->db['db_password'], $config->db['db_database']);
+$db = new DB($config->db['db_driver'], $config->db['db_hostname'], $config->db['db_username'], $config->db['db_password'], $config->db['db_database'], $db['db_type']);
 $registry->db = $db;
 
 $load = new Load($registry);

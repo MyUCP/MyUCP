@@ -30,8 +30,6 @@ $config = array(
 	// Используется для запуска скриптов из Cron`а.
 	'token'			=>		'mytoken123',
 	
-	'index_page'	=>		'main/index',
-	
 	// Данные Базы Данных
 	'db'		=>		array(
 		

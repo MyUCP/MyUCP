@@ -63,16 +63,6 @@ $config = [
 		'mail_sender'		=>		'Ivan Petrov',
 	],
 	
-	// Настройки UnitPay
-	'unitpay' 		=> 		[
-		
-		// Публичный ключ
-		'public_key'		=>		'',
-		
-		// Секретный ключ
-		'secret_key'		=>		''
-	],
-	
 	// Подключение доп. конфиг. файлов
 	'configs' 		=> 		[
 		

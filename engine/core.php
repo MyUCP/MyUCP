@@ -3,6 +3,7 @@
 * MyUCP
 */
 
+spl_autoload_register(array("AutoLoad", "getLoader"));
 set_error_handler(array('Logs', "getError"));
 
 $registry = new Registry();

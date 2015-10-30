@@ -29,7 +29,7 @@ class Logs {
 		self::getDateLog();
 		self::getLogFile();
 		self::getLogs();
-		file_put_contents(static::$log['file'], static::$log['logs'].$text);
+		// file_put_contents(static::$log['file'], static::$log['logs'].$text);
 	}
 	
 	static function getError($errno, $errstr, $errfile, $errline)

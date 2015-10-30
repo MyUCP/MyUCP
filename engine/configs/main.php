@@ -68,21 +68,5 @@ $config = [
 		
 		//Список доп. конфиг. файлов для подключения
 		'rows'
-	],
-
-	// Адреса директорий для работы autoload
-	'path' 	=>	[
-		'Logs'	=>	'engine/protected/',
-		'Registry'	=>	'engine/protected/',
-		'Config'	=>	'engine/protected/',
-		'Request'	=>	'engine/protected/',
-		'Session'	=>	'engine/protected/',
-		'Response'	=>	'engine/protected/',
-		'Document'	=>	'engine/protected/',
-		'DB'		=>	'engine/protected/',
-		'mysqlDriver'=>	'engine/protected/database',
-		'Load'		=>	'engine/protected/',
-		'Router'	=>	'engine/protected/',
-		'Route'		=>	'engine/protected/Router',
 	]
 ];

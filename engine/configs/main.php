@@ -1,29 +1,20 @@
 <?php
 /*
-* MyUCP
-* File Version 4.1
-* Date: 27.10.2015
-* Developed by Maksa988
+|--------------------------------------------------------------------------
+| Главный файл конфигурации
+|--------------------------------------------------------------------------
+|
+| Указаны основые данны для работы с системой
+| Есть возможность подключить сторонние конфигурационные файлы
+|
 */
+$config = [
 
-$config = array(
+	// Режим откладки, рекомендуеться использовать во время разработки
+	'debug_mode'	=>		true,
 
-	// Название сайта
-	// Например: My First Website
-	'title'		=>		'My First Website',
-	
-	// Описание сайта (meta description).
-	// Пример: My personal website
-	'description'	=>		'My personal website',
-	
-	// Ключевые слова (meta keywords).
-	// Пример: website, first
-	'keywords'		=>		'website, first',
-	
-	// URL панели управления.
-	// Обратите внимание на то, что сайт должен располагаться в корне (под)домена.
-	// http://example.com/, http://ucp.example.com/ - правильно.
-	// http://example.com/ucp/ - неправильно.
+	// URL вашего сайта.
+	// Будет использовано при формировании URL адреса
 	'url'			=>		'http://example.com/',
 	
 	// Токен.
@@ -31,34 +22,37 @@ $config = array(
 	'token'			=>		'mytoken123',
 	
 	// Данные Базы Данных
-	'db'		=>		array(
+	'db'			=>		[
 		
 		// Драйвер для работы с БД.
 		// По умолчанию MySQL (mysqli).
-		'db_driver'		=>		'mysql',
+		'driver'		=>		'mysql',
 
 		// Тип СУБД.
 		// По умолчанию поддерживается только СУБД MySQL (mysql).
-		'db_type'		=>		'mysql',
+		'type'			=>		'mysql',
 		
 		// Хост БД.
 		// Пример: localhost, 127.0.0.1, db.example.com и пр.
-		'db_hostname'	=>		'localhost',
+		'hostname'		=>		'localhost',
 		
 		// Имя пользователя СУБД.
-		'db_username'	=>		'root',
+		'username'		=>		'root',
 		
 		// Пароль пользователя СУБД.
-		'db_password'	=>		'',
+		'password'		=>		'',
 		
 		// Название БД.
-		'db_database'	=>		'myucp',
+		'database'		=>		'myucp',
+
+		// Испльзуемая кодировка
+		'charset'   	=> 		'utf8',
 		
-	),
+	],
 	
 	
 	// Настройки почты
-	'mail' 		=> 		array(
+	'mail' 		=> 		[
 		
 		// E-Mail отправителя.
 		// Пример: support@example.com, noreply@example.com
@@ -67,22 +61,38 @@ $config = array(
 		// Имя отправителя.
 		// Пример: Ivan Petrov
 		'mail_sender'		=>		'Ivan Petrov',
-	),
+	],
 	
 	// Настройки UnitPay
-	'unitpay' 		=> 		array(
+	'unitpay' 		=> 		[
 		
 		// Публичный ключ
 		'public_key'		=>		'',
 		
 		// Секретный ключ
 		'secret_key'		=>		''
-	),
+	],
 	
-	//Подключение доп. конфиг. файлов
-	'configs' => array(
+	// Подключение доп. конфиг. файлов
+	'configs' 		=> 		[
 		
 		//Список доп. конфиг. файлов для подключения
 		'rows'
-	)
-);
+	],
+
+	// Адреса директорий для работы autoload
+	'path' 	=>	[
+		'Logs'	=>	'engine/protected/',
+		'Registry'	=>	'engine/protected/',
+		'Config'	=>	'engine/protected/',
+		'Request'	=>	'engine/protected/',
+		'Session'	=>	'engine/protected/',
+		'Response'	=>	'engine/protected/',
+		'Document'	=>	'engine/protected/',
+		'DB'		=>	'engine/protected/',
+		'mysqlDriver'=>	'engine/protected/database',
+		'Load'		=>	'engine/protected/',
+		'Router'	=>	'engine/protected/',
+		'Route'		=>	'engine/protected/Router',
+	]
+];

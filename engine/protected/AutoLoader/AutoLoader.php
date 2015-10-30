@@ -23,7 +23,6 @@ class AutoLoader {
 
 	// Получения пути для загрузки определённого класса
 	public function getPath(){
-		// dd($this->path[$this->className]);
 		if(!empty($this->path[$this->className])){
 			return $this->path[$this->className];
 		} else {

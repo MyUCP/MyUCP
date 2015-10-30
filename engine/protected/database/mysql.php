@@ -1,72 +1,57 @@
 <?php
 /*
 * MyUCP
-* File Version 4.0.0.1
-* Date: 15.07.2015
-* Developed by Maksa988
 */
 
 final class mysqlDriver {
 	private $mysql;
-	private $count = 0;
-	public function __construct($hostname, $username, $password, $database, $type) {
-		if (!$this->mysql = new mysqli($hostname, $username, $password, $database)) {
-	  		exit('Ошибка: Не удалось соединиться с базой данных!');
+
+	public function __construct($options) {
+		@$this->mysql = mysqli_connect($options['hostname'], $options['username'], $options['password'], $options['database']);
+		if (!$this->mysql) {
+			$this->error(mysqli_connect_errno()." ".mysqli_connect_error());
 		}
-		
-		$this->mysql->set_charset("utf8"); 
+		mysqli_set_charset($this->mysql, $options['charset']) or $this->error(mysqli_error($this->mysql));
   	}
 		
   	public function query($sql) {
-		$resource = $this->mysql->query($sql);
-		
-		$this->count++;
-		
-		if ($resource) {
-			if(preg_match("/SELECT/i", $sql)){	
-				$i = 0;
-				$data = array();
-				
-				while($result = @$resource->fetch_assoc()) {
-					$data[$i] = $result;
-					$i++;
-				}
-				
-				$resource->free();
-				
-				$query = new stdClass();
-				$query->row = isset($data[0]) ? $data[0] : array();
-				$query->rows = $data;
-				$query->num_rows = $i;
-				
-				unset($data);
-				return $query;	
-			} else {
-				return true;
-			}
-		} else {
-			exit('Ошибка: ' . $this->mysql->error . '<br>Номер ошибки: ' . $this->mysql->errno . '<br>' . $sql);
-		}
+		return mysqli_query($this->mysql, $sql);
   	}
 	
-	public function escape($value) {
-		return $this->mysql->real_escape_string($value);
-	}
-	
-  	public function countAffected() {
-		return $this->mysql->affected_rows;
+  	public function fetch($result, $mode){
+  		return mysqli_fetch_array($result, $mode);
   	}
 
+  	public function affected_rows(){
+  		return mysqli_affected_rows($this->mysql);
+  	}
+
+  	public function num_rows($result){
+  		return mysqli_num_rows($result);
+  	}
+
+  	public function free($result){
+  		mysqli_free_result($result);
+  	}
+
+	public function escape($value) {
+		return mysqli_real_escape_string($this->mysql, $value);
+	}
+
   	public function getLastId() {
-		return $this->mysql->insert_id;
+		return mysqli_insert_id($this->mysql);
   	}	
 	
-  	public function getCount() {
-		return $this->count;
+  	public function getError(){
+  		return mysqli_error($this->mysql);
   	}
-	
+
+  	public function getErrno(){
+  		return mysqli_errno($this->mysql);
+  	}
+
 	public function __destruct() {
-		$this->mysql->close();
+		mysqli_close($this->mysql);
 	}
 }
 ?>

@@ -4,7 +4,7 @@
 */
 
 spl_autoload_register(array("AutoLoad", "getLoader"));
-set_error_handler(array('Logs', "getError"));
+// set_error_handler(array('Logs', "getError"));
 
 $registry = new Registry();
 $registry->config = new Config();

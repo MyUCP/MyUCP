@@ -10,10 +10,10 @@ class Config {
 	private $data = array();
 	
 	public function __construct() {
-		if(is_readable(ENGINE_DIR . 'configs/main.php')) {
-			require_once(ENGINE_DIR . 'configs/main.php');
+		if(is_readable('./configs/main.php')) {
+			$config = require_once('./configs/main.php');
 			$this->data = array_merge($this->data, $config);
-			$this->loadConfigs($config['configs']);
+			$this->loadConfigs();
 			return true;
 		}
 		exit('Ошибка: Не удалось загрузить файл конфигурации!');
@@ -30,14 +30,21 @@ class Config {
 		return false;
 	}
 	
-	public function loadConfigs($list){
-		foreach($list as $config){
-			if(is_readable(ENGINE_DIR . 'configs/'. $config .'.php')) {
-				require_once(ENGINE_DIR . 'configs/'. $config .'.php');
-				$this->data[$config] = (object) $$config;
-				return true;
+	public function loadConfigs(){
+		$configs = scandir("./configs");
+		array_shift($configs);
+		array_shift($configs);
+
+		foreach($configs as $item){
+			if($item != "main.php" && is_dir($item)){
+				if(is_readable('./configs/'. $item)) {
+					$config = require_once('./configs/'. $item);
+					$configName = substr($item, 0, -4);
+					$this->data[$configName] = (object) $config;
+					return true;
+				}
+				exit('Ошибка: Не удалось загрузить дополнительный файл конфигурации!');
 			}
-			exit('Ошибка: Не удалось загрузить дополнительный файл конфигурации!');
 		}
 	}
 }

@@ -21,12 +21,6 @@ abstract class Controller {
 	public function __set($key, $value) {
 		$this->registry->$key = $value;
 	}
-	
-	public function getChild($child = array()) {
-		foreach($child as $item) {
-			$this->action->make($item);
-			$this->data[basename($item)] = $this->action->go(true);
-		}
-	}
+
 }
 ?>

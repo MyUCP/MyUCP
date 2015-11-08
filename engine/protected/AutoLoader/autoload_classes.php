@@ -22,5 +22,6 @@ return [
 	'Load'		=>	'engine/protected/load.php',
 	'Router'	=>	'engine/protected/router.php',
 	'Route'		=>	'engine/protected/Router/Route.php',
-	'Controller'=> 	'engine/protected/controller.php'
+	'Controller'=> 	'engine/protected/controller.php',
+	'Model'		=>	'engine/protected/model.php'
 ];

@@ -70,18 +70,17 @@ class Router {
 		}
 	}
 
-	public function make() {
-		if(strpos($this->route()['controller'], ".")){
-			$controller = explode(".", $this->route()['controller']);
+	public function loadControler($controllerName, $actionName, $parameters = []){
+
+		if(strpos($controllerName, ".")){
+			$controller = explode(".", $controllerName);
 			$this->controller = array_shift(array_reverse($controller));
 				array_pop($controller);
 			$this->folder = implode("/", $controller);
 		} else {
-			$this->controller = $this->route()['controller'];
+			$this->controller = $controllerName;
 		}
-			$this->action = $this->route()['method'];
-			$this->parameters = $this->route()['parameters'];
-
+			$this->action = $actionName;
 
 		if(empty($this->folder)){
 			$controllerFile = APP_DIR . 'controllers/' . $this->controller . '.php';
@@ -104,10 +103,15 @@ class Router {
 			if(empty($this->parameters)) {
 				return call_user_func(array($controller, $this->action));
 			} else {
-				return call_user_func_array(array($controller, $this->action), $this->parameters);
+				return call_user_func_array(array($controller, $this->action), $parameters);
 			}
 		}
 		exit('Ошибка: Не удалось загрузить контроллер ' . $this->controller . '!');
+	}
+
+	public function make() {
+
+		return $this->loadControler($this->route()['controller'], $this->route()['method'], $this->route()['parameters']);
 	}
 }
 ?>

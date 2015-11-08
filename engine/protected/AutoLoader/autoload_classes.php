@@ -23,5 +23,7 @@ return [
 	'Router'	=>	'engine/protected/router.php',
 	'Route'		=>	'engine/protected/Router/Route.php',
 	'Controller'=> 	'engine/protected/controller.php',
-	'Model'		=>	'engine/protected/model.php'
+	'Model'		=>	'engine/protected/model.php',
+	'View'		=>	'engine/protected/Views/view.php',
+
 ];

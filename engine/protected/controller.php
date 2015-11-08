@@ -22,5 +22,16 @@ abstract class Controller {
 		$this->registry->$key = $value;
 	}
 
+	public function extendViews($child = array()) {
+		foreach($child as $item) {			
+			$this->data[$this->registry->router->getMethod($item)] = $this->registry
+												->router
+												->loadControler(
+														$this->registry->router->getController($item), 
+														$this->registry->router->getMethod($item)
+													);
+
+		}
+	}
 }
 ?>

@@ -1,9 +1,6 @@
 <?php
 /*
 * MyUCP
-* File Version 4.0
-* Date: 30.03.2015
-* Developed by Maksa988
 */
 
 class Load {
@@ -11,25 +8,6 @@ class Load {
 
 	public function __construct($registry) {
 		$this->registry = $registry;
-	}
-	
-
-	public function viewLoad($name, $vars = array()){
-
-		$file = THEME_DIR . $name . '.php';
-		if(is_readable($file)){
-			extract($vars);
-	  		$content = include($file);
-			
-	  		return $content;
-		}
-		exit('Ошибка: Не удалось загрузить шаблон ' . $name . '!');
-	}
-	
-	public function view($view = array(), $vars = array()) {
-		foreach($view as $item) {
-			$this->viewLoad($item, $vars);
-		}
 	}
 	
 	public function model($name){

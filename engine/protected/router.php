@@ -94,13 +94,13 @@ class Router {
 			
 			$controller = new $controllerClass($this->registry);
 			
-			if(is_callable(array($controller, $this->action))) {
+			if(is_callable(array($this->controller, $this->action))) {
 				$this->action = $this->action;
 			} else {
 				$this->action = 'index';
 			}
 			
-			if(empty($this->parameters)) {
+			if(empty($parameters)) {
 				return call_user_func(array($controller, $this->action));
 			} else {
 				return call_user_func_array(array($controller, $this->action), $parameters);

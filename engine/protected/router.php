@@ -79,7 +79,7 @@ class Router {
 		} else {
 			$this->controller = $this->route()['controller'];
 		}
-			$this->method = $this->route()['method'];
+			$this->action = $this->route()['method'];
 			$this->parameters = $this->route()['parameters'];
 
 

@@ -38,7 +38,7 @@ class Router {
 			$this->route->addRegex($item['url'], $item['as']);
 			if($this->route->check($this->registry->request->get['action'], $item['as'])){
 				$this->local = $item['as'];
-				$parameters = $this->route->parse($this->registry->request->get['action'], $item['as']);
+				$parameters[$item['as']] = $this->route->parse($this->registry->request->get['action'], $item['as']);
 			}
 
 			$this->names[$item["as"]] = [
@@ -47,7 +47,7 @@ class Router {
 				"url" => $this->registry->request->get['action'],
 				"controller" => $this->getController($item['uses']),
 				"method" => $this->getMethod($item['uses']),
-				"parameters" => $parameters,
+				"parameters" => $parameters[$item['as']],
 			];
 		}
 	}

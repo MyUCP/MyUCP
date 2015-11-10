@@ -36,7 +36,7 @@ class Config {
 		array_shift($configs);
 
 		foreach($configs as $item){
-			if($item != "main.php" && is_dir($item)){
+			if($item != "main.php"){
 				if(is_readable('./configs/'. $item)) {
 					$config = require_once('./configs/'. $item);
 					$configName = substr($item, 0, -4);

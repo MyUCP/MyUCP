@@ -42,6 +42,7 @@ class Route extends Router {
 	   	for($i = 1; $i < count($preg); $i++){
 	    	$params[$this->routeParams[$i - 1]] = $preg[$i];
 	   	}
+	   	unset($this->routeParams);
 	   	return $params;
 	}
 

@@ -35,4 +35,14 @@ class Load {
 		exit('Ошибка: Не удалось загрузить библиотеку ' . $name . '!');
 	}
 }
-?>
+
+
+model($name){
+	global $registry;
+	return $registry->load->model($name);
+}
+
+library($name){
+	global $registry;
+	return $registry->load->library($name);
+}

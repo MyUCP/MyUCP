@@ -25,4 +25,8 @@ class View {
 		exit('Ошибка: Не удалось загрузить шаблон ' . $name . '!');
 	}
 }
-?>
+
+function view($name, $vars = array()){
+	global $registry;
+	return $registry->view->load($name, $vars);
+}

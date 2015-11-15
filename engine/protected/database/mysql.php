@@ -11,7 +11,7 @@ final class mysqlDriver {
 		if (!$this->mysql) {
 			$this->error(mysqli_connect_errno()." ".mysqli_connect_error());
 		}
-		mysqli_set_charset($this->mysql, $options['charset']) or $this->error(mysqli_error($this->mysql));
+		mysqli_set_charset($this->mysql, $options['charset']) or exit(mysqli_error($this->mysql));
   	}
 		
   	public function query($sql) {
@@ -34,9 +34,9 @@ final class mysqlDriver {
   		mysqli_free_result($result);
   	}
 
-	public function escape($value) {
-		return mysqli_real_escape_string($this->mysql, $value);
-	}
+  	public function escape($value) {
+  		return mysqli_real_escape_string($this->mysql, $value);
+  	}
 
   	public function getLastId() {
 		return mysqli_insert_id($this->mysql);
@@ -50,8 +50,8 @@ final class mysqlDriver {
   		return mysqli_errno($this->mysql);
   	}
 
-	public function __destruct() {
-		mysqli_close($this->mysql);
-	}
+  	public function __destruct() {
+  		mysqli_close($this->mysql);
+  	}
 }
 ?>

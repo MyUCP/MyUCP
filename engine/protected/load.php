@@ -37,12 +37,12 @@ class Load {
 }
 
 
-model($name){
+function model($name){
 	global $registry;
 	return $registry->load->model($name);
 }
 
-library($name){
+function library($name){
 	global $registry;
 	return $registry->load->library($name);
 }

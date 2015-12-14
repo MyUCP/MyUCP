@@ -25,4 +25,6 @@ return [
 	'Controller'=> 	'engine/protected/controller.php',
 	'Model'		=>	'engine/protected/Model/model.php',
 	'View'		=>	'engine/protected/Views/view.php',
+	'Debug'		=>	'engine/protected/Debug/Debug.php',
+	'DebugException'=>	'engine/protected/Debug/DebugException.php',
 ];

@@ -1,9 +1,6 @@
 <?php
 /*
 * MyUCP
-* File Version 4.0
-* Date: 30.03.2015
-* Developed by Maksa988
 */
 
 abstract class Controller {
@@ -21,7 +18,6 @@ abstract class Controller {
 	public function __set($key, $value) {
 		$this->registry->$key = $value;
 	}
-
 	public function extendViews($child = array()) {
 		foreach($child as $item) {			
 			$this->data[$this->registry->router->getMethod($item)] = $this->registry
@@ -30,7 +26,6 @@ abstract class Controller {
 														$this->registry->router->getController($item), 
 														$this->registry->router->getMethod($item)
 													);
-
 		}
 	}
 }

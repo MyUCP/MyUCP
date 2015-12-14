@@ -10,5 +10,5 @@
 */
 
 return [
-	['url' => '', 'as' => 'welcome', 'uses' => 'main.indexController@index'],
+	['url' => '', 'as' => 'welcome', 'uses' => 'HomeController@welcome'],
 ];

@@ -14,4 +14,3 @@ define('APP_DIR', dirname(__FILE__) . '/app/');
 define('THEME_DIR', dirname(__FILE__) . '/theme/');
 
 require_once(ENGINE_DIR . 'app.php');
-require_once(ENGINE_DIR . 'core.php');

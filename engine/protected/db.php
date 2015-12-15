@@ -41,7 +41,7 @@ class DB {
 		if($options['driver'] == "mysql" or $options['driver'] == 'pdo'){
 			$class = $options['driver'] . 'Driver';
 		} else {
-			$this->error("Не удалось найти драйвер для работы с базой данных!");
+			new Debug("Не удалось найти драйвер для работы с базой данных!");
 		}
 
 		$this->driver = new $class($options);
@@ -464,7 +464,7 @@ class DB {
 	}
 	
 	private function error($err) {
-		exit("Ошибка: ".$err);
+		new Debug("Ошибка: ".$err, "2");
 	}
 
 	private function cutStats() {

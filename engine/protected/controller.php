@@ -18,6 +18,7 @@ abstract class Controller {
 	public function __set($key, $value) {
 		$this->registry->$key = $value;
 	}
+	
 	public function extendViews($child = array()) {
 		foreach($child as $item) {			
 			$this->data[$this->registry->router->getMethod($item)] = $this->registry

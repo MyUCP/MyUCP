@@ -6,7 +6,6 @@
 spl_autoload_register(array("AutoLoad", "getLoader"));
 
 $registry = new Registry();
-$registry->debug = new Debug();
 $registry->config = new Config();
 $registry->request = new Request();
 $registry->session = new Session();

@@ -14,7 +14,7 @@ class Route extends Router {
 	private $regex;
 	private $route;
 
-	public function __construct($rules) { $rules; }
+	public function __construct() { }
 
 	public function addRegex($route, $key){
 		$regex = '/' . preg_replace('/\//', '\/', $route) .  '/';

@@ -28,8 +28,7 @@ class Router {
 
 		$this->registry = $registry;
 		$this->rules = include_once(APP_DIR . "routers.php");
-		require_once(ENGINE_DIR . "protected/Router/Route.php");
-		$this->route = new Route($this->rules);
+		$this->route = new Route;
 		$this->getRules();
 	}
 
@@ -106,7 +105,7 @@ class Router {
 				return call_user_func_array(array($controller, $this->action), $parameters);
 			}
 		}
-		exit('Ошибка: Не удалось загрузить контроллер ' . $this->controller . '!');
+		new Debug('Ошибка: Не удалось загрузить контроллер ' . $this->controller . '!');
 	}
 
 	public function make() {

@@ -61,7 +61,7 @@ class Model {
 				$this->sql .= " AND `{$condition[0]}` {$condition[1]} '{$condition[2]}'";
 			}
 		} else {
-			exit("Оператор <b>{$condition[1]}</b> не найден!");
+			new Debug("Оператор <b>{$condition[1]}</b> не найден!", 1);
 		}
 		
 		return $this;

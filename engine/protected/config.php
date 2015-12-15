@@ -16,7 +16,7 @@ class Config {
 			$this->loadConfigs();
 			return true;
 		}
-		exit('Ошибка: Не удалось загрузить файл конфигурации!');
+		new Debug('Ошибка: Не удалось загрузить файл конфигурации!');
 	}
 	
 	public function __set($key, $val){
@@ -43,7 +43,7 @@ class Config {
 					$this->data[$configName] = (object) $config;
 					return true;
 				}
-				exit('Ошибка: Не удалось загрузить дополнительный файл конфигурации!');
+				new Debug('Ошибка: Не удалось загрузить дополнительный файл конфигурации!');
 			}
 		}
 	}

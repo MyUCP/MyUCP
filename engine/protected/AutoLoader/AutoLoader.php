@@ -26,7 +26,7 @@ class AutoLoader {
 		if(!empty($this->path[$this->className])){
 			return $this->path[$this->className];
 		} else {
-			exit("Не найден путь автозагрузки файла для класса: ".$this->className);
+			new Debug("Не найден путь автозагрузки файла для класса: ".$this->className);
 		}
 	}
 
@@ -34,7 +34,7 @@ class AutoLoader {
 	public function loadClass(){
 		$path = $this->getPath();
 		if(!file_exists($path)) {
-			exit("Неудалось загрузить файл для класса: ".$this->className);
+			new Debug("Неудалось загрузить файл для класса: ".$this->className);
 		}
 
 		return require_once($path);

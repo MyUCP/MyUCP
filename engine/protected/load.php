@@ -21,7 +21,7 @@ class Load {
 				return true;
 			}
 		}
-		exit('Ошибка: Не удалось загрузить модель ' . $name . '!');
+		new Debug('Ошибка: Не удалось загрузить модель ' . $name . '!');
 	}
 	
 	public function library($name){
@@ -32,7 +32,7 @@ class Load {
 			require_once($libPath);
 			return true;
 		}
-		exit('Ошибка: Не удалось загрузить библиотеку ' . $name . '!');
+		new Debug('Ошибка: Не удалось загрузить библиотеку ' . $name . '!');
 	}
 }
 

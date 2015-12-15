@@ -11,6 +11,7 @@ class Model {
 	private $sql;
 	private $select;
 	private $set;
+	private $order;
 	private $limit;
 	private $key;
 	private $value;
@@ -82,6 +83,11 @@ class Model {
 		return $this;
 	}
 
+	public function order($row, $type){
+		$this->order = " ORDER BY `$row` {$type} ";
+		return $this;
+	}
+
 	public function select($row){
 		$this->select = "`{$row}`";
 		return $this;
@@ -95,7 +101,7 @@ class Model {
 
 	public function get(){
 		$select = (!empty($this->select)) ? $this->select : "*";
-		$result = $this->db->getAll("SELECT {$select} FROM `{$this->table}` WHERE ".$this->sql.$this->limit);
+		$result = $this->db->getAll("SELECT {$select} FROM `{$this->table}` WHERE ".$this->sql.$this->order.$this->limit);
 		return (count($result) >= 2) ? $result : $result[0];
 	}
 

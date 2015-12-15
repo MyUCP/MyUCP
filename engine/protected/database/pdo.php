@@ -9,7 +9,7 @@ final class pdoDriver {
 	public function __construct($options) {
 	  @$this->pdo = new PDO("$options['type']:host={$options['hostname']};dbname={$options['database']};charset={$options['charset']}", $options['username'], $options['password']);
 		if (!$this->pdo){
-			new Debug($this->pdo->errorCode()." ".$this->pdo->errorInfo());
+			new Debug($this->pdo->errorCode()." ".$this->pdo->errorInfo(), 1);
 		}
 	}
 	

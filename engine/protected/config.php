@@ -37,15 +37,16 @@ class Config {
 
 		foreach($configs as $item){
 			if($item != "main.php"){
+				$a .= $item;
 				if(is_readable('./configs/'. $item)) {
 					$config = require_once('./configs/'. $item);
 					$configName = substr($item, 0, -4);
 					$this->data[$configName] = (object) $config;
-					return true;
 				}
 				new Debug('Ошибка: Не удалось загрузить дополнительный файл конфигурации!');
 			}
 		}
+		return true;
 	}
 }
 ?>

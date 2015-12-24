@@ -14,3 +14,13 @@ set_error_handler("getError");
 
 require_once(ENGINE_DIR . 'core.php');
 
+/*
+ * Временная функция
+ */
+
+function dd($value){
+    echo "<pre>";
+    var_dump($value);
+    echo "</pre>";
+    die();
+}

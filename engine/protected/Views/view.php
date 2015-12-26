@@ -20,9 +20,17 @@ class View {
 	  		$content = ob_get_contents();
 	  		ob_end_clean();
 			
-	  		return $content;
+	  		return $this->replace($content, $vars);
 		}
 		new Debug('Ошибка: Не удалось загрузить шаблон ' . $name . '!');
+	}
+
+	public function replace($view, $vars){
+		foreach($vars as $key => $value){
+			$view = str_replace("{{ $".$key." }}", $value, $view);
+			$view = str_replace("{{ ".$key." }}", $value, $view);
+		}
+		return $view;
 	}
 }
 

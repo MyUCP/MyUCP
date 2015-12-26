@@ -29,5 +29,9 @@ abstract class Controller {
 													);
 		}
 	}
+
+	public function extend($child = array()) {
+		$this->extendViews($child);
+	}
 }
 ?>

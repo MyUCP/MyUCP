@@ -13,7 +13,7 @@ class View {
 	}
 	
 	public function load($name, $vars = array()) {
-		return $this->Zara->compile($name, $vars)->getCompiled();
+		return $this->Zara->compile($name, $vars, new ZaraFactory)->getCompiled();
 	}
 }
 

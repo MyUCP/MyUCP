@@ -6,12 +6,15 @@ class Zara {
 	protected $path;
 	protected $vars;
 	private $compiler;
+	private $factory;
 	private $compiled = false;
 
-	public function compile($filename, $vars = []){
+	public function compile($filename, $vars = [], ZaraFactory $factory){
 		$this->vars = $vars;
+		$this->vars["zara"] = $this;
 		$this->filename = $filename;
 		$this->compiler = new ZaraCompiler;
+		$this->factory = $factory;
 		$this->searchFile();
 
 		return $this;
@@ -31,16 +34,12 @@ class Zara {
 	private function searchFile(){
 		if(file_exists(THEME_DIR . $this->filename . '.zara.php')){
 			$this->path = "./assets/cache/".md5(THEME_DIR . $this->filename . ".zara.php");
-			$this->compiler->compile(THEME_DIR . $this->filename . '.zara.php');
+			$this->compiler->compile(THEME_DIR . $this->filename . '.zara.php', $this->factory);
 			$this->compiled = true;
 		} elseif(file_exists(THEME_DIR . $this->filename . '.php')){
 			$this->path = THEME_DIR . $this->filename . '.php';
 		} else {
-			new Debug('Ошибка: Не удалось загрузить шаблон ' . $name . '!');
+			new Debug('Ошибка: Не удалось загрузить шаблон ' . $this->filename . '!');
 		}
 	}
-}
-
-function e($val){
-	return $val;
 }

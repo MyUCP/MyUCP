@@ -14,9 +14,12 @@ class ZaraCompiler {
     ];
     protected $extensions = [];
     protected $forelseCounter = 0;
+    protected $footer = [];
+    protected $factory;
 
-    public function compile($path = null)
+    public function compile($path = null, ZaraFactory $factory)
     {
+        $this->factory = $factory;
         $contents = $this->compileString(file_get_contents($path));
 		file_put_contents("./assets/cache/".md5($path)."", $contents);
     }
@@ -164,6 +167,17 @@ class ZaraCompiler {
         return $methods;
     }
 
+    protected function startsWith($haystack, $needles)
+    {
+        foreach ((array) $needles as $needle) {
+            if ($needle != '' && strpos($haystack, $needle) === 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected function compileRegularEchos($value)
     {
         $pattern = sprintf('/(@)?%s\s*(.+?)\s*%s(\r?\n)?/s', $this->contentTags[0], $this->contentTags[1]);
@@ -201,7 +215,50 @@ class ZaraCompiler {
     {
         $segments = explode(',', preg_replace("/[\(\)\\\"\']/", '', $expression));
 
-        return '<?php $'.trim($segments[0])." = app('".trim($segments[1])."'); ?>";
+        return '<?php $'.trim($segments[0])." = new ".trim($segments[1])."; ?>";
+    }
+
+    protected function compileYield($expression)
+    {
+        return "<?php echo \$zara->factory->yieldContent{$expression}; ?>";
+    }
+
+    protected function compileShow($expression)
+    {
+        return '<?php echo $zara->factory->yieldSection(); ?>';
+    }
+
+    protected function compileSection($expression)
+    {
+        return "<?php \$zara->factory->startSection{$expression}; ?>";
+    }
+
+    protected function compileAppend($expression)
+    {
+        return '<?php $zara->factory->appendSection(); ?>';
+    }
+
+    protected function compileEndsection($expression)
+    {
+        return '<?php $zara->factory->stopSection(); ?>';
+    }
+
+    protected function compileStop($expression)
+    {
+        return '<?php $zara->factory->stopSection(); ?>';
+    }
+
+    protected function compileExtends($expression)
+    {
+        if ($this->startsWith($expression, '(')) {
+            $expression = substr($expression, 1, -1);
+        }
+
+        $data = "<?php echo \$zara->compile($expression, get_defined_vars(), \$this->factory)->getCompiled(); ?>";
+
+        $this->footer[] = $data;
+
+        return '';
     }
 
     protected function compileUnless($expression)
@@ -236,23 +293,11 @@ class ZaraCompiler {
         return "<?php if{$expression}: ?>";
     }
 
-    /**
-     * Compile the else-if statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
     protected function compileElseif($expression)
     {
         return "<?php elseif{$expression}: ?>";
     }
 
-    /**
-     * Compile the forelse statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
     protected function compileEmpty($expression)
     {
         $empty = '$__empty_'.$this->forelseCounter--;
@@ -260,89 +305,41 @@ class ZaraCompiler {
         return "<?php endforeach; if ({$empty}): ?>";
     }
 
-    /**
-     * Compile the while statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
     protected function compileWhile($expression)
     {
         return "<?php while{$expression}: ?>";
     }
 
-    /**
-     * Compile the end-while statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
     protected function compileEndwhile($expression)
     {
         return '<?php endwhile; ?>';
     }
 
-    /**
-     * Compile the end-for statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
     protected function compileEndfor($expression)
     {
         return '<?php endfor; ?>';
     }
 
-    /**
-     * Compile the end-for-each statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
     protected function compileEndforeach($expression)
     {
         return '<?php endforeach; ?>';
     }
 
-    /**
-     * Compile the end-can statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
     protected function compileEndcan($expression)
     {
         return '<?php endif; ?>';
     }
 
-    /**
-     * Compile the end-cannot statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
     protected function compileEndcannot($expression)
     {
         return '<?php endif; ?>';
     }
 
-    /**
-     * Compile the end-if statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
     protected function compileEndif($expression)
     {
         return '<?php endif; ?>';
     }
 
-    /**
-     * Compile the end-for-else statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
     protected function compileEndforelse($expression)
     {
         return '<?php endif; ?>';

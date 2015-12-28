@@ -16,12 +16,12 @@ class AutoLoader {
 		$this->loadClass();
 	}
 
-	// Получения списка классов и их путей для загрузки файлов
+	// Получение списка классов и их путей для загрузки файлов
 	public function getPaths(){
 		$this->path = require("./engine/protected/AutoLoader/autoload_classes.php");
 	}
 
-	// Получения пути для загрузки определённого класса
+	// Получение пути для загрузки определённого класса
 	public function getPath(){
 		if(!empty($this->path[$this->className])){
 			return $this->path[$this->className];

@@ -24,7 +24,9 @@ return [
 	'Route'		=>	'engine/protected/Router/Route.php',
 	'Controller'=> 	'engine/protected/controller.php',
 	'Model'		=>	'engine/protected/Model/model.php',
-	'View'		=>	'engine/protected/Views/view.php',
+	'View'		=>	'engine/protected/Views/View.php',
+	'Zara'		=>	'engine/protected/Views/Zara/Zara.php',
+	'ZaraCompiler'=>	'engine/protected/Views/Zara/ZaraCompiler.php',
 	'Debug'		=>	'engine/protected/Debug/Debug.php',
 	'DebugException'=>	'engine/protected/Debug/DebugException.php',
 ];

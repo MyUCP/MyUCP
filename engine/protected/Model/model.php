@@ -42,18 +42,26 @@ class Model {
 		$count = count($data);
 		foreach($data as $key => $value){
 			$this->key .= "`{$key}`";
-			$this->value .= "'{$value}'";
 
+			if($value != 'NOW()'){
+				$this->value .= "'{$value}'";
+			} else {
+				$this->value .= "{$value}";
+			}
+			
 			$count--;
 				if($count > 0) $this->key .= ", ";
 				if($count > 0) $this->value .= ", ";
 		}
 		$this->db->query($this->sql."(".$this->key.") VALUES (".$this->value.")");
-		return (!$this->db->insertId()) ? $this->db->error : $this->db->insertId();
+		$result = (!$this->db->insertId()) ? $this->db->error : $this->db->insertId();
+		$this->clear();
+		return $result;
 	}
 
 	public function where(){
 		$condition = func_get_args();
+		$this->sql .= "WHERE ";
 		if(in_array($condition[1], $this->operators)){
 			if($this->presence === false){
 				$this->sql .= "`{$condition[0]}` {$condition[1]} '{$condition[2]}'";
@@ -71,9 +79,14 @@ class Model {
 	public function set(){
 		$params = func_get_args();
 		if(is_array($params[0])){
-			$count = count($data);
+			$count = count($params[0]);
 			foreach($params[0] as $key => $value){
-				$this->set .= "`{$key}` = '{$value}'";
+				if($value != 'NOW()'){
+					$this->set .= "`{$key}` = '{$value}'";
+				} else {
+					$this->set .= "`{$key}` = {$value}";
+				}
+				
 				$count--;
 					if($count > 0) $this->set .= ", ";
 			}
@@ -89,7 +102,7 @@ class Model {
 	}
 
 	public function select($row){
-		$this->select = "`{$row}`";
+		$this->select = "{$row}";
 		return $this;
 	}
 
@@ -102,21 +115,38 @@ class Model {
 	public function get(){
 		$select = (!empty($this->select)) ? $this->select : "*";
 		$result = $this->db->getAll("SELECT {$select} FROM `{$this->table}` WHERE ".$this->sql.$this->order.$this->limit);
-		return (count($result) >= 2) ? $result : $result[0];
+		$result = (count($result) >= 2) ? $result : $result[0];
+		$this->clear();
+		return $result;
 	}
 
 	public function update(){
 		if(!empty($this->sql)){
 			$this->sql = "WHERE ".$this->sql;
 		}
-		return $this->db->query("UPDATE `{$this->table}` SET {$this->set} {$this->sql}");
+		$result = $this->db->query("UPDATE `{$this->table}` SET {$this->set} {$this->sql}");
+		$this->clear();
+		return $result;
 	}
 
 	public function delete(){
 		if(!empty($this->sql)){
 			$this->sql = "WHERE ".$this->sql;
 		}
-		return $this->db->query("DELETE FROM `{$this->table}` {$this->sql}");
+		$result = $this->db->query("DELETE FROM `{$this->table}` {$this->sql}");
+		$this->clear();
+		return $result;
+	}
+
+	private function clear() {
+		$this->limit = null;
+		$this->sql = null;
+		$this->set = null;
+		$this->select = null;
+		$this->order = null;
+		$this->presence = false;
+		$this->key = null;
+		$this->value = null;
 	}
 }
 ?>

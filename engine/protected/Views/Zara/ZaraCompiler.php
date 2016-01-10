@@ -344,4 +344,9 @@ class ZaraCompiler {
     {
         return '<?php endif; ?>';
     }
+
+    protected function compileElse($expression)
+    {
+        return '<?php else: ?>';
+    }
 }

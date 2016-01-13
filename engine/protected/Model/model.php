@@ -24,6 +24,7 @@ class Model {
         'not similar to',
     ];
     private $presence = false;
+    protected $table;
 	
 	public function __construct($registry) {
 		$this->registry = $registry;
@@ -35,6 +36,12 @@ class Model {
 	
 	public function __set($key, $value) {
 		$this->registry->$key = $value;
+	}
+
+	public function table($name) {
+		$this->table = $name;
+
+		return $this;
 	}
 
 	public function create($data = []){

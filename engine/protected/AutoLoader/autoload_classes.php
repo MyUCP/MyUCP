@@ -30,4 +30,5 @@ return [
 	'ZaraFactory'=>	'engine/protected/Views/Zara/ZaraFactory.php',
 	'Debug'		=>	'engine/protected/Debug/Debug.php',
 	'DebugException'=>	'engine/protected/Debug/DebugException.php',
+	'Dumper'	=>	'engine/protected/Helpers/Dumper.php',
 ];

@@ -121,7 +121,7 @@ class Model {
 
 	public function get(){
 		$select = (!empty($this->select)) ? $this->select : "*";
-		$result = $this->db->getAll("SELECT {$select} FROM `{$this->table}` WHERE ".$this->sql.$this->order.$this->limit);
+		$result = $this->db->getAll("SELECT {$select} FROM `{$this->table}` ".$this->sql.$this->order.$this->limit);
 		$result = (count($result) >= 2) ? $result : $result[0];
 		$this->clear();
 		return $result;
@@ -129,7 +129,7 @@ class Model {
 
 	public function update(){
 		if(!empty($this->sql)){
-			$this->sql = "WHERE ".$this->sql;
+			$this->sql = " ".$this->sql;
 		}
 		$result = $this->db->query("UPDATE `{$this->table}` SET {$this->set} {$this->sql}");
 		$this->clear();
@@ -138,7 +138,7 @@ class Model {
 
 	public function delete(){
 		if(!empty($this->sql)){
-			$this->sql = "WHERE ".$this->sql;
+			$this->sql = " ".$this->sql;
 		}
 		$result = $this->db->query("DELETE FROM `{$this->table}` {$this->sql}");
 		$this->clear();

@@ -10,5 +10,5 @@
 */
 
 return [
-	['url' => '', 'as' => 'welcome', 'uses' => 'HomeController@welcome'],
+	['url' => '', 'as' => 'welcome',  'callback' => 'return view("welcome");'],
 ];

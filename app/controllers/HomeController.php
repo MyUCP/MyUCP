@@ -5,12 +5,8 @@
 
 class HomeController extends Controller {
 
-	/**
-	 * [welcome description]
-	 * @return [type] [description]
-	 */
 	public function welcome() {
-		
+		dd($this->router->route());
 		return view("welcome");
 	}
 }

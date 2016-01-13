@@ -44,10 +44,17 @@ class Router {
 				"name" => $item['as'],
 				"rule" => $item['url'],
 				"url" => $this->registry->request->get['action'],
-				"controller" => $this->getController($item['uses']),
-				"method" => $this->getMethod($item['uses']),
 				"parameters" => $parameters[$item['as']],
+				"callback"	=> $item['callback'],
 			];
+
+			if(!empty($item['uses'])){
+				$this->names[$item['as']]['controller'] = $this->getController($item['uses']);
+				$this->names[$item['as']]['method'] = $this->getMethod($item['uses']);
+				$this->names[$item['as']]['type'] = 'controller';
+			} else {
+				$this->names[$item['as']]['type'] = 'callback';
+			}
 		}
 	}
 
@@ -109,7 +116,10 @@ class Router {
 	}
 
 	public function make() {
-
+		if($this->route()['type'] == 'callback'){
+			
+			return eval($this->route()['callback']);
+		}
 		return $this->loadControler($this->route()['controller'], $this->route()['method'], $this->route()['parameters']);
 	}
 }

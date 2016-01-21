@@ -65,7 +65,10 @@ class Model {
 
 	public function where(){
 		$condition = func_get_args();
-		$this->sql .= "WHERE ";
+		
+		if($this->presence === false)
+			$this->sql .= "WHERE ";
+
 		if(in_array($condition[1], $this->operators)){
 			if($this->presence === false){
 				$this->sql .= "`{$condition[0]}` {$condition[1]} '{$condition[2]}'";

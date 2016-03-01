@@ -4,7 +4,6 @@
 */
 
 class Debug extends DebugException {
-
 	public $message = "Произошла неизвестная ошибка";
 	public $description = ["Ошибка при работе приложения", 
                             "Ошибка при работе с базой данных", 
@@ -13,13 +12,10 @@ class Debug extends DebugException {
 	public $file;
 	public $line;
 	protected $error;
-
 	public function __construct() {
         $args = func_get_args();
-
         (!empty($args[1])) ? $args[1] : "0";
         (!empty($args[2])) ? $args[2] : null;
-
         $this->error = $args[0];
         if(is_array($this->error)){
             if($this->error[0] == 8) return true;
@@ -33,7 +29,6 @@ class Debug extends DebugException {
         }
         return $this->showError();
     }
-
     public function showError(){
         global $registry;
         if($registry->config->debug_mode){

@@ -1,0 +1,24 @@
+{
+	"name": "maksa988/myucp",
+	"description": "Mini PHP framework",
+	"version": "5.2.3",
+	"keywords": ["myucp", "ucp", "framework", "help"],
+	"homepage": "https://github.com/maksa988/MyUCP",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Maxim Rebitskiy",
+			"email": "admin@maksa988.ru",
+			"homepage": "http://myucp.maksa988.su",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/maksa988/MyUCP/issues",
+		"source": "https://github.com/maksa988/MyUCP"
+	},
+	"require": {
+		"php": ">=5.5.0"
+	},
+	"minimum-stability": "stable"
+}

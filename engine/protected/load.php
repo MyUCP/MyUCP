@@ -44,6 +44,17 @@ class Load {
 
 		return true;
 	}
+
+	public function inject(){
+		$names = func_get_args();
+		foreach($names[0] as $name){
+			if(class_exists($name)){
+				$this->registry->$name = new $name($this->registry);
+			}
+		}
+
+		return true;
+	}
 }
 
 
@@ -55,4 +66,9 @@ function model(){
 function library(){
 	global $registry;
 	return $registry->load->library(func_get_args());
+}
+
+function inject(){
+	global $registry;
+	return $registry->load->inject(func_get_args());
 }

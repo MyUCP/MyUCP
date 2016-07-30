@@ -52,6 +52,10 @@ final class mysqlDriver {
 		return mysqli_errno($this->mysql);
 	}
 
+	public function close() {
+		mysqli_close($this->mysql);
+	}
+
 	public function __destruct() {
 		@mysqli_close($this->mysql);
 	}

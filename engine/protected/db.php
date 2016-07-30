@@ -474,5 +474,9 @@ class DB {
 			unset($this->stats[$first]);
 		}
 	}
+
+	public function closeConnect() {
+		$this->driver->close();
+	}
 }
 ?>

@@ -9,7 +9,6 @@ class AutoLoader {
 	private $className;
 
 	/**
-	 * [__construct description]
 	 * @param [type] $className [description]
 	 */
 	public function __construct($className){
@@ -19,7 +18,7 @@ class AutoLoader {
 	}
 
 	/**
-	 * [getPaths description]
+	 * [Получение массива со списком путей и классов]
 	 * @return [type] [description]
 	 */
 	public function getPaths(){
@@ -27,7 +26,7 @@ class AutoLoader {
 	}
 
 	/**
-	 * [getPath description]
+	 * [Получение пути определённого класса]
 	 * @return [type] [description]
 	 */
 	public function getPath(){
@@ -39,7 +38,7 @@ class AutoLoader {
 	}
 
 	/**
-	 * [loadClass description]
+	 * [Загрузка файла класса]
 	 * @return [type] [description]
 	 */
 	public function loadClass(){

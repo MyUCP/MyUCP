@@ -16,5 +16,3 @@ $registry->load = new Load($registry);
 $registry->router = new Router($registry);
 $registry->view = new View($registry);
 $registry->response->output($registry->router->make());
-
-$registry->db->closeConnect();

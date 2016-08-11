@@ -16,9 +16,11 @@ class Router {
 	private $method;
 	private $parameters;
 	private $route;
-	private $rules;
+	private $rules = [];
 	private $local;
 	private $names;
+
+	public static $verbs = ['GET', 'POST'];
 	
 	public function __construct($registry) {
 		$this->folder = null;
@@ -27,35 +29,42 @@ class Router {
 		$this->parameters = null;
 
 		$this->registry = $registry;
-		$this->rules = include_once(APP_DIR . "routers.php");
-		$this->route = new Route;
+		array_push($this->rules, include_once(APP_DIR . "routers.php"));
+		$this->route = new Route($registry);
 		$this->getRules();
 	}
 
 	public function getRules(){
 		foreach($this->rules as $item){
-			$this->route->addRegex($item['url'], $item['as']);
-			if($this->route->check($this->registry->request->get['action'], $item['as'])){
-				$this->local = $item['as'];
-				$parameters[$item['as']] = $this->route->parse($this->registry->request->get['action'], $item['as']);
-			}
 
-			$this->names[$item["as"]] = [
-				"name" => $item['as'],
-				"rule" => $item['url'],
-				"url" => $this->registry->request->get['action'],
-				"parameters" => $parameters[$item['as']],
-				"callback"	=> $item['callback'],
-			];
+			if(is_array($item)) {
 
-			if(!empty($item['uses'])){
-				$this->names[$item['as']]['controller'] = $this->getController($item['uses']);
-				$this->names[$item['as']]['method'] = $this->getMethod($item['uses']);
-				$this->names[$item['as']]['type'] = 'controller';
-			} else {
-				$this->names[$item['as']]['type'] = 'callback';
+				$this->route->addRegex($item['url'], $item['as']);
+				if($this->route->check($this->registry->request->get['action'], $item['as'], $item['method'])){
+					$this->local = $item['as'];
+					$parameters[$item['as']] = $this->route->parse($this->registry->request->get['action'], $item['as']);
+				}
+
+				$this->names[$item["as"]] = [
+					"http_method" => (!empty($item['method'])) ? $item['method'] : "get",
+					"name" => $item['as'],
+					"rule" => $item['url'],
+					"url" => $this->registry->request->get['action'],
+					"parameters" => $parameters[$item['as']],
+					"callback"	=> $item['callback'],
+				];
+
+				if(!empty($item['uses'])){
+					$this->names[$item['as']]['controller'] = $this->getController($item['uses']);
+					$this->names[$item['as']]['method'] = $this->getMethod($item['uses']);
+					$this->names[$item['as']]['type'] = 'controller';
+				} else {
+					$this->names[$item['as']]['type'] = 'callback';
+				}
 			}
 		}
+
+		return $this;
 	}
 
 	public function getController($uses){
@@ -68,7 +77,7 @@ class Router {
 		return $preg[2][0];
 	}
 
-	public function route($name = ""){
+	public function route($name = null){
 		if(empty($name)){
 			return $this->names[$this->local];
 		} else {
@@ -121,6 +130,54 @@ class Router {
 			return eval($this->route()['callback']);
 		}
 		return $this->loadControler($this->route()['controller'], $this->route()['method'], $this->route()['parameters']);
+	}
+
+	public function getIndexLastRules() {
+		return count($this->rules) - 1;
+	}
+
+	public function post($url, $parameters = null) {
+
+		if(is_array($parameters)) {
+			$name = (!empty($parameters['as'])) ? $parameters['as'] : base64_encode($url)."post";
+			$uses = (!empty($parameters['uses'])) ? $parameters['uses'] : null;
+		} else {
+			$name = base64_encode($url)."post";
+			$uses = (!empty($parameters)) ? $parameters : null;
+		}
+
+		$this->rules[] = ["method"	=>	"post", "url"	=>	$url, "as"	=>	$name, "uses" => $uses]; 
+
+		return $this;
+	}
+
+	public function get($url, $parameters = null) {
+
+		if(is_array($parameters)) {
+			$name = (!empty($parameters['as'])) ? $parameters['as'] : base64_encode($url)."get";
+			$uses = (!empty($parameters['uses'])) ? $parameters['uses'] : null;
+		} else {
+			$name = base64_encode($url)."get";
+			$uses = (!empty($parameters)) ? $parameters : null;
+		}
+
+		$this->rules[] = ["method"	=>	"get", "url"	=>	$url, "as"	=>	$name, "uses" => $uses]; 
+
+		return $this;
+	}
+
+	public function name($name) {
+		
+		$this->rules[$this->getIndexLastRules()]['as']	=	$name;
+
+		return $this;
+	}
+
+	public function uses($uses) {
+
+		$this->rules[$this->getIndexLastRules()]['uses']	=	$uses;
+
+		return $this;
 	}
 }
 ?>

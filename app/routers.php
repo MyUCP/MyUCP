@@ -9,6 +9,6 @@
 |
 */
 
-return [
-	['url' => '', 'as' => 'welcome',  'uses' => 'HomeController@welcome'],
-];
+
+Router::get("", "HomeController@test")->name("test");
+Router::get("helllo/itsme", "HomeController@welcome")->name("welcome");

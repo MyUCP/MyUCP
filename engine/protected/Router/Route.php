@@ -10,11 +10,16 @@
 
 class Route extends Router {
 
+	private $registry;
+
 	private $routeParams = [];
 	private $regex;
 	private $route;
 
-	public function __construct() { }
+	public function __construct($registry) {
+
+		$this->registry = $registry;
+	}
 
 	public function addRegex($route, $key){
 		$regex = '/' . preg_replace('/\//', '\/', $route) .  '/';
@@ -46,7 +51,25 @@ class Route extends Router {
 	   	return $params;
 	}
 
-	public function check($route, $key) {
-		return preg_match($this->regex[$key], $route);
+	public function check($route, $key, $request_method = "get") {
+
+		if(preg_match($this->regex[$key], $route)) {
+			if($this->checkRequestMethod($request_method)) {
+
+				return true;
+			}
+		}
+
+		return false;
+ 	}
+
+ 	private function checkRequestMethod($request_method) {
+
+ 		if(mb_strtoupper($request_method) == mb_strtoupper($this->registry->request->server['REQUEST_METHOD'])) {
+
+ 			return true;
+ 		}
+
+ 		return false;
  	}
 }

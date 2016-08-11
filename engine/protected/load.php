@@ -56,19 +56,3 @@ class Load {
 		return true;
 	}
 }
-
-
-function model(){
-	global $registry;
-	return $registry->load->model(func_get_args());
-}
-
-function library(){
-	global $registry;
-	return $registry->load->library(func_get_args());
-}
-
-function inject(){
-	global $registry;
-	return $registry->load->inject(func_get_args());
-}

@@ -10,5 +10,4 @@
 */
 
 
-Router::get("", "HomeController@test")->name("test");
-Router::get("helllo/itsme", "HomeController@welcome")->name("welcome");
+Router::get("/", "HomeController@welcome");

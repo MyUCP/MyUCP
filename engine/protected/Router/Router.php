@@ -19,6 +19,7 @@ class Router {
 	private $rules = [];
 	private $local;
 	private $names;
+	private $url = "/";
 
 	public static $verbs = ['GET', 'POST'];
 	
@@ -27,6 +28,8 @@ class Router {
 		$this->controller = null;
 		$this->method = null;
 		$this->parameters = null;
+
+		$this->url = (!empty($this->registry->request->get['action'])) ? $this->registry->request->get['action'] : "/";
 
 		$this->registry = $registry;
 		array_push($this->rules, include_once(APP_DIR . "routers.php"));
@@ -40,7 +43,7 @@ class Router {
 			if(is_array($item)) {
 
 				$this->route->addRegex($item['url'], $item['as']);
-				if($this->route->check($this->registry->request->get['action'], $item['as'], $item['method'])){
+				if($this->route->check($this->url, $item['as'], $item['method'])){
 					$this->local = $item['as'];
 					$parameters[$item['as']] = $this->route->parse($this->registry->request->get['action'], $item['as']);
 				}
@@ -112,7 +115,7 @@ class Router {
 			if(is_callable(array($this->controller, $this->action))) {
 				$this->action = $this->action;
 			} else {
-				$this->action = 'index';
+				new Debug('Ошибка: Не удалось загрузить указанный метод ' . $this->action . '!');
 			}
 			
 			if(empty($parameters)) {
@@ -146,6 +149,7 @@ class Router {
 			$uses = (!empty($parameters)) ? $parameters : null;
 		}
 
+		$url = (!empty($url)) ? $url : "/";
 		$this->rules[] = ["method"	=>	"post", "url"	=>	$url, "as"	=>	$name, "uses" => $uses]; 
 
 		return $this;
@@ -161,6 +165,7 @@ class Router {
 			$uses = (!empty($parameters)) ? $parameters : null;
 		}
 
+		$url = (!empty($url)) ? $url : "/";
 		$this->rules[] = ["method"	=>	"get", "url"	=>	$url, "as"	=>	$name, "uses" => $uses]; 
 
 		return $this;

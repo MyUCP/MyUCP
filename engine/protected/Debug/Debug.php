@@ -7,7 +7,8 @@ class Debug extends DebugException {
 	public $message = "Произошла неизвестная ошибка";
 	public $description = ["Ошибка при работе приложения", 
                             "Ошибка при работе с базой данных", 
-                            "Внутреняя ошибка фреймворка"];
+                            "Внутреняя ошибка фреймворка",
+                            null => "Ошибка при работе приложения"];
 	public $code = 0;
 	public $file;
 	public $line;
@@ -27,6 +28,7 @@ class Debug extends DebugException {
             $this->code = $args[1];
             new DebugException($args[0], $args[1], $args[2]);
         }
+
         return $this->showError();
     }
     public function showError(){

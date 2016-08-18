@@ -59,10 +59,11 @@ if(!function_exists('redirect')) {
 
 	function redirect($value){
 		global $registry;
-
+		
 		// If it`s array then it`s maybe router
 		if(is_array($value)) {
-			return $registry->response->redirect($value['url']);
+			$url = (!empty($value['rule'])) ? $value['rule'] : "/";
+			return $registry->response->redirect($url);
 		}
 
 		return $registry->response->redirect($value);

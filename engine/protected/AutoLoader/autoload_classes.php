@@ -16,6 +16,7 @@ return [
 	'Session'	=>	'engine/protected/session.php',
 	'Response'	=>	'engine/protected/response.php',
 	'Document'	=>	'engine/protected/document.php',
+	'Builder'	=>	'engine/protected/Database/Builder.php',
 	'DB'		=>	'engine/protected/Database/DB.php',
 	'mysqlDriver'=>	'engine/protected/Database/drivers/mysql.php',
 	'pdoDriver'=>	'engine/protected/Database/drivers/pdo.php',

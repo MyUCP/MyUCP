@@ -20,6 +20,9 @@ class Load {
 				require_once($modelPath);
 				if(class_exists($modelClass)){
 					$this->registry->$modelClass = new $modelClass($this->registry);
+					$this->registry
+						 ->$modelClass
+						 ->table($this->registry->$modelClass->table);
 				}
 			} else {
 				new Debug('Ошибка: Не удалось загрузить модель ' . $name . '!');

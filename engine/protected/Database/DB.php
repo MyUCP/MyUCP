@@ -478,5 +478,25 @@ class DB {
 	public function closeConnect() {
 		$this->driver->close();
 	}
+
+	public static function raw($sql) {
+		return $sql;
+	}
+
+	public static function concat($values = []) {
+
+		if(empty($values) && !is_array($values))
+			new Debug("Метод concat() ожидает в качестве параметра массив значений", 1);
+
+		$count = count($values);
+		foreach ($values as $value) {
+			$concat .= $value;
+
+			$count--;
+				if($count > 0) $concat .= ", ";
+		}
+
+		return "CONCAT({$concat})";
+	}
 }
 ?>

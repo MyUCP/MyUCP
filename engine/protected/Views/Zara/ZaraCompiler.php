@@ -86,7 +86,7 @@ class ZaraCompiler {
     }
 
     /**
-     * Compile Blade comments into valid PHP.
+     * Compile Zara comments into valid PHP.
      *
      * @param  string  $value
      * @return string
@@ -99,7 +99,7 @@ class ZaraCompiler {
     }
 
     /**
-     * Compile Blade echos into valid PHP.
+     * Compile Zara echos into valid PHP.
      *
      * @param  string  $value
      * @return string

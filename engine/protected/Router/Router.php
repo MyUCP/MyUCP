@@ -29,9 +29,10 @@ class Router {
 		$this->method = null;
 		$this->parameters = null;
 
+		$this->registry = $registry;
+
 		$this->url = (!empty($this->registry->request->get['action'])) ? $this->registry->request->get['action'] : "/";
 
-		$this->registry = $registry;
 		array_push($this->rules, include_once(APP_DIR . "routers.php"));
 		$this->route = new Route($registry);
 		$this->getRules();

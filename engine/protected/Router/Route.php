@@ -51,7 +51,7 @@ class Route extends Router {
 	   	return $params;
 	}
 
-	public function check($route, $key, $request_method = "get") {
+	public function check($route, $key, $request_method = "any") {
 
 		if(preg_match($this->regex[$key], $route)) {
 			if($this->checkRequestMethod($request_method)) {
@@ -64,6 +64,9 @@ class Route extends Router {
  	}
 
  	private function checkRequestMethod($request_method) {
+
+ 		if($request_method == "any")
+ 			return true;
 
  		if(mb_strtoupper($request_method) == mb_strtoupper($this->registry->request->server['REQUEST_METHOD'])) {
 

@@ -39,14 +39,18 @@ class Router {
 	}
 
 	public function getRules(){
+		
 		foreach($this->rules as $item){
+
+			if(!empty($item['method']))
+				$item['method'] = "any";
 
 			if(is_array($item)) {
 
 				$this->route->addRegex($item['url'], $item['as']);
 				if($this->route->check($this->url, $item['as'], $item['method'])){
 					$this->local = $item['as'];
-					$parameters[$item['as']] = $this->route->parse($this->registry->request->get['action'], $item['as']);
+					$parameters[$item['as']] = $this->route->parse($this->url, $item['as']);
 				}
 
 				$this->names[$item["as"]] = [
@@ -152,6 +156,22 @@ class Router {
 
 		$url = (!empty($url)) ? $url : "/";
 		$this->rules[] = ["method"	=>	"post", "url"	=>	$url, "as"	=>	$name, "uses" => $uses]; 
+
+		return $this;
+	}
+
+	public function any($url, $parameters = null) {
+
+		if(is_array($parameters)) {
+			$name = (!empty($parameters['as'])) ? $parameters['as'] : base64_encode($url)."any";
+			$uses = (!empty($parameters['uses'])) ? $parameters['uses'] : null;
+		} else {
+			$name = base64_encode($url)."any";
+			$uses = (!empty($parameters)) ? $parameters : null;
+		}
+
+		$url = (!empty($url)) ? $url : "/";
+		$this->rules[] = ["method"	=>	"any", "url"	=>	$url, "as"	=>	$name, "uses" => $uses]; 
 
 		return $this;
 	}

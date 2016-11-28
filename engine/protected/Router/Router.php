@@ -95,41 +95,46 @@ class Router {
 
 	public function loadControler($controllerName, $actionName, $parameters = []){
 
-		if(strpos($controllerName, ".")){
-			$controller = explode(".", $controllerName);
-			$this->controller = array_shift(array_reverse($controller));
-				array_pop($controller);
-			$this->folder = implode("/", $controller);
-		} else {
-			$this->controller = $controllerName;
-		}
-			$this->action = $actionName;
+		if(!empty($this->local)) {
+			if(strpos($controllerName, ".")){
+				$controller = explode(".", $controllerName);
+				$this->controller = array_shift(array_reverse($controller));
+					array_pop($controller);
+				$this->folder = implode("/", $controller);
+			} else {
+				$this->controller = $controllerName;
+			}
+				$this->action = $actionName;
 
-		if(empty($this->folder)){
-			$controllerFile = APP_DIR . 'controllers/' . $this->controller . '.php';
+			if(empty($this->folder)){
+				$controllerFile = APP_DIR . 'controllers/' . $this->controller . '.php';
+			} else {
+				$controllerFile = APP_DIR . 'controllers/' . $this->folder . '/' . $this->controller . '.php';
+			}
+			$controllerClass = $this->controller;
+			
+			if(is_readable($controllerFile)) {
+				require_once($controllerFile);
+				
+				$controller = new $controllerClass($this->registry);
+				
+				if(is_callable(array($this->controller, $this->action))) {
+					$this->action = $this->action;
+				} else {
+					return new Debug('Ошибка: Не удалось загрузить указанный метод ' . $this->action . '!');
+				}
+				
+				if(empty($parameters)) {
+					return call_user_func(array($controller, $this->action));
+				} else {
+					return call_user_func_array(array($controller, $this->action), $parameters);
+				}
+			}
+
+			return new Debug('Ошибка: Не удалось загрузить контроллер ' . $this->controller . '!');
 		} else {
-			$controllerFile = APP_DIR . 'controllers/' . $this->folder . '/' . $this->controller . '.php';
+			return new HttpException(404, "Страница не найдена");
 		}
-		$controllerClass = $this->controller;
-		
-		if(is_readable($controllerFile)) {
-			require_once($controllerFile);
-			
-			$controller = new $controllerClass($this->registry);
-			
-			if(is_callable(array($this->controller, $this->action))) {
-				$this->action = $this->action;
-			} else {
-				new Debug('Ошибка: Не удалось загрузить указанный метод ' . $this->action . '!');
-			}
-			
-			if(empty($parameters)) {
-				return call_user_func(array($controller, $this->action));
-			} else {
-				return call_user_func_array(array($controller, $this->action), $parameters);
-			}
-		}
-		new Debug('Ошибка: Не удалось загрузить контроллер ' . $this->controller . '!');
 	}
 
 	public function make() {

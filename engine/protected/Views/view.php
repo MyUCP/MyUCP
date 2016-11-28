@@ -12,12 +12,12 @@ class View {
 		$this->Zara = new Zara;
 	}
 	
-	public function load($name, $vars = array()) {
-		return $this->Zara->compile($name, $vars, new ZaraFactory)->getCompiled();
+	public function load($name, $vars = array(), $exception) {
+		return $this->Zara->compile($name, $vars, new ZaraFactory, $exception)->getCompiled();
 	}
 }
 
-function view($name, $vars = array()){
+function view($name, $vars = array(), $exception = true){
 	global $registry;
-	return $registry->view->load($name, $vars);
+	return $registry->view->load($name, $vars, $exception);
 }

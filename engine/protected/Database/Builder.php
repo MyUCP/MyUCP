@@ -110,7 +110,7 @@ class Builder {
 	public function orWhere(){
 		$condition = (is_array(func_get_args()[0])) ? func_get_args()[0] : func_get_args();
 		
-		if($this->presence !== false)
+		if($this->presence === false)
 			new Debug("Использование метода orWhere() без метода where() невозможно", 1);
 
 		if(empty($condition[2])) {

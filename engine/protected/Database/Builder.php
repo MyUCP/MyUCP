@@ -85,19 +85,23 @@ class Builder {
 			$this->sql .= "WHERE ";
 
 		if(empty($condition[2])) {
+			$value = (in_array($condition[1], $this->functions)) ? $condition[1] : "'{$condition[1]}'";
+
 			if($this->presence === false){
-				$this->sql .= "{$condition[0]} = '{$condition[1]}'";
+				$this->sql .= "{$condition[0]} = ".$value;
 				$this->presence = true;
 			} else {
-				$this->sql .= " AND {$condition[0]} = '{$condition[1]}'";
+				$this->sql .= " AND {$condition[0]} = ".$value;
 			}
 		} else {
 			if(in_array($condition[1], $this->operators)){
+				$value = (in_array($condition[2], $this->functions)) ? $condition[2] : "'{$condition[2]}'";
+
 				if($this->presence === false){
-					$this->sql .= "{$condition[0]} {$condition[1]} '{$condition[2]}'";
+					$this->sql .= "{$condition[0]} {$condition[1]} ".$value;
 					$this->presence = true;
 				} else {
-					$this->sql .= " AND {$condition[0]} {$condition[1]} '{$condition[2]}'";
+					$this->sql .= " AND {$condition[0]} {$condition[1]} ".$value;
 				}
 			} else {
 				new Debug("Оператор <b>{$condition[1]}</b> не найден!", 1);

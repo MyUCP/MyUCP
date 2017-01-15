@@ -254,7 +254,7 @@ class ZaraCompiler {
             $expression = substr($expression, 1, -1);
         }
 
-        $data = "<?php echo \$zara->compile($expression, get_defined_vars(), \$this->factory)->getCompiled(); ?>";
+        $data = "<?php echo \$zara->compile($expression, get_defined_vars(), \$this->factory, true)->getCompiled(); ?>";
 
         $this->footer[] = $data;
 

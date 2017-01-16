@@ -51,6 +51,10 @@ class Request {
 		return cookie($name, $value, $time);
 	}
 
+	public static function server($name) {
+		return $_SERVER[$name];
+	}
+
 	public static function file($name) {
 		return new File($name);
 	}

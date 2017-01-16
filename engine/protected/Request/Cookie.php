@@ -24,11 +24,11 @@ class Cookie {
 	}
 
 	public function unHashed() {
-		return $this->decodeValue($this->hashedValue, config()->app_key);
+		return $this->hashedValue;
 	}
 
 	public function getValue() {
-		return $this->unHashed();
+		return $this->decodeValue($this->hashedValue, config()->app_key);
 	}
 
 	public function forever() {

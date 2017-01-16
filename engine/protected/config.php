@@ -1,17 +1,14 @@
 <?php
 /*
 * MyUCP
-* File Version 4.0
-* Date: 30.03.2015
-* Developed by Maksa988
 */
 
 class Config {
-	private $data = array();
+	private $data = [];
 	
 	public function __construct() {
 		if(is_readable('./configs/main.php')) {
-			$config = require_once('./configs/main.php');
+			$config = require('./configs/main.php');
 			$this->data = array_merge($this->data, $config);
 			$this->loadConfigs();
 			return true;
@@ -36,7 +33,7 @@ class Config {
 		array_shift($configs);
 
 		foreach($configs as $item){
-			if($item != "main.php"){
+			if($item != "main.php" && $item != "autoload_classes.php"){
 				$a .= $item;
 				if(is_readable('./configs/'. $item)) {
 					$config = require_once('./configs/'. $item);

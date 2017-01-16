@@ -22,7 +22,10 @@ class AutoLoader {
 	 * @return [type] [description]
 	 */
 	public function getPaths(){
-		$this->path = require("./engine/protected/AutoLoader/autoload_classes.php");
+		$this->path = array_merge(
+				require("./engine/protected/AutoLoader/autoload_classes.php"), 
+				require("./configs/autoload_classes.php")
+			);
 	}
 
 	/**

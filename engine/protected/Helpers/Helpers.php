@@ -79,3 +79,19 @@ if(!function_exists('refresh')) {
 	}
 
 }
+
+if(!function_exists('cookie')) {
+
+	function cookie($name, $value = null, $time = null) {
+		return new Cookie($name, $value, $time);
+	}
+
+}
+
+if(!function_exists('config')) {
+
+	function config() {
+		return new Config();
+	}
+
+}

@@ -3,10 +3,6 @@
 |--------------------------------------------------------------------------
 | Запросы
 |--------------------------------------------------------------------------
-|
-| Здесь фильтруються все виды запросов, они записываються в удобные 
-| переменные которые вы можете использовать в контроллере
-|
 */
 class Request {
 	public $get = array();
@@ -31,16 +27,32 @@ class Request {
 		$this->server = $_SERVER;
 	}
 	
-  	private function clean($data) {
+  	private static function clean($data) {
 		if (is_array($data)) {
 	  		foreach ($data as $key => $value) {
 				unset($data[$key]);
-				$data[$this->clean($key)] = $this->clean($value);
+				$data[self::clean($key)] = self::clean($value);
 	  		}
 		} else {
 	  		$data = htmlspecialchars($data, ENT_COMPAT);
 		}
 		return $data;
+	}
+
+	public static function get($name) {
+		return $_GET[$name];
+	}
+
+	public static function post($name) {
+		return $_POST[$name];
+	}
+
+	public static function cookie($name, $value = null, $time = null) {
+		return cookie($name, $value, $time);
+	}
+
+	public static function file($name) {
+		return new File($name);
 	}
 }
 ?>

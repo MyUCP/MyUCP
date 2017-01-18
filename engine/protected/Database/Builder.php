@@ -442,9 +442,9 @@ class Builder {
 	public function set(){
 		$params = (is_array(func_get_args()[0])) ? func_get_args()[0] : func_get_args();
 
-		if(is_array($params[0])){
-			$count = count($params[0]);
-			foreach($params[0] as $key => $value){
+		if(is_array($params)){
+			$count = count($params);
+			foreach($params as $key => $value){
 				if(!in_array($value, $this->operators)){
 					$this->set .= "{$key} = '{$value}'";
 				} else {

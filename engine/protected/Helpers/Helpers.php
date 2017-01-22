@@ -48,8 +48,7 @@ if(!function_exists('library')) {
 if(!function_exists('inject')) {
 
 	function inject(){
-		global $registry;
-		return $registry->load->inject(func_get_args());
+		return registry()->load->inject(func_get_args());
 	}
 
 }
@@ -71,7 +70,7 @@ if(!function_exists('redirect')) {
 			return registry()->response->redirect($url);
 		}
 
-		return $registry->response->redirect($value);
+		return registry()->response->redirect($value);
 	}
 
 }

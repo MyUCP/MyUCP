@@ -445,7 +445,7 @@ class Builder {
 		if(is_array($params)){
 			$count = count($params);
 			foreach($params as $key => $value){
-				if(!in_array($value, $this->operators)){
+				if(!in_array($value, $this->operators) && !in_array($value, $this->functions)){
 					$this->set .= "{$key} = '{$value}'";
 				} else {
 					$this->set .= "{$key} = {$value}";

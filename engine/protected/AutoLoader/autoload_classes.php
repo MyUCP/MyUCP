@@ -11,7 +11,7 @@
 return [
 	'Logs'	=>	'engine/protected/logs.php',
 	'Registry'	=>	'engine/protected/registry.php',
-	'Config'	=>	'engine/protected/config.php',
+	'Config'	=>	'engine/protected/Config/Config.php',
 	'Request'	=>	'engine/protected/Request/Request.php',
 	'File'		=>	'engine/protected/Request/File.php',
 	'Cookie'	=>	'engine/protected/Request/Cookie.php',

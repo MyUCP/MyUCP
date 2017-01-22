@@ -8,7 +8,7 @@ class Config {
 	
 	public function __construct() {
 		if(is_readable('./configs/main.php')) {
-			$config = require('./configs/main.php');
+			$config = require_once('./configs/main.php');
 			$this->data = array_merge($this->data, $config);
 			$this->loadConfigs();
 			return true;

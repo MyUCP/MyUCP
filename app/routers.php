@@ -10,4 +10,6 @@
 */
 
 
-Router::get("/", "HomeController@welcome");
+Router::get("/", function() {
+	return view("welcome");
+});

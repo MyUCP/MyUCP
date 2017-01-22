@@ -9,8 +9,6 @@
 */
 
 class Router {
-	private $registry;
-
 	private $folder;
 	private $controller;
 	private $method;
@@ -23,18 +21,15 @@ class Router {
 
 	public static $verbs = ['GET', 'POST'];
 	
-	public function __construct($registry) {
+	public function __construct() {
 		$this->folder = null;
 		$this->controller = null;
 		$this->method = null;
 		$this->parameters = null;
+		$this->url = (!empty(registry()->request->get['action'])) ? registry()->request->get['action'] : "/";
 
-		$this->registry = $registry;
-
-		$this->url = (!empty($this->registry->request->get['action'])) ? $this->registry->request->get['action'] : "/";
-
-		array_push($this->rules, include_once(APP_DIR . "routers.php"));
-		$this->route = new Route($registry);
+		$this->loadRules();
+		$this->route = new Route(registry());
 		$this->getRules();
 	}
 
@@ -42,7 +37,7 @@ class Router {
 		
 		foreach($this->rules as $item){
 
-			if(!empty($item['method']))
+			if(empty($item['method']))
 				$item['method'] = "any";
 
 			if(is_array($item)) {
@@ -54,10 +49,10 @@ class Router {
 				}
 
 				$this->names[$item["as"]] = [
-					"http_method" => (!empty($item['method'])) ? $item['method'] : "get",
+					"http_method" => $item['method'],
 					"name" => $item['as'],
 					"rule" => $item['url'],
-					"url" => $this->registry->request->get['action'],
+					"url" => registry()->request->get['action'],
 					"parameters" => $parameters[$item['as']],
 					"callback"	=> $item['callback'],
 				];
@@ -73,6 +68,10 @@ class Router {
 		}
 
 		return $this;
+	}
+
+	public function loadRules() {
+		return require_once(APP_DIR . "routers.php");
 	}
 
 	public function getController($uses){
@@ -116,7 +115,7 @@ class Router {
 			if(is_readable($controllerFile)) {
 				require_once($controllerFile);
 				
-				$controller = new $controllerClass($this->registry);
+				$controller = new $controllerClass(registry());
 				
 				if(is_callable(array($this->controller, $this->action))) {
 					$this->action = $this->action;
@@ -138,10 +137,9 @@ class Router {
 	}
 
 	public function make() {
-		if($this->route()['type'] == 'callback'){
-			
-			return eval($this->route()['callback']);
-		}
+		if($this->route()['callback'])
+			return registry()->response->output($this->route()['callback']());
+
 		return $this->loadControler($this->route()['controller'], $this->route()['method'], $this->route()['parameters']);
 	}
 
@@ -149,50 +147,65 @@ class Router {
 		return count($this->rules) - 1;
 	}
 
-	public function post($url, $parameters = null) {
+	public function post($url, $parameters = null, $callback = null) {
 
 		if(is_array($parameters)) {
 			$name = (!empty($parameters['as'])) ? $parameters['as'] : base64_encode($url)."post";
 			$uses = (!empty($parameters['uses'])) ? $parameters['uses'] : null;
 		} else {
 			$name = base64_encode($url)."post";
-			$uses = (!empty($parameters)) ? $parameters : null;
+
+			if(gettype($parameters) == string) {
+				$uses = (!empty($parameters)) ? $parameters : null;
+			} else {
+				$callback = $parameters;
+			}
 		}
 
 		$url = (!empty($url)) ? $url : "/";
-		$this->rules[] = ["method"	=>	"post", "url"	=>	$url, "as"	=>	$name, "uses" => $uses]; 
+		$this->rules[] = ["method"	=>	"post", "url"	=>	$url, "as"	=>	$name, "uses" => $uses, "callback" => $callback]; 
 
 		return $this;
 	}
 
-	public function any($url, $parameters = null) {
+	public function any($url, $parameters = null, $callback = null) {
 
 		if(is_array($parameters)) {
 			$name = (!empty($parameters['as'])) ? $parameters['as'] : base64_encode($url)."any";
 			$uses = (!empty($parameters['uses'])) ? $parameters['uses'] : null;
 		} else {
 			$name = base64_encode($url)."any";
-			$uses = (!empty($parameters)) ? $parameters : null;
+
+			if(gettype($parameters) == string) {
+				$uses = (!empty($parameters)) ? $parameters : null;
+			} else {
+				$callback = $parameters;
+			}
 		}
 
 		$url = (!empty($url)) ? $url : "/";
-		$this->rules[] = ["method"	=>	"any", "url"	=>	$url, "as"	=>	$name, "uses" => $uses]; 
+		$this->rules[] = ["method"	=>	"any", "url"	=>	$url, "as"	=>	$name, "uses" => $uses, "callback" => $callback]; 
 
 		return $this;
 	}
 
-	public function get($url, $parameters = null) {
+	public function get($url, $parameters = null, $callback = null) {
 
 		if(is_array($parameters)) {
 			$name = (!empty($parameters['as'])) ? $parameters['as'] : base64_encode($url)."get";
 			$uses = (!empty($parameters['uses'])) ? $parameters['uses'] : null;
 		} else {
 			$name = base64_encode($url)."get";
-			$uses = (!empty($parameters)) ? $parameters : null;
+
+			if(gettype($parameters) == string) {
+				$uses = (!empty($parameters)) ? $parameters : null;
+			} else {
+				$callback = $parameters;
+			}
 		}
 
 		$url = (!empty($url)) ? $url : "/";
-		$this->rules[] = ["method"	=>	"get", "url"	=>	$url, "as"	=>	$name, "uses" => $uses]; 
+		$this->rules[] = ["method"	=>	"get", "url"	=>	$url, "as"	=>	$name, "uses" => $uses, "callback" => $callback]; 
 
 		return $this;
 	}

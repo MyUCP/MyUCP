@@ -68,10 +68,8 @@ class Route extends Router {
  		if($request_method == "any")
  			return true;
 
- 		if(mb_strtoupper($request_method) == mb_strtoupper($this->registry->request->server['REQUEST_METHOD'])) {
-
+ 		if(mb_strtoupper($request_method) == mb_strtoupper(registry()->request->server['REQUEST_METHOD']))
  			return true;
- 		}
 
  		return false;
  	}

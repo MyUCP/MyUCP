@@ -137,8 +137,10 @@ class Router {
 	}
 
 	public function make() {
-		if($this->route()['callback'])
-			return registry()->response->output($this->route()['callback']());
+		if($this->route()['callback']) {
+			$callback = $this->route()['callback'];
+			return registry()->response->output($callback());
+		}
 
 		return $this->loadControler($this->route()['controller'], $this->route()['method'], $this->route()['parameters']);
 	}

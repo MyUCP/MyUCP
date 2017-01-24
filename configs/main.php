@@ -49,18 +49,9 @@ return [
 		'charset'   	=> 		'utf8',
 		
 	],
-	
-	
-	// Настройки почты
-	'mail' 		=> 		[
-		
-		// E-Mail отправителя.
-		// Пример: support@example.com, noreply@example.com
-		'mail_from'		=>		'support@example.com',
-		
-		// Имя отправителя.
-		// Пример: Ivan Petrov
-		'mail_sender'		=>		'Ivan Petrov',
-	],
-	
+
+    //Список пользовательских файлов для загрузки
+    'load_files'          =>      [
+        "app/helpers/Custom.php",
+    ],
 ];

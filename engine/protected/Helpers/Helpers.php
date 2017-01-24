@@ -3,6 +3,7 @@
 * MyUCP
 */
 
+
 if(!function_exists('registry')) {
 
 	function registry(){
@@ -108,5 +109,17 @@ if(!function_exists('abort')) {
 	function abort($code) {
 		return new HttpException($code);
 	}
+
+}
+
+if(!function_exists('session')) {
+
+    function session($name, $value = null) {
+
+        if($value != null)
+            registry()->session->data[$name] = $value;
+
+        return registry()->session->data[$name];
+    }
 
 }

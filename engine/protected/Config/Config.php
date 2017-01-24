@@ -11,6 +11,7 @@ class Config {
 			$config = require_once('./configs/main.php');
 			$this->data = array_merge($this->data, $config);
 			$this->loadConfigs();
+            $this->loadCustomFiles();
 			return true;
 		}
 		new Debug('Ошибка: Не удалось загрузить файл конфигурации!');
@@ -45,5 +46,14 @@ class Config {
 		}
 		return true;
 	}
+
+	private function loadCustomFiles()
+    {
+        foreach($this->data['load_files'] as $path) {
+            if (file_exists($path)) {
+                require_once($path);
+            }
+        }
+    }
 }
 ?>

@@ -34,4 +34,7 @@ return [
 	'Debug'		=>	'engine/protected/Debug/Debug.php',
 	'DebugException'=>	'engine/protected/Debug/DebugException.php',
 	'Dumper'	=>	'engine/protected/Helpers/Dumper.php',
+    'Lang'      =>  'engine/protected/Localization/Lang.php',
+    'Translator'=>  'engine/protected/Localization/Translator.php',
+    'LocalizationLoader'=>  'engine/protected/Localization/LocalizationLoader.php',
 ];

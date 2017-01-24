@@ -6,7 +6,10 @@
 
 if(!function_exists('registry')) {
 
-	function registry(){
+    /**
+     * @return Registry
+     */
+    function registry(){
 	    global $registry;
 
 	    return $registry;
@@ -16,7 +19,11 @@ if(!function_exists('registry')) {
 
 if(!function_exists('dd')) {
 
-	function dd($value, $die = true){
+    /**
+     * @param $value
+     * @param bool $die
+     */
+    function dd($value, $die = true){
 	    new Dumper($value, $die);
 	}
 
@@ -24,7 +31,10 @@ if(!function_exists('dd')) {
  
 if(!function_exists('ci')) {
 
-	function ci($value) {
+    /**
+     * @param $value
+     */
+    function ci($value) {
 	    new Dumper($value, false, "ci");
 	}
 	
@@ -32,7 +42,10 @@ if(!function_exists('ci')) {
 
 if(!function_exists('model')) {
 
-	function model(){
+    /**
+     * @return mixed
+     */
+    function model(){
 		return registry()->load->model(func_get_args());
 	}
 }
@@ -40,7 +53,10 @@ if(!function_exists('model')) {
 if(!function_exists('library')) {
 
 
-	function library(){
+    /**
+     * @return mixed
+     */
+    function library(){
 		return registry()->load->library(func_get_args());
 	}
 
@@ -48,7 +64,10 @@ if(!function_exists('library')) {
 
 if(!function_exists('inject')) {
 
-	function inject(){
+    /**
+     * @return mixed
+     */
+    function inject(){
 		return registry()->load->inject(func_get_args());
 	}
 
@@ -56,7 +75,11 @@ if(!function_exists('inject')) {
 
 if(!function_exists('route')) {
 
-	function route($name = null){
+    /**
+     * @param null $name
+     * @return mixed
+     */
+    function route($name = null){
 		return registry()->router->route($name);
 	}
 
@@ -64,7 +87,11 @@ if(!function_exists('route')) {
 
 if(!function_exists('redirect')) {
 
-	function redirect($value){
+    /**
+     * @param $value
+     * @return mixed
+     */
+    function redirect($value){
 		// If it`s array then it`s maybe router
 		if(is_array($value)) {
 			$url = (!empty($value['rule'])) ? $value['rule'] : "/";
@@ -78,7 +105,10 @@ if(!function_exists('redirect')) {
 
 if(!function_exists('refresh')) {
 
-	function refresh(){
+    /**
+     * @return mixed
+     */
+    function refresh(){
 		return redirect(route());
 	}
 
@@ -86,7 +116,13 @@ if(!function_exists('refresh')) {
 
 if(!function_exists('cookie')) {
 
-	function cookie($name, $value = null, $time = null) {
+    /**
+     * @param $name
+     * @param null $value
+     * @param null $time
+     * @return Cookie
+     */
+    function cookie($name, $value = null, $time = null) {
 		return new Cookie($name, $value, $time);
 	}
 
@@ -94,7 +130,11 @@ if(!function_exists('cookie')) {
 
 if(!function_exists('config')) {
 
-	function config($config = null) {
+    /**
+     * @param null $config
+     * @return bool|mixed
+     */
+    function config($config = null) {
 		if(!empty($config))
 			return registry()->config->$config;
 
@@ -106,7 +146,11 @@ if(!function_exists('config')) {
 
 if(!function_exists('abort')) {
 
-	function abort($code) {
+    /**
+     * @param $code
+     * @return HttpException
+     */
+    function abort($code) {
 		return new HttpException($code);
 	}
 
@@ -114,12 +158,30 @@ if(!function_exists('abort')) {
 
 if(!function_exists('session')) {
 
+    /**
+     * @param $name
+     * @param null $value
+     * @return mixed
+     */
     function session($name, $value = null) {
 
         if($value != null)
             registry()->session->data[$name] = $value;
 
         return registry()->session->data[$name];
+    }
+
+}
+
+if(!function_exists('lang')) {
+
+    /**
+     * @param $key
+     * @param array $replace
+     * @return mixed
+     */
+    function lang($key, $replace = []) {
+        return Lang::get($key, $replace);
     }
 
 }

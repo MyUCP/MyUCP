@@ -31,9 +31,7 @@ class Builder {
     public static $table;
 
 	public function __construct() {
-		global $registry;
-
-		$this->db = $registry->db;
+		$this->db = registry()->db;
 	}
 
 
@@ -43,14 +41,14 @@ class Builder {
 		return new self;
 	}
 
-	public static function from($name) {
-		self::$table = $name;
+	public function from($name) {
+		$this->table = $name;
 
-		return new self;
+		return $this;
 	}
 
 	public function create($data = []){
-		$this->sql = "INSERT INTO `".self::$table."`";
+		$this->sql = "INSERT INTO `". ((self::$table != null) ? self::$table : $this->table) ."`";
 		$count = count($data);
 		foreach($data as $key => $value){
 			$this->key .= "{$key}";
@@ -285,8 +283,7 @@ class Builder {
 
 	public function get(){
 		
-		$result = $this->db->getAll("SELECT {$this->select} FROM ".self::$table." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
-		$result = (count($result) >= 2) ? $result : $result[0];
+		$result = $this->db->getAll("SELECT {$this->select} FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -294,14 +291,26 @@ class Builder {
 
 	public function first(){
 		
-		$result = $this->db->getRow("SELECT {$this->select} FROM ".self::$table." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getRow("SELECT {$this->select} FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$this->clear();
+
+		return $result;
+	}
+
+	public function firstOrError(){
+		
+		$result = $this->db->getRow("SELECT {$this->select} FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+
+		if($this->db->affectedRows() == 0)
+			return new HttpException(404, "Страница не найдена");
+		
 		$this->clear();
 
 		return $result;
 	}
 
 	public function value($value){
-		$result = $this->db->getOne("SELECT {$value} FROM ".self::$table." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT {$value} FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		
 		$this->clear();
 		
@@ -310,7 +319,7 @@ class Builder {
 
 	public function count(){
 
-		$result = $this->db->getOne("SELECT COUNT(*) FROM ".self::$table." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT COUNT(*) FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -321,7 +330,7 @@ class Builder {
 			new Debug("Для метода max() необходимо указать параметр с названием поля", 1);
 		}
 
-		$result = $this->db->getOne("SELECT MAX({$row}) FROM ".self::$table." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT MAX({$row}) FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -332,7 +341,7 @@ class Builder {
 			new Debug("Для метода min() необходимо указать параметр с названием поля", 1);
 		}
 
-		$result = $this->db->getOne("SELECT MIN({$row}) FROM ".self::$table." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT MIN({$row}) FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -343,7 +352,7 @@ class Builder {
 			new Debug("Для метода avg() необходимо указать параметр с названием поля", 1);
 		}
 
-		$result = $this->db->getOne("SELECT AVG({$row}) FROM ".self::$table." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT AVG({$row}) FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -354,7 +363,7 @@ class Builder {
 			new Debug("Для метода sum() необходимо указать параметр с названием поля", 1);
 		}
 
-		$result = $this->db->getOne("SELECT SUM({$row}) FROM ".self::$table." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT SUM({$row}) FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -466,7 +475,7 @@ class Builder {
 		if(!empty($this->sql)){
 			$this->sql = " ".$this->join.$this->sql;
 		}
-		$result = $this->db->query("UPDATE ".self::$table." SET {$this->set} {$this->sql}");
+		$result = $this->db->query("UPDATE ". ((self::$table != null) ? self::$table : $this->table) ." SET {$this->set} {$this->sql}");
 		$this->clear();
 
 		return $result;
@@ -476,7 +485,7 @@ class Builder {
 		if(!empty($this->sql)){
 			$this->sql = " ".$this->join.$this->sql;
 		}
-		$result = $this->db->query("DELETE FROM ".self::$table." {$this->sql}");
+		$result = $this->db->query("DELETE FROM ". ((self::$table != null) ? self::$table : $this->table) ." {$this->sql}");
 		$this->clear();
 
 		return $result;
@@ -487,12 +496,12 @@ class Builder {
 		if($num < 1)
 			new Debug("Метод increment() в качестве аргумента может принять только число", 1); 
 
-		return $this->db->query("ALTER TABLE ".self::$table." AUTO_INCREMENT = {$num}");
+		return $this->db->query("ALTER TABLE ". ((self::$table != null) ? self::$table : $this->table) ." AUTO_INCREMENT = {$num}");
 	}
 
 	public function truncate() {
 
-		return $this->db->query("TRUNCATE TABLE ".self::$table);
+		return $this->db->query("TRUNCATE TABLE ". ((self::$table != null) ? self::$table : $this->table));
 	}
 
 	private function clear() {
@@ -507,6 +516,7 @@ class Builder {
 		$this->group = null;
 		$this->join = null;
 		self::$table = null;
+		$this->table = null;
 	}
 }
 ?>

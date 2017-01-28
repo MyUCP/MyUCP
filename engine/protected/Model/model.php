@@ -11,6 +11,8 @@ class Model {
 	
 	public function __construct($registry) {
 		$this->registry = $registry;
+		$this->Builder = new Builder();
+		$this->Builder->from($this->table);
 	}
 	
 	public function __get($key) {
@@ -23,14 +25,14 @@ class Model {
 
 	public function table($name) {
 		$this->table = $name;
-		$this->Builder = Builder::table($name);
+		$this->Builder->from($this->table);
 
 		return $this;
 	}
 
 	public function create($data = []){
 
-		return $this->Builder->create($data);;
+		return $this->Builder->create($data);
 	}
 
 	public function where(){
@@ -106,12 +108,17 @@ class Model {
 
 	public function get(){
 
-		return $this->Builder->get();
+		return $this->Builder->from($this->table)->get();
 	}
 
 	public function first(){
 
 		return $this->Builder->first();
+	}
+
+	public function firstOrError(){
+
+		return $this->Builder->firstOrError();
 	}
 
 	public function value($value){

@@ -175,14 +175,14 @@ class Model {
 		return $this;
 	}
 
-	public function crossJoin($table = null) {
+	public function crossJoin() {
 		$this->Builder->crossJoin(func_get_args());
 
 		return $this;
 	}
 
 	public function set(){
-		$this->Builder->set(func_get_args());
+		$this->Builder->set(func_get_args()[0]);
 
 		return $this;
 	}

@@ -18,7 +18,12 @@ class Translator
     public function __construct(LocalizationLoader $loader, $locale)
     {
         $this->loader = $loader;
-        $this->locale = $locale;
+
+        if(empty(cookie("__lang")->getValue())) {
+            $this->setLocale($locale);
+        } else {
+            $this->setLocale(cookie("__lang")->getValue());
+        }
     }
 
     /**
@@ -119,6 +124,7 @@ class Translator
     {
         $this->locale = $locale;
         $this->loader->setLocale($locale);
+        cookie("__lang", $locale);
         return $this;
     }
 }

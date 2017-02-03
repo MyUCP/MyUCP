@@ -82,7 +82,7 @@ class Builder {
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
-		if(empty($condition[2])) {
+		if(!isset($condition[2])) {
 			$value = (in_array($condition[1], $this->functions)) ? $condition[1] : "'{$condition[1]}'";
 
 			if($this->presence === false){
@@ -115,7 +115,7 @@ class Builder {
 		if($this->presence === false)
 			new Debug("Использование метода orWhere() без метода where() невозможно", 1);
 
-		if(empty($condition[2])) {
+		if(!isset($condition[2])) {
 			$this->sql .= " OR {$condition[0]} = '{$condition[1]}'";
 		} else {
 			if(in_array($condition[1], $this->operators)){
@@ -133,7 +133,7 @@ class Builder {
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
-		if(empty($condition))
+		if(!is_array($condition))
 			new Debug("В качестве второго аргумента метод whereBetween() ожидает массив", 1);
 
 		if($this->presence === false){
@@ -151,8 +151,8 @@ class Builder {
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
-		if(empty($condition))
-			new Debug("В качестве второго аргумента метод whereBetween() ожидает массив", 1);
+		if(!is_array($condition))
+			new Debug("В качестве второго аргумента метод whereNotBetween() ожидает массив", 1);
 
 		if($this->presence === false){
 			$this->sql .= "{$row} NOT BETWEEN '{$condition[0]}' AND '{$condition[1]}'";
@@ -169,8 +169,8 @@ class Builder {
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
-		if(empty($condition))
-			new Debug("В качестве второго аргумента метод whereBetween() ожидает массив", 1);
+		if(!is_array($condition))
+			new Debug("В качестве второго аргумента метод whereIn() ожидает массив", 1);
 
 		$values = "(";
 
@@ -197,7 +197,7 @@ class Builder {
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
-		if(empty($condition))
+		if(!is_array($condition))
 			new Debug("В качестве второго аргумента метод whereNotIn() ожидает массив", 1);
 
 		$values = "(";

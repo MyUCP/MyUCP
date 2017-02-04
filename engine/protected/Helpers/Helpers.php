@@ -40,6 +40,16 @@ if(!function_exists('ci')) {
 	
 }
 
+if(!function_exists('view')) {
+
+    /**
+     * @return mixed
+     */
+    function view($name, $vars = [], $exception = true){
+        return registry()->view->load($name, $vars, $exception);
+    }
+}
+
 if(!function_exists('model')) {
 
     /**

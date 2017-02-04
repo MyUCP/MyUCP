@@ -16,8 +16,3 @@ class View {
 		return $this->Zara->compile($name, $vars, new ZaraFactory, $exception)->getCompiled();
 	}
 }
-
-function view($name, $vars = array(), $exception = true){
-	global $registry;
-	return $registry->view->load($name, $vars, $exception);
-}

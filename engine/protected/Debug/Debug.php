@@ -38,8 +38,7 @@ class Debug extends DebugException {
     }
 
     public function showError(){
-        global $registry;
-        if($registry->config->debug_mode){
+        if(registry()->config->debug_mode){
     	   require_once("DebugViewTemplate.php");
            die();
         }

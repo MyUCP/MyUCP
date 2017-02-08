@@ -4,7 +4,7 @@
 */
 
 class Builder {
-	
+
 	private $db;
 
 	private $sql;
@@ -17,23 +17,22 @@ class Builder {
 	private $key;
 	private $value;
 	protected $operators = [
-        '=', '<', '>', '<=', '>=', '<>', '!=',
-        'like', 'like binary', 'not like', 'between', 'ilike',
-        '&', '|', '^', '<<', '>>',
-        'rlike', 'regexp', 'not regexp',
-        '~', '~*', '!~', '!~*', 'similar to',
-        'not similar to',
-    ];
-    protected $functions = [
-    	'NOW()', 'CURDATE()', 'RAND()',
-    ];
-    private $presence = false;
-    public static $table;
+		'=', '<', '>', '<=', '>=', '<>', '!=',
+		'like', 'like binary', 'not like', 'between', 'ilike',
+		'&', '|', '^', '<<', '>>',
+		'rlike', 'regexp', 'not regexp',
+		'~', '~*', '!~', '!~*', 'similar to',
+		'not similar to',
+	];
+	protected $functions = [
+		'NOW()', 'CURDATE()', 'RAND()',
+	];
+	private $presence = false;
+	public static $table;
 
 	public function __construct() {
 		$this->db = registry()->db;
 	}
-
 
 	public static function table($name) {
 		self::$table = $name;
@@ -42,13 +41,13 @@ class Builder {
 	}
 
 	public function from($name) {
-		$this->table = $name;
+		$this->table($name);
 
 		return $this;
 	}
 
 	public function create($data = []){
-		$this->sql = "INSERT INTO `". ((self::$table != null) ? self::$table : $this->table) ."`";
+		$this->sql = "INSERT INTO `". self::$table ."`";
 		$count = count($data);
 		foreach($data as $key => $value){
 			$this->key .= "{$key}";
@@ -58,10 +57,10 @@ class Builder {
 			} else {
 				$this->value .= "{$value}";
 			}
-			
+
 			$count--;
-				if($count > 0) $this->key .= ", ";
-				if($count > 0) $this->value .= ", ";
+			if($count > 0) $this->key .= ", ";
+			if($count > 0) $this->value .= ", ";
 		}
 		$this->db->query($this->sql."(".$this->key.") VALUES (".$this->value.")");
 		$result = (!$this->db->insertId()) ? $this->db->error : $this->db->insertId();
@@ -105,13 +104,13 @@ class Builder {
 				new Debug("Оператор <b>{$condition[1]}</b> не найден!", 1);
 			}
 		}
-		
+
 		return $this;
 	}
 
 	public function orWhere(){
 		$condition = (is_array(func_get_args()[0])) ? func_get_args()[0] : func_get_args();
-		
+
 		if($this->presence === false)
 			new Debug("Использование метода orWhere() без метода where() невозможно", 1);
 
@@ -124,12 +123,12 @@ class Builder {
 				new Debug("Оператор <b>{$condition[1]}</b> не найден!", 1);
 			}
 		}
-		
+
 		return $this;
 	}
 
 	public function whereBetween($row, $condition = []){
-		
+
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
@@ -142,12 +141,12 @@ class Builder {
 		} else {
 			$this->sql .= " AND {$row} BETWEEN '{$condition[0]}' AND '{$condition[1]}'";
 		}
-		
+
 		return $this;
 	}
 
 	public function whereNotBetween($row, $condition = []){
-		
+
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
@@ -160,12 +159,12 @@ class Builder {
 		} else {
 			$this->sql .= " AND {$row} NOT BETWEEN '{$condition[0]}' AND '{$condition[1]}'";
 		}
-		
+
 		return $this;
 	}
 
 	public function whereIn($row, $condition = []){
-		
+
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
@@ -179,7 +178,7 @@ class Builder {
 			$values .= "'{$value}'";
 
 			$count--;
-				if($count > 0) $values .= ", ";
+			if($count > 0) $values .= ", ";
 		}
 
 		if($this->presence === false){
@@ -188,12 +187,12 @@ class Builder {
 		} else {
 			$this->sql .= " AND {$row} IN {$values})";
 		}
-		
+
 		return $this;
 	}
 
 	public function whereNotIn($row, $condition = []){
-		
+
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
@@ -207,7 +206,7 @@ class Builder {
 			$values .= "'{$value}'";
 
 			$count--;
-				if($count > 0) $values .= ", ";
+			if($count > 0) $values .= ", ";
 		}
 
 		if($this->presence === false){
@@ -216,12 +215,12 @@ class Builder {
 		} else {
 			$this->sql .= " AND {$row} NOT IN {$values})";
 		}
-		
+
 		return $this;
 	}
 
 	public function whereNull($row = null){
-		
+
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
@@ -234,12 +233,12 @@ class Builder {
 		} else {
 			$this->sql .= " AND ISNULL({$row})";
 		}
-		
+
 		return $this;
 	}
 
 	public function whereNotNull($row = null){
-		
+
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
@@ -252,7 +251,7 @@ class Builder {
 		} else {
 			$this->sql .= " AND NOT ISNULL({$row})";
 		}
-		
+
 		return $this;
 	}
 
@@ -269,7 +268,7 @@ class Builder {
 
 	public function addSelect($row){
 		$this->select .= ", {$row}";
-		
+
 		return $this;
 	}
 
@@ -277,49 +276,49 @@ class Builder {
 		$limit = (is_array(func_get_args()[0])) ? func_get_args()[0] : func_get_args();
 
 		$this->limit = (!empty($limit[1])) ? " LIMIT {$limit[0]}, {$limit[1]}" : " LIMIT {$limit[0]}";
-		
+
 		return $this;
 	}
 
 	public function get(){
-		
-		$result = $this->db->getAll("SELECT {$this->select} FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+
+		$result = $this->db->getAll("SELECT {$this->select} FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
 	}
 
 	public function first(){
-		
-		$result = $this->db->getRow("SELECT {$this->select} FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+
+		$result = $this->db->getRow("SELECT {$this->select} FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
 	}
 
 	public function firstOrError(){
-		
-		$result = $this->db->getRow("SELECT {$this->select} FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+
+		$result = $this->db->getRow("SELECT {$this->select} FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 
 		if($this->db->affectedRows() == 0)
 			return new HttpException(404, "Страница не найдена");
-		
+
 		$this->clear();
 
 		return $result;
 	}
 
 	public function value($value){
-		$result = $this->db->getOne("SELECT {$value} FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
-		
+		$result = $this->db->getOne("SELECT {$value} FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+
 		$this->clear();
-		
+
 		return $result;
 	}
 
 	public function count(){
 
-		$result = $this->db->getOne("SELECT COUNT(*) FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT COUNT(*) FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -330,7 +329,7 @@ class Builder {
 			new Debug("Для метода max() необходимо указать параметр с названием поля", 1);
 		}
 
-		$result = $this->db->getOne("SELECT MAX({$row}) FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT MAX({$row}) FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -341,7 +340,7 @@ class Builder {
 			new Debug("Для метода min() необходимо указать параметр с названием поля", 1);
 		}
 
-		$result = $this->db->getOne("SELECT MIN({$row}) FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT MIN({$row}) FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -352,7 +351,7 @@ class Builder {
 			new Debug("Для метода avg() необходимо указать параметр с названием поля", 1);
 		}
 
-		$result = $this->db->getOne("SELECT AVG({$row}) FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT AVG({$row}) FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -363,7 +362,7 @@ class Builder {
 			new Debug("Для метода sum() необходимо указать параметр с названием поля", 1);
 		}
 
-		$result = $this->db->getOne("SELECT SUM({$row}) FROM ". ((self::$table != null) ? self::$table : $this->table) ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
+		$result = $this->db->getOne("SELECT SUM({$row}) FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
 		$this->clear();
 
 		return $result;
@@ -459,9 +458,9 @@ class Builder {
 				} else {
 					$this->set .= "{$key} = {$value}";
 				}
-				
+
 				$count--;
-					if($count > 0) $this->set .= ", ";
+				if($count > 0) $this->set .= ", ";
 			}
 		} else {
 			$this->set .= "{$params[0]} = '{$params[1]}'";
@@ -475,7 +474,7 @@ class Builder {
 		if(!empty($this->sql)){
 			$this->sql = " ".$this->join.$this->sql;
 		}
-		$result = $this->db->query("UPDATE ". ((self::$table != null) ? self::$table : $this->table) ." SET {$this->set} {$this->sql}");
+		$result = $this->db->query("UPDATE ". self::$table ." SET {$this->set} {$this->sql}");
 		$this->clear();
 
 		return $result;
@@ -485,7 +484,7 @@ class Builder {
 		if(!empty($this->sql)){
 			$this->sql = " ".$this->join.$this->sql;
 		}
-		$result = $this->db->query("DELETE FROM ". ((self::$table != null) ? self::$table : $this->table) ." {$this->sql}");
+		$result = $this->db->query("DELETE FROM ". self::$table ." {$this->sql}");
 		$this->clear();
 
 		return $result;
@@ -494,9 +493,9 @@ class Builder {
 	public function increment($num) {
 
 		if($num < 1)
-			new Debug("Метод increment() в качестве аргумента может принять только число", 1); 
+			new Debug("Метод increment() в качестве аргумента может принять только число", 1);
 
-		return $this->db->query("ALTER TABLE ". ((self::$table != null) ? self::$table : $this->table) ." AUTO_INCREMENT = {$num}");
+		return $this->db->query("ALTER TABLE ". self::$table ." AUTO_INCREMENT = {$num}");
 	}
 
 	public function truncate() {
@@ -516,7 +515,5 @@ class Builder {
 		$this->group = null;
 		$this->join = null;
 		self::$table = null;
-		$this->table = null;
 	}
 }
-?>

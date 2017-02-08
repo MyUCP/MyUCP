@@ -1,16 +1,14 @@
 <?php
 /*
 * MyUCP
-* File Version 4.0
-* Date: 30.03.2015
-* Developed by Maksa988
 */
 
 class Response {
-	private $headers = array();
+	
+	private $headers = [];
 	
 	public function addHeader($header) {
-		$this->headersarray[] = $header;
+		$this->headers[] = $header;
 	}
 
 	public function redirect($url) {

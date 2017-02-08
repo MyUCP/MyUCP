@@ -5,196 +5,195 @@
 
 class Model {
 
-	private $registry;
+    private $registry;
     public $table;
     private $Builder;
-	
-	public function __construct($registry) {
-		$this->registry = $registry;
-		$this->Builder = new Builder();
-		$this->Builder->from($this->table);
-	}
-	
-	public function __get($key) {
-		return $this->registry->$key;
-	}
-	
-	public function __set($key, $value) {
-		$this->registry->$key = $value;
-	}
 
-	public function table($name) {
-		$this->table = $name;
-		$this->Builder->from($this->table);
+    public function __construct($registry) {
+        $this->registry = $registry;
+        $this->Builder = new Builder();
+        $this->Builder->from($this->table);
+    }
 
-		return $this;
-	}
+    public function __get($key) {
+        return $this->registry->$key;
+    }
 
-	public function create($data = []){
+    public function __set($key, $value) {
+        $this->registry->$key = $value;
+    }
 
-		return $this->Builder->create($data);
-	}
+    public function table($name) {
+        $this->table = $name;
+        $this->Builder->from($this->table);
 
-	public function where(){
-		$this->Builder->where(func_get_args());
+        return $this;
+    }
 
-		return $this;
-	}
+    public function create($data = []){
 
-	public function orWhere(){
-		$this->Builder->orWhere(func_get_args());
-		
-		return $this;
-	}
+        return $this->Builder->from($this->table)->create($data);
+    }
 
-	public function whereBetween($row, $condition = []){
-		$this->Builder->whereBetween($row, $condition);
-		
-		return $this;
-	}
+    public function where(){
+        $this->Builder->where(func_get_args());
 
-	public function whereNotBetween($row, $condition = []){
-		$this->Builder->whereNotBetween($row, $condition);
-		
-		return $this;
-	}
+        return $this;
+    }
 
-	public function whereIn($row, $condition = []){
-		$this->Builder->whereIn($row, $condition);
-		
-		return $this;
-	}
+    public function orWhere(){
+        $this->Builder->orWhere(func_get_args());
 
-	public function whereNotIn($row, $condition = []){
-		$this->Builder->whereNotIn($row, $condition);
-		
-		return $this;
-	}
+        return $this;
+    }
 
-	public function whereNull($row = null){
-		$this->Builder->whereNull($row);
-		
-		return $this;
-	}
+    public function whereBetween($row, $condition = []){
+        $this->Builder->whereBetween($row, $condition);
 
-	public function whereNotNull($row = null){
-		$this->Builder->whereNotNull($row);
-		
-		return $this;
-	}
+        return $this;
+    }
 
-	public function order($row, $type){
-		$this->Builder->order($row, $type);
-		return $this;
-	}
+    public function whereNotBetween($row, $condition = []){
+        $this->Builder->whereNotBetween($row, $condition);
 
-	public function select($row){
-		$this->Builder->select($row);
+        return $this;
+    }
 
-		return $this;
-	}
+    public function whereIn($row, $condition = []){
+        $this->Builder->whereIn($row, $condition);
 
-	public function addSelect($row){
-		$this->Builder->addSelect($row);
-		
-		return $this;
-	}
+        return $this;
+    }
 
-	public function limit(){
-		$this->Builder->limit(func_get_args());
-		
-		return $this;
-	}
+    public function whereNotIn($row, $condition = []){
+        $this->Builder->whereNotIn($row, $condition);
 
-	public function get(){
+        return $this;
+    }
 
-		return $this->Builder->from($this->table)->get();
-	}
+    public function whereNull($row = null){
+        $this->Builder->whereNull($row);
 
-	public function first(){
+        return $this;
+    }
 
-		return $this->Builder->first();
-	}
+    public function whereNotNull($row = null){
+        $this->Builder->whereNotNull($row);
 
-	public function firstOrError(){
+        return $this;
+    }
 
-		return $this->Builder->firstOrError();
-	}
+    public function order($row, $type){
+        $this->Builder->order($row, $type);
+        return $this;
+    }
 
-	public function value($value){
-		
-		return $this->Builder->value($value);
-	}
+    public function select($row){
+        $this->Builder->select($row);
 
-	public function count(){
+        return $this;
+    }
 
-		return $this->Builder->count();
-	}
+    public function addSelect($row){
+        $this->Builder->addSelect($row);
 
-	public function max($row = null){
+        return $this;
+    }
 
-		return $this->Builder->max($row);
-	}
+    public function limit(){
+        $this->Builder->limit(func_get_args());
 
-	public function min($row = null){
-		
-		return $this->Builder->min($row);
-	}
+        return $this;
+    }
 
-	public function avg($row = null){
-		
-		return $this->Builder->avg($row);
-	}
+    public function get(){
 
-	public function sum($row = null){
-		
-		return $this->Builder->sum($row);
-	}
+        return $this->Builder->from($this->table)->get();
+    }
 
-	public function groupBy($row) {
-		$this->Builder->groupBy($row);
+    public function first(){
 
-		return $this;
-	}
+        return $this->Builder->from($this->table)->first();
+    }
 
-	public function join() {
-		$this->Builder->join(func_get_args());
+    public function firstOrError(){
 
-		return $this;
-	}
+        return $this->Builder->from($this->table)->firstOrError();
+    }
 
-	public function leftJoin() {
-		$this->Builder->leftJoin(func_get_args());
+    public function value($value){
 
-		return $this;
-	}
+        return $this->Builder->from($this->table)->value($value);
+    }
 
-	public function rightJoin() {
-		$this->Builder->rightJoin(func_get_args());
+    public function count(){
 
-		return $this;
-	}
+        return $this->Builder->from($this->table)->count();
+    }
 
-	public function crossJoin() {
-		$this->Builder->crossJoin(func_get_args());
+    public function max($row = null){
 
-		return $this;
-	}
+        return $this->Builder->from($this->table)->max($row);
+    }
 
-	public function set(){
-		$this->Builder->set(func_get_args()[0]);
+    public function min($row = null){
 
-		return $this;
-	}
+        return $this->Builder->from($this->table)->min($row);
+    }
 
-	public function update(){
+    public function avg($row = null){
 
-		return $this->Builder->update();
-	}
+        return $this->Builder->from($this->table)->avg($row);
+    }
 
-	public function delete(){
-		
-		return $this->Builder->delete();
-	}
+    public function sum($row = null){
+
+        return $this->Builder->from($this->table)->sum($row);
+    }
+
+    public function groupBy($row) {
+        $this->Builder->groupBy($row);
+
+        return $this;
+    }
+
+    public function join() {
+        $this->Builder->join(func_get_args());
+
+        return $this;
+    }
+
+    public function leftJoin() {
+        $this->Builder->leftJoin(func_get_args());
+
+        return $this;
+    }
+
+    public function rightJoin() {
+        $this->Builder->rightJoin(func_get_args());
+
+        return $this;
+    }
+
+    public function crossJoin() {
+        $this->Builder->crossJoin(func_get_args());
+
+        return $this;
+    }
+
+    public function set(){
+        $this->Builder->set(func_get_args()[0]);
+
+        return $this;
+    }
+
+    public function update(){
+
+        return $this->Builder->from($this->table)->update();
+    }
+
+    public function delete(){
+
+        return $this->Builder->from($this->table)->delete();
+    }
 }
-?>

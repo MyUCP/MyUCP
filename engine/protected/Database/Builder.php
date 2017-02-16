@@ -81,6 +81,17 @@ class Builder {
 		if($this->presence === false)
 			$this->sql .= "WHERE ";
 
+        if(!isset($condition[1])) {
+            if($this->presence === false){
+                $this->sql .= $condition[0];
+                $this->presence = true;
+            } else {
+                $this->sql .= " AND ". $condition[0];
+            }
+
+            return $this;
+        }
+
 		if(!isset($condition[2])) {
 			$value = (in_array($condition[1], $this->functions)) ? $condition[1] : "'{$condition[1]}'";
 
@@ -113,6 +124,12 @@ class Builder {
 
 		if($this->presence === false)
 			new Debug("Использование метода orWhere() без метода where() невозможно", 1);
+
+        if(!isset($condition[1])) {
+            $this->sql .= " OR ". $condition[0];
+
+            return $this;
+        }
 
 		if(!isset($condition[2])) {
 			$this->sql .= " OR {$condition[0]} = '{$condition[1]}'";
@@ -463,6 +480,12 @@ class Builder {
 				if($count > 0) $this->set .= ", ";
 			}
 		} else {
+            if(!isset($params[1])) {
+                $this->set .= $params[1];
+
+                return $this;
+            }
+            
 			$this->set .= "{$params[0]} = '{$params[1]}'";
 		}
 

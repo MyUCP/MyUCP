@@ -18,6 +18,7 @@ class Router {
 	private $local;
 	private $names;
 	private $url = "/";
+    private $group;
 
 	public static $verbs = ['GET', 'POST'];
 	
@@ -33,8 +34,13 @@ class Router {
 		$this->getRules();
 	}
 
+	public function initGroup($group)
+    {
+        return new RouteGroup($group, $this->url, $this->group);
+    }
+
 	public function getRules(){
-		
+
 		foreach($this->rules as $item){
 
 			if(empty($item['method']))
@@ -48,14 +54,19 @@ class Router {
 					$parameters[$item['as']] = $this->route->parse($this->url, $item['as']);
 				}
 
-				$this->names[$item["as"]] = [
-					"http_method" => $item['method'],
-					"name" => $item['as'],
-					"rule" => $item['url'],
-					"url" => registry()->request->get['action'],
-					"parameters" => $parameters[$item['as']],
-					"callback"	=> $item['callback'],
-				];
+                if(!isset($this->group['parameters'])) {
+                    $params = $parameters[$item['as']];
+                } else {
+                    $params = array_merge($this->group['parameters'], $parameters[$item['as']]);
+                }
+
+                $this->names[$item['as']]["http_method"] = $item['method'];
+                $this->names[$item['as']]["name"] = $item['as'];
+                $this->names[$item['as']]["rule"] = $item['url'];
+                $this->names[$item['as']]["url"] = $this->url;
+                $this->names[$item['as']]["parameters"] = $params;
+                $this->names[$item['as']]["callback"] = $item['callback'];
+                $this->names[$item['as']]["models"] = $item['models'];
 
 				if(!empty($item['uses'])){
 					$this->names[$item['as']]['controller'] = $this->getController($item['uses']);
@@ -64,6 +75,9 @@ class Router {
 				} else {
 					$this->names[$item['as']]['type'] = 'callback';
 				}
+
+				if($this->local == $item['as'])
+				    return $this;
 			}
 		}
 
@@ -92,7 +106,7 @@ class Router {
 		}
 	}
 
-	public function loadControler($controllerName, $actionName, $parameters = []){
+	public function loadController($controllerName, $actionName, $parameters = [], $models = []){
 
 		if(!empty($this->local)) {
 			if(strpos($controllerName, ".")){
@@ -122,7 +136,11 @@ class Router {
 				} else {
 					return new Debug('Ошибка: Не удалось загрузить указанный метод ' . $this->action . '!');
 				}
-				
+
+				if(!empty($models)) {
+                    call_user_func_array("model", $models);
+                }
+
 				if(empty($parameters)) {
 					return call_user_func(array($controller, $this->action));
 				} else {
@@ -139,15 +157,30 @@ class Router {
 	public function make() {
 		if($this->route()['callback']) {
 			$callback = $this->route()['callback'];
-			return registry()->response->output($callback());
+			return registry()->response->output(call_user_func_array($callback, $this->route()['parameters']));
 		}
 
-		return $this->loadControler($this->route()['controller'], $this->route()['method'], $this->route()['parameters']);
+		return $this->loadController(
+		    $this->route()['controller'],
+            $this->route()['method'],
+            $this->route()['parameters'],
+            $this->route()['models']
+        );
 	}
 
 	public function getIndexLastRules() {
 		return count($this->rules) - 1;
 	}
+
+	public function group($rule, $function)
+    {
+        $this->initGroup([
+            "rule"  =>  $rule,
+            "callback" =>   $function,
+        ], $this->group);
+
+        return $this;
+    }
 
 	public function post($url, $parameters = null, $callback = null) {
 
@@ -225,5 +258,11 @@ class Router {
 
 		return $this;
 	}
+
+	public function model() {
+        foreach (func_get_args() as $modelName) {
+            $this->rules[$this->getIndexLastRules()]['models'][] = $modelName;
+        }
+    }
 }
 ?>

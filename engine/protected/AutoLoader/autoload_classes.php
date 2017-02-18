@@ -24,6 +24,8 @@ return [
 	'Load'		=>	'engine/protected/Load.php',
 	'Router'	=>	'engine/protected/Router/Router.php',
 	'Route'		=>	'engine/protected/Router/Route.php',
+    'RouteGroup'=>	'engine/protected/Router/RouteGroup.php',
+    'RouteHelper'=>	'engine/protected/Router/RouteHelper.php',
 	'HttpException'=>'engine/protected/Router/HttpException.php',
 	'Controller'=> 	'engine/protected/Controller/Controller.php',
 	'Model'		=>	'engine/protected/Model/Model.php',

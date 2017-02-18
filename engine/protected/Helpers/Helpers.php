@@ -90,7 +90,7 @@ if(!function_exists('route')) {
      * @return mixed
      */
     function route($name = null){
-		return registry()->router->route($name);
+		return new RouteHelper($name);
 	}
 
 }

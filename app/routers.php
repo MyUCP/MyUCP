@@ -9,7 +9,8 @@
 |
 */
 
+Router::any("test-{id:[0-9]+}-{name:[a-z]+}", "HomeController@welcome");
 
-Router::get("/", function() {
+Router::any("/", function() {
 	return view("welcome");
 });

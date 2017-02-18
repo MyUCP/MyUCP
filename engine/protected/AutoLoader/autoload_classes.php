@@ -17,6 +17,7 @@ return [
 	'Cookie'	=>	'engine/protected/Request/Cookie.php',
 	'Session'	=>	'engine/protected/Session/Session.php',
 	'Response'	=>	'engine/protected/Response/Response.php',
+    'Redirect'	=>	'engine/protected/Response/Redirect.php',
 	'Builder'	=>	'engine/protected/Database/Builder.php',
 	'DB'		=>	'engine/protected/Database/DB.php',
 	'mysqlDriver'=>	'engine/protected/Database/drivers/mysql.php',

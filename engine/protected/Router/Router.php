@@ -32,11 +32,22 @@ class Router {
 		$this->loadRules();
 		$this->route = new Route(registry());
 		$this->getRules();
+
+        $this->checkUrl();
 	}
 
 	public function initGroup($group)
     {
         return new RouteGroup($group, $this->url, $this->group);
+    }
+
+    public function checkUrl() {
+        foreach ($this->names as $item) {
+            if($this->route->check($this->url, $item['name'], $item['http_method'])){
+                $this->local = $item['name'];
+                return $this;
+            }
+        }
     }
 
 	public function getRules(){
@@ -46,39 +57,34 @@ class Router {
 			if(empty($item['method']))
 				$item['method'] = "any";
 
-			if(is_array($item)) {
+            if($item['group'] == "prefix")
+                $item['url'] = $item['group_prefix']."/".$item['url'];
+                $item['as'] = $item['group_prefix'].$item['as'];
 
-				$this->route->addRegex($item['url'], $item['as']);
-				if($this->route->check($this->url, $item['as'], $item['method'])){
-					$this->local = $item['as'];
-					$parameters[$item['as']] = $this->route->parse($this->url, $item['as']);
-				}
+            $this->route->addRegex($item['url'], $item['as']);
+            $parameters[$item['as']] = $this->route->parse($this->url, $item['as']);
 
-                if(!isset($this->group['parameters'])) {
-                    $params = $parameters[$item['as']];
-                } else {
-                    $params = array_merge($this->group['parameters'], $parameters[$item['as']]);
-                }
+            if($item['group'] != "domain") {
+                $params = $parameters[$item['as']];
+            } else {
+                $params = array_merge($item['group_parameters'], $parameters[$item['as']]);
+            }
 
-                $this->names[$item['as']]["http_method"] = $item['method'];
-                $this->names[$item['as']]["name"] = $item['as'];
-                $this->names[$item['as']]["rule"] = $item['url'];
-                $this->names[$item['as']]["url"] = $this->url;
-                $this->names[$item['as']]["parameters"] = $params;
-                $this->names[$item['as']]["callback"] = $item['callback'];
-                $this->names[$item['as']]["models"] = $item['models'];
+            $this->names[$item['as']]["http_method"] = $item['method'];
+            $this->names[$item['as']]["name"] = $item['as'];
+            $this->names[$item['as']]["rule"] = $item['url'];
+            $this->names[$item['as']]["url"] = $this->url;
+            $this->names[$item['as']]["parameters"] = $params;
+            $this->names[$item['as']]["callback"] = $item['callback'];
+            $this->names[$item['as']]["models"] = $item['models'];
 
-				if(!empty($item['uses'])){
-					$this->names[$item['as']]['controller'] = $this->getController($item['uses']);
-					$this->names[$item['as']]['method'] = $this->getMethod($item['uses']);
-					$this->names[$item['as']]['type'] = 'controller';
-				} else {
-					$this->names[$item['as']]['type'] = 'callback';
-				}
-
-				if($this->local == $item['as'])
-				    return $this;
-			}
+            if(!empty($item['uses'])){
+                $this->names[$item['as']]['controller'] = $this->getController($item['uses']);
+                $this->names[$item['as']]['method'] = $this->getMethod($item['uses']);
+                $this->names[$item['as']]['type'] = 'controller';
+            } else {
+                $this->names[$item['as']]['type'] = 'callback';
+            }
 		}
 
 		return $this;
@@ -198,13 +204,21 @@ class Router {
 		}
 
 		$url = (!empty($url)) ? $url : "/";
-		$this->rules[] = ["method"	=>	"post", "url"	=>	$url, "as"	=>	$name, "uses" => $uses, "callback" => $callback]; 
+        $this->rules[] = [
+            "method"	=>	"post",
+            "url"	=>	$url,
+            "as"	=>	$name,
+            "uses" => $uses,
+            "callback" => $callback,
+            "group" =>  $this->group['type'],
+            "group_params" => $this->group['parameters'],
+            "group_prefix" => $this->group['prefix'],
+        ];
 
 		return $this;
 	}
 
 	public function any($url, $parameters = null, $callback = null) {
-
 		if(is_array($parameters)) {
 			$name = (!empty($parameters['as'])) ? $parameters['as'] : base64_encode($url)."any";
 			$uses = (!empty($parameters['uses'])) ? $parameters['uses'] : null;
@@ -219,7 +233,17 @@ class Router {
 		}
 
 		$url = (!empty($url)) ? $url : "/";
-		$this->rules[] = ["method"	=>	"any", "url"	=>	$url, "as"	=>	$name, "uses" => $uses, "callback" => $callback]; 
+
+		$this->rules[] = [
+		    "method"	=>	"any",
+            "url"	=>	$url,
+            "as"	=>	$name,
+            "uses" => $uses,
+            "callback" => $callback,
+            "group" =>  $this->group['type'],
+            "group_params" => $this->group['parameters'],
+            "group_prefix" => $this->group['prefix'],
+        ];
 
 		return $this;
 	}
@@ -240,7 +264,16 @@ class Router {
 		}
 
 		$url = (!empty($url)) ? $url : "/";
-		$this->rules[] = ["method"	=>	"get", "url"	=>	$url, "as"	=>	$name, "uses" => $uses, "callback" => $callback]; 
+        $this->rules[] = [
+            "method"	=>	"get",
+            "url"	=>	$url,
+            "as"	=>	$name,
+            "uses" => $uses,
+            "callback" => $callback,
+            "group" =>  $this->group['type'],
+            "group_params" => $this->group['parameters'],
+            "group_prefix" => $this->group['prefix'],
+        ];
 
 		return $this;
 	}

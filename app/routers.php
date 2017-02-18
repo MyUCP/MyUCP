@@ -9,8 +9,14 @@
 |
 */
 
+Router::group(["prefix" => "admin"], function (){
+    Router::any("test-{id:[0-9]+}-{name:[a-z]+}", function(){
+        dd("test");
+    });
+});
+
 Router::any("test-{id:[0-9]+}-{name:[a-z]+}", "HomeController@welcome");
 
 Router::any("/", function() {
 	return view("welcome");
-});
+})->name("home");

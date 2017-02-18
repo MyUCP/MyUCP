@@ -36,6 +36,7 @@ class RouteGroup
     {
         if(preg_match('/^['. $group['rule']['prefix'] .']+\/.+/', $this->url)){
             $this->link['type'] = "prefix";
+            $this->link['prefix'] = $group['rule']['prefix'];
             return $group['callback']();
         }
 
@@ -44,7 +45,6 @@ class RouteGroup
 
     protected function initDomainGroup($group = [])
     {
-
         $regex = '/' . preg_replace('/\//', '\/', $group['rule']['domain']) .  '/';
         $params = [];
         if(preg_match_all('/\{([a-z]+):(.*?)\}/', $group['rule']['domain'], $preg)) {
@@ -82,6 +82,8 @@ class RouteGroup
             $key = $param[2];
             $value = null;
         }
+
+        $this->link['type'] = "param";
 
         switch ($param[0]) {
             case "session":
@@ -146,6 +148,8 @@ class RouteGroup
 
     public function __destruct()
     {
-        $this->link['parameters'] = null;
+        unset($this->link['type']);
+        unset($this->link['parameters']);
+        unset($this->link['prefix']);
     }
 }

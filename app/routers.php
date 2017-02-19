@@ -11,7 +11,7 @@
 
 Router::group(["prefix" => "admin"], function (){
     Router::any("test-{id:[0-9]+}-{name:[a-z]+}", function(){
-        dd("test");
+        dd(flash("error"));
     });
 });
 

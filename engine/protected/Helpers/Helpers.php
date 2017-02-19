@@ -170,9 +170,23 @@ if(!function_exists('session')) {
     function session($name, $value = null) {
 
         if($value != null)
-            registry()->session->data[$name] = $value;
+            registry()->session->get($name, $value);
 
-        return registry()->session->data[$name];
+        return registry()->session->get($name);
+    }
+
+}
+
+if(!function_exists('flash')) {
+
+    /**
+     * @param $name
+     * @param null $value
+     * @return mixed
+     */
+    function flash($name, $value = null) {
+
+        return registry()->session->flash($name, $value);
     }
 
 }

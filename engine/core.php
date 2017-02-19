@@ -16,3 +16,4 @@ $registry->lang = new Translator(new LocalizationLoader(config()->locale, config
 $registry->view = new View($registry);
 $registry->router = new Router;
 $registry->response->output($registry->router->make());
+$registry->session->unsetFlash();

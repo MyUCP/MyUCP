@@ -1,5 +1,3 @@
 /vendor
-/app/controllers
-/app/models
-/app/routers.php
+/app
 /.idea

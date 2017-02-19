@@ -9,7 +9,7 @@
 * Открыт и полностью бесплатен
 
 #### Ссылки
-* Официальный сайт: [myucp.maksa988.ru](http://myucp.maksa988.ru/)
+* Официальный сайт: [myucp.ru](http://myucp.ru/)
 * Список версий и изменений: https://github.com/maksa988/MyUCP/releases
-* Сайт автора: [maksa988.ru](http://maksa988.ru)
-* Документация: [https://github.com/maksa988/MyUCP/wiki](https://github.com/maksa988/MyUCP/wiki)
+* Сайт автора: [maksa988.tech](http://maksa988.tech)
+* Документация: [http://myucp.ru/docs](http://myucp.ru/docs)

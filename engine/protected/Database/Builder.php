@@ -530,7 +530,7 @@ class Builder {
 		$this->limit = null;
 		$this->sql = null;
 		$this->set = null;
-		$this->select = null;
+		$this->select = "*";
 		$this->order = null;
 		$this->presence = false;
 		$this->key = null;

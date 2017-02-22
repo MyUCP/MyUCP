@@ -31,10 +31,10 @@ class Request {
 		if (is_array($data)) {
 	  		foreach ($data as $key => $value) {
 				unset($data[$key]);
-				$data[self::clean($key)] = self::clean($value);
+				$data[self::clean($key)] = registry()->db->escape(self::clean($value));
 	  		}
 		} else {
-	  		$data = htmlspecialchars($data, ENT_COMPAT);
+	  		$data = registry()->db->escape(htmlspecialchars($data, ENT_COMPAT));
 		}
 		return $data;
 	}

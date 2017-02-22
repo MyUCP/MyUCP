@@ -483,6 +483,14 @@ class DB {
 		return $sql;
 	}
 
+	public function escape($value)
+	{
+        if(!is_array($value))
+            return $this->driver->escape($value);
+
+        return $value;
+	}
+
 	public static function concat($values = []) {
 
 		if(empty($values) && !is_array($values))

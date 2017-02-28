@@ -169,10 +169,7 @@ if(!function_exists('session')) {
      */
     function session($name, $value = null) {
 
-        if($value != null)
-            registry()->session->get($name, $value);
-
-        return registry()->session->get($name);
+        return registry()->session->get($name, $va);
     }
 
 }

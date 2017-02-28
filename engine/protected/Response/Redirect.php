@@ -3,12 +3,11 @@
 class Redirect
 {
     private $url;
-    private $route = false;
 
-    public function __construct($value)
+    public function __construct($value, $params = [])
     {
         if(gettype($value) == "object") {
-            $this->url = $value->getRedirectURL($value->rule);
+            $this->url = $value->getRedirectURL($value->rule, $params);
         } else {
             $this->url = $value;
         }

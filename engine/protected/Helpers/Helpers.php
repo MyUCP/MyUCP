@@ -101,8 +101,8 @@ if(!function_exists('redirect')) {
      * @param $value
      * @return mixed
      */
-    function redirect($value){
-		return new Redirect($value);
+    function redirect($value, $params = null){
+		return new Redirect($value, $params);
 	}
 
 }
@@ -169,7 +169,7 @@ if(!function_exists('session')) {
      */
     function session($name, $value = null) {
 
-        return registry()->session->get($name, $va);
+        return registry()->session->get($name, $value);
     }
 
 }

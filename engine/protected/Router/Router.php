@@ -297,5 +297,14 @@ class Router {
             $this->rules[$this->getIndexLastRules()]['models'][] = $modelName;
         }
     }
+
+    public function alias($url)
+	{
+		$this->rules[] = $this->rules[$this->getIndexLastRules()];
+
+		$this->rules[$this->getIndexLastRules()]['url'] = $url;
+        $this->rules[$this->getIndexLastRules()]['as'] = base64_encode($url);
+
+		return $this;
+	}
 }
-?>

@@ -22,7 +22,7 @@ class Route extends Router {
 	}
 
 	public function addRegex($route, $key){
-		$regex = '/' . preg_replace('/\//', '\/', $route) .  '/';
+		$regex = '/^' . preg_replace('/\//', '\/', $route) .  '$/';
 	    if(preg_match_all('/\{([a-z]+):(.*?)\}/', $route, $preg)){
 	      for($i = 0; $i < count($preg[0]); $i++){
 	        $this->routeParams[] = $preg[1][$i];

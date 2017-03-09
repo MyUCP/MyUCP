@@ -38,7 +38,7 @@ class File {
 	}
 
 	public function getTmpPath() {
-		return $this->tmpPath;
+		return str_replace('\\\\\\\\', "\\", $this->tmpPath);
 	}
 
 	public function getPath() {
@@ -72,7 +72,7 @@ class File {
   		$this->error = $this->file['error'];
   		$this->dirName = $file->getPath();
   		$this->tmpPath = $this->file['tmp_name'];
-  		$this->md5_file = md5_file($this->file['tmp_name']);
+  		$this->md5_file = md5($this->file['tmp_name']);
   		$this->extension = $originalFile->getExtension();
   	}
 }

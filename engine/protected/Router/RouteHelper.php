@@ -37,8 +37,10 @@ class RouteHelper
 
     public function getRedirectURL($rule, $params = [])
     {
-        foreach ($params as $key => $value) {
-            $rule = preg_replace('/\{(['. $key .']+):(.*?)\}/', $value, $rule);
+        if(!empty($params)) {
+            foreach ($params as $key => $value) {
+                $rule = preg_replace('/\{(['. $key .']+):(.*?)\}/', $value, $rule);
+            }
         }
 
         return $rule;

@@ -76,8 +76,8 @@ class RouteGroup
         $param = $group['rule']['param'];
 
         if(is_array($param[2])) {
-            $key = array_keys($param)[2];
-            $value = $param[$key];
+            $key = key($param[2]);
+            $value = $param[2][$key];
         } else {
             $key = $param[2];
             $value = null;

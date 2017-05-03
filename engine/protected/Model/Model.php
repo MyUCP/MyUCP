@@ -6,12 +6,15 @@
 class Model {
 
     private $registry;
-    public $table;
+    public $table = null;
+    public $primary_key = "id";
+
     private $Builder;
 
     public function __construct($registry) {
         $this->registry = $registry;
         $this->Builder = new Builder();
+        $this->table = ($this->table == null) ? mb_strtolower(str_replace("Model", "", get_class($this))."s") : $this->table;
         $this->Builder->from($this->table);
     }
 
@@ -111,14 +114,25 @@ class Model {
         return $this->Builder->from($this->table)->get();
     }
 
-    public function first(){
-
-        return $this->Builder->from($this->table)->first();
+    public function find($key)
+    {
+        return $this->Builder->from($this->table)->where($this->primary_key, $key)->first();
     }
 
-    public function firstOrError(){
+    public function first($key = null){
 
-        return $this->Builder->from($this->table)->firstOrError();
+        if($key == null)
+            return $this->Builder->from($this->table)->first();
+
+        return $this->Builder->from($this->table)->where($this->primary_key, $key)->first();
+    }
+
+    public function firstOrError($key = null){
+
+        if($key == null)
+            return $this->Builder->from($this->table)->firstOrError();
+
+        return $this->Builder->from($this->table)->where($this->primary_key, $key)->firstOrError();
     }
 
     public function value($value){

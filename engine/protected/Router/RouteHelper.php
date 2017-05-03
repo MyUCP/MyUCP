@@ -31,18 +31,20 @@ class RouteHelper
 
     public function redirect($params = [])
     {
-        $url = $this->getRedirectURL($this->rule, $params);
+        $url = $this->getRedirectURL($params);
         return redirect($url);
     }
 
-    public function getRedirectURL($rule, $params = [])
+    public function getRedirectURL($params = [])
     {
+        $url = $this->rule;
+
         if(!empty($params)) {
             foreach ($params as $key => $value) {
-                $rule = preg_replace('/\{(['. $key .']+):(.*?)\}/', $value, $rule);
+                $url = preg_replace('/\{(['. $key .']+):(.*?)\}/', $value, $this->rule);
             }
         }
 
-        return $rule;
+        return $url;
     }
 }

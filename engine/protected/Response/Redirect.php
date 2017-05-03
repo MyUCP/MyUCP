@@ -7,7 +7,7 @@ class Redirect
     public function __construct($value, $params = [])
     {
         if(gettype($value) == "object") {
-            $this->url = $value->getRedirectURL($value->rule, $params);
+            $this->url = $value->getRedirectURL($params);
         } else {
             $this->url = $value;
         }

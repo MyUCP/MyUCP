@@ -9,8 +9,7 @@
 */
 
 return [
-	'Logs'	=>	'engine/protected/logs.php',
-	'Registry'	=>	'engine/protected/registry.php',
+	'Registry'	=>	'engine/protected/Registry.php',
 	'Config'	=>	'engine/protected/Config/Config.php',
 	'Request'	=>	'engine/protected/Request/Request.php',
 	'File'		=>	'engine/protected/Request/File.php',

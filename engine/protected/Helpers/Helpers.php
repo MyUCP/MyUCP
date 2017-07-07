@@ -200,3 +200,17 @@ if(!function_exists('lang')) {
     }
 
 }
+
+
+if(!function_exists('redirect_url')) {
+
+    /**
+     * @param $name
+     * @param array $args
+     * @return RouteHelper
+     */
+    function redirect_url($name, $args = []){
+        return (new RouteHelper($name))->getRedirectURL($args);
+    }
+
+}

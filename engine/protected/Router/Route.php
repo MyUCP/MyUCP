@@ -43,12 +43,12 @@ class Route extends Router {
 	}
 	  
 	private function regexResultsToParams($preg) {
-	    $params = [];
-	   	for($i = 1; $i < count($preg); $i++){
-	    	$params[$this->routeParams[$i - 1]] = $preg[$i];
-	   	}
-	   	unset($this->routeParams);
-	   	return $params;
+        $params = [];
+        for($i = 1; $i < count($preg); $i++){
+            $params[$this->routeParams[count($this->routeParams) - $i]] = $preg[$i];
+        }
+        unset($this->routeParams);
+        return $params;
 	}
 
 	public function check($route, $key, $request_method = "any") {

@@ -17,7 +17,7 @@ class Cookie {
 			$this->time = $time = ($time != null) ? $time : time() + 3600;
 			$this->hashedValue = $value = $this->encodeValue($value, config()->app_key);
 
-			return setcookie($name, $value, $time);
+			return setcookie($name, $value, $time, "/");
 		}
 
 		return $this;
@@ -35,7 +35,7 @@ class Cookie {
 		if($this->value != null) {
 			$this->hashedValue = $this->encodeValue($this->value, config()->app_key);
 
-			return setcookie($this->name, $this->hashedValue, time() + 157680000);
+			return setcookie($this->name, $this->hashedValue, time() + 157680000, "/");
 		}
 	}
 

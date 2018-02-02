@@ -411,6 +411,7 @@ class Response
         }
         // status
         header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText), true, $this->statusCode);
+
         // cookies
         foreach ($this->headers->getCookies() as $cookie) {
             if ($cookie->isRaw()) {
@@ -419,6 +420,7 @@ class Response
                 setcookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(), $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
             }
         }
+
         return $this;
     }
 

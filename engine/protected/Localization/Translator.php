@@ -19,10 +19,10 @@ class Translator
     {
         $this->loader = $loader;
 
-        if(empty(cookie("__lang")->getValue())) {
+        if(empty(cookie("__lang"))) {
             $this->setLocale($locale);
         } else {
-            $this->setLocale(cookie("__lang")->getValue());
+            $this->setLocale(cookie("__lang"));
         }
     }
 
@@ -124,7 +124,7 @@ class Translator
     {
         $this->locale = $locale;
         $this->loader->setLocale($locale);
-        cookie("__lang", $locale);
+        cookie("__lang", $locale)->forever();
         return $this;
     }
 }

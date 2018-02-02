@@ -110,13 +110,17 @@ if(!function_exists('refresh')) {
 
 if(!function_exists('cookie')) {
     /**
-     * @param $name
-     * @param null $value
-     * @param null $time
-     * @return Cookie
+     * @param string $name
+     * @param string $value
+     * @param int $minutes
+     * @return Cookie|string
      */
-    function cookie($name, $value = null, $time = null) {
-		return new Cookie($name, $value, $time);
+    function cookie($name, $value = null, $minutes = null) {
+        if(is_null($value)) {
+            return request()->cookie->get($name);
+        }
+
+		return new Cookie($name, $value, time() + ($minutes * 60));
 	}
 }
 

@@ -12,6 +12,7 @@ return [
 	'Registry'	=>	'engine/protected/Registry.php',
 	'Config'	=>	'engine/protected/Config/Config.php',
 	'Request'	=>	'engine/protected/Request/Request.php',
+    'Header'	=>	'engine/protected/Request/Header.php',
 	'File'		=>	'engine/protected/Request/File.php',
 	'Cookie'	=>	'engine/protected/Request/Cookie.php',
 	'Session'	=>	'engine/protected/Session/Session.php',
@@ -39,4 +40,9 @@ return [
     'Lang'      =>  'engine/protected/Localization/Lang.php',
     'Translator'=>  'engine/protected/Localization/Translator.php',
     'LocalizationLoader'=>  'engine/protected/Localization/LocalizationLoader.php',
+    'Arr'       =>  'engine/protected/Support/Arr.php',
+    'Str'       =>  'engine/protected/Support/Str.php',
+    'Collection'=>  'engine/protected/Collection/Collection.php',
+    'Arrayable' =>  'engine/protected/Collection/Arrayable.php',
+    'Jsonable'  =>  'engine/protected/Collection/Jsonable.php',
 ];

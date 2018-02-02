@@ -1,7 +1,4 @@
 <?php
-/*
-* MyUCP
-*/
 
 class Response {
 	

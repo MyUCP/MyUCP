@@ -27,7 +27,7 @@ class Router {
 		$this->controller = null;
 		$this->method = null;
 		$this->parameters = null;
-		$this->url = (!empty(registry()->request->get['action'])) ? registry()->request->get['action'] : "/";
+		$this->url = (!empty(registry()->request->get['r'])) ? registry()->request->get['r'] : "/";
 
 		$this->loadRules();
 		$this->route = new Route(registry());

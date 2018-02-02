@@ -26,7 +26,7 @@ class File {
 		$path = ($path == null) ? "./assets/files/" : $path;
 		$name = ($name == null) ? md5($this->getOriginalName()). "." . $this->getExtension() : $name;
 
-		return move_uploaded_file($this->getTmpPath(), $path.$name);
+		return copy($this->getTmpPath(), $path.$name);
 	}
 	
 	public function getExtension() {

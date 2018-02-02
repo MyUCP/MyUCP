@@ -4,9 +4,9 @@
 */
 
 abstract class Controller {
+
 	private $registry;
-	protected $data = array();
-	
+
 	public function __construct($registry) {
 		$this->registry = $registry;
 	}

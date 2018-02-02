@@ -16,6 +16,11 @@ class RouteHelper
     public function __construct($name = null)
     {
         $route = registry()->router->route($name);
+
+        if(is_null($route)) {
+            throw new Debug("Маршрута \"$name\" не существует");
+        }
+
         $this->http_method = $route['http_method'];
         $this->name = $route['name'];
         $this->url = $route['url'];

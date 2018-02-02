@@ -82,11 +82,20 @@ if(!function_exists('route')) {
 
 if(!function_exists('redirect')) {
     /**
-     * @param $value
+     * @param RouteHelper|string $value
+     * @param array $parameters if $path is a route
      * @return Redirect
      */
-    function redirect($value, $params = null){
-		return new Redirect($value, $params);
+    function redirect($path = null, $parameters = []) {
+        $redirect = new Redirect();
+
+        if(is_null($path)) {
+            return $redirect;
+        } elseif($path instanceof RouteHelper) {
+            return $redirect->route($path);
+        }
+
+        return $redirect->to($path);
 	}
 }
 
@@ -249,6 +258,16 @@ if(!function_exists('request')) {
     }
 }
 
+if(!function_exists('response')) {
+
+    /**
+     * @return Response
+     */
+    function response() {
+
+        return registry()->response;
+    }
+}
 
 if (! function_exists('value')) {
     /**

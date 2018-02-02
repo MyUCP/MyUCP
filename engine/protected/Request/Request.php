@@ -17,6 +17,8 @@ class Request implements Arrayable
     const METHOD_TRACE = 'TRACE';
     const METHOD_CONNECT = 'CONNECT';
 
+    public $attributes;
+
 	public $get;
 
 	public $post;
@@ -40,6 +42,10 @@ class Request implements Arrayable
     protected $baseUrl;
 
     protected $pathInfo;
+
+    protected $format;
+
+    protected static $formats;
 	
 	public function __construct() {
 		$_GET = $this->collect($_GET);
@@ -48,7 +54,8 @@ class Request implements Arrayable
 		$_COOKIE = $this->collect($_COOKIE);
 		$_FILES = $this->collect($_FILES);
 		$_SERVER = $this->collect($_SERVER);
-		
+
+		$this->attributes = new Collection();
 		$this->get = $_GET;
 		$this->post = $_POST;
 		$this->request = $_REQUEST;
@@ -636,5 +643,99 @@ class Request implements Arrayable
         }
 
         return $this->pathInfo;
+    }
+
+    /**
+     * Gets the request format.
+     *
+     * Here is the process to determine the format:
+     *
+     *  * format defined by the user (with setRequestFormat())
+     *  * _format request attribute
+     *  * $default
+     *
+     * @param string $default The default format
+     *
+     * @return string The request format
+     */
+    public function getRequestFormat($default = 'html')
+    {
+        if (null === $this->format) {
+            $this->format = $this->attributes->get('_format');
+        }
+
+        return null === $this->format ? $default : $this->format;
+    }
+
+    /**
+     * Gets the mime type associated with the format.
+     *
+     * @param string $format The format
+     *
+     * @return string The associated mime type (null if not found)
+     */
+    public function getMimeType($format)
+    {
+        if (null === static::$formats) {
+            static::initializeFormats();
+        }
+
+        return isset(static::$formats[$format]) ? static::$formats[$format][0] : null;
+    }
+
+    /**
+     * Initializes HTTP request formats.
+     *
+     * @return array
+     */
+    protected static function initializeFormats()
+    {
+        return static::$formats = array(
+            'html' => array('text/html', 'application/xhtml+xml'),
+            'txt' => array('text/plain'),
+            'js' => array('application/javascript', 'application/x-javascript', 'text/javascript'),
+            'css' => array('text/css'),
+            'json' => array('application/json', 'application/x-json'),
+            'xml' => array('text/xml', 'application/xml', 'application/x-xml'),
+            'rdf' => array('application/rdf+xml'),
+            'atom' => array('application/atom+xml'),
+            'rss' => array('application/rss+xml'),
+            'form' => array('application/x-www-form-urlencoded'),
+        );
+    }
+
+    /**
+     * Checks if the request method is of specified type.
+     *
+     * @param string $method Uppercase request method (GET, POST etc)
+     *
+     * @return bool
+     */
+    public function isMethod($method)
+    {
+        return $this->getMethod() === Str::upper($method);
+    }
+
+    /**
+     * Checks whether or not the method is safe.
+     *
+     * @see https://tools.ietf.org/html/rfc7231#section-4.2.1
+     *
+     * @param bool $andCacheable Adds the additional condition that the method should be cacheable. True by default.
+     *
+     * @return bool
+     */
+    public function isMethodSafe()
+    {
+        return Arr::in(['GET', 'HEAD', 'OPTIONS', 'TRACE'], $this->getMethod());
+    }
+
+    /**
+     * Returns the URL referrer.
+     * @return string|null URL referrer, null if not available
+     */
+    public function getReferrer()
+    {
+        return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
     }
 }

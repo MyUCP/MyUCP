@@ -163,15 +163,16 @@ class Router {
 	public function make() {
 		if($this->route()['callback']) {
 			$callback = $this->route()['callback'];
-			return registry()->response->output(call_user_func_array($callback, $this->route()['parameters']));
+
+			return registry()->response->setContent(call_user_func_array($callback, $this->route()['parameters']));
 		}
 
-		return $this->loadController(
+        return registry()->response->setContent($this->loadController(
 		    $this->route()['controller'],
             $this->route()['method'],
             $this->route()['parameters'],
             $this->route()['models']
-        );
+        ));
 	}
 
 	public function getIndexLastRules() {
@@ -190,13 +191,15 @@ class Router {
 
 	public function post($url, $parameters = null, $callback = null) {
 
+	    $uses = null;
+
 		if(is_array($parameters)) {
 			$name = (!empty($parameters['as'])) ? $parameters['as'] : base64_encode($url)."post";
 			$uses = (!empty($parameters['uses'])) ? $parameters['uses'] : null;
 		} else {
 			$name = base64_encode($url)."post";
 
-			if(gettype($parameters) == string) {
+			if(is_string($parameters)) {
 				$uses = (!empty($parameters)) ? $parameters : null;
 			} else {
 				$callback = $parameters;
@@ -225,7 +228,7 @@ class Router {
 		} else {
 			$name = base64_encode($url)."any";
 
-			if(gettype($parameters) == string) {
+			if(is_string($parameters)) {
 				$uses = (!empty($parameters)) ? $parameters : null;
 			} else {
 				$callback = $parameters;
@@ -256,7 +259,7 @@ class Router {
 		} else {
 			$name = base64_encode($url)."get";
 
-			if(gettype($parameters) == string) {
+			if(is_string($parameters)) {
 				$uses = (!empty($parameters)) ? $parameters : null;
 			} else {
 				$callback = $parameters;

@@ -5,72 +5,100 @@
 
 
 if(!function_exists('registry')) {
+
     /**
      * @return Registry
      */
-    function registry(){
+    function registry() {
 	    global $registry;
 
 	    return $registry;
 	}
+
+}
+
+if(!function_exists('app')) {
+
+    /**
+     * @return Application
+     */
+    function app() {
+        global $app;
+
+        return $app;
+    }
+
 }
 
 if(!function_exists('dd')) {
+
     /**
      * @param $value
      * @param bool $die
      */
-    function dd($value, $die = true){
+    function dd($value, $die = true) {
 	    new Dumper($value, $die);
 	}
+
 }
  
 if(!function_exists('ci')) {
+
     /**
      * @param $value
      */
     function ci($value) {
 	    new Dumper($value, false, "ci");
 	}
+
 }
 
 if(!function_exists('view')) {
+
     /**
      * @return mixed
      */
     function view($name, $vars = [], $exception = true){
         return registry()->view->load($name, $vars, $exception);
     }
+
 }
 
 if(!function_exists('model')) {
+
     /**
      * @return mixed
      */
     function model(){
 		return registry()->load->model(func_get_args());
 	}
+
 }
 
 if(!function_exists('library')) {
+
     /**
      * @return mixed
      */
     function library(){
 		return registry()->load->library(func_get_args());
 	}
+
 }
 
 if(!function_exists('inject')) {
+
     /**
      * @return mixed
      */
     function inject(){
 		return registry()->load->inject(func_get_args());
 	}
+
 }
 
 if(!function_exists('route')) {
+
     /**
      * @param null $name
      * @return RouteHelper
@@ -78,9 +106,11 @@ if(!function_exists('route')) {
     function route($name = null){
 		return new RouteHelper($name);
 	}
+
 }
 
 if(!function_exists('redirect')) {
+
     /**
      * @param RouteHelper|string $value
      * @param array $parameters if $path is a route
@@ -97,18 +127,22 @@ if(!function_exists('redirect')) {
 
         return $redirect->to($path);
 	}
+
 }
 
 if(!function_exists('refresh')) {
+
     /**
      * @return mixed
      */
     function refresh(){
 		return redirect(route());
 	}
+
 }
 
 if(!function_exists('cookie')) {
+
     /**
      * @param string $name
      * @param string $value
@@ -122,9 +156,11 @@ if(!function_exists('cookie')) {
 
 		return new Cookie($name, $value, time() + ($minutes * 60));
 	}
+
 }
 
 if(!function_exists('config')) {
+
     /**
      * @param null $config
      * @return bool|mixed
@@ -135,10 +171,12 @@ if(!function_exists('config')) {
 
 		return registry()->config;
 	}
+
 }
 
 
 if(!function_exists('abort')) {
+
     /**
      * @param $code
      * @return HttpException
@@ -146,9 +184,11 @@ if(!function_exists('abort')) {
     function abort($code) {
 		return new HttpException($code);
 	}
+
 }
 
 if(!function_exists('session')) {
+
     /**
      * @param $name
      * @param null $value
@@ -158,9 +198,11 @@ if(!function_exists('session')) {
 
         return registry()->session->get($name, $value);
     }
+
 }
 
 if(!function_exists('flash')) {
+
     /**
      * @param $name
      * @param null $value
@@ -170,9 +212,11 @@ if(!function_exists('flash')) {
 
         return registry()->session->flash($name, $value);
     }
+
 }
 
 if(!function_exists('lang')) {
+
     /**
      * @param $key
      * @param array $replace
@@ -181,10 +225,12 @@ if(!function_exists('lang')) {
     function lang($key, $replace = []) {
         return Lang::get($key, $replace);
     }
+
 }
 
 
 if(!function_exists('redirect_url')) {
+
     /**
      * @param $name
      * @param array $args
@@ -193,9 +239,11 @@ if(!function_exists('redirect_url')) {
     function redirect_url($name, $args = []){
         return (new RouteHelper($name))->getRedirectURL($args);
     }
+
 }
 
 if (! function_exists('data_get')) {
+
     /**
      * Get an item from an array or object using "dot" notation.
      *
@@ -236,9 +284,11 @@ if (! function_exists('data_get')) {
 
         return $target;
     }
+
 }
 
 if (! function_exists('array_wrap')) {
+
     /**
      * If the given value is not an array, wrap it in one.
      *
@@ -249,6 +299,7 @@ if (! function_exists('array_wrap')) {
     {
         return Arr::wrap($value);
     }
+
 }
 
 if(!function_exists('request')) {
@@ -260,6 +311,7 @@ if(!function_exists('request')) {
 
         return registry()->request;
     }
+
 }
 
 if(!function_exists('response')) {
@@ -271,9 +323,11 @@ if(!function_exists('response')) {
 
         return registry()->response;
     }
+
 }
 
 if (! function_exists('value')) {
+
     /**
      * Return the default value of the given value.
      *
@@ -284,4 +338,5 @@ if (! function_exists('value')) {
     {
         return $value instanceof Closure ? $value() : $value;
     }
+
 }

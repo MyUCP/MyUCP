@@ -3,18 +3,32 @@
 * MyUCP
 */
 
-class Registry {
+class Registry
+{
+    /**
+     * @var array
+     */
 	private $data = [];
-	
-	public function __set($key, $val){
+
+    /**
+     * @param $key
+     * @param $val
+     */
+	public function __set($key, $val)
+    {
 		$this->data[$key] = $val;
 	}
-	
-	public function __get($key){
+
+    /**
+     * @param $key
+     * @return bool|mixed
+     */
+	public function __get($key)
+    {
 		if(isset($this->data[$key])){
 			return $this->data[$key];
 		}
+
 		return false;
 	}
 }
-?>

@@ -4,15 +4,27 @@
 */
 
 class View {
-	private $registry;
+    /**
+     * @var Zara
+     */
 	private $Zara;
 
-	public function __construct($registry) {
-		$this->registry = $registry;
+    /**
+     * View constructor.
+     */
+	public function __construct()
+    {
 		$this->Zara = new Zara;
 	}
-	
-	public function load($name, $vars = array(), $exception) {
+
+    /**
+     * @param string $name
+     * @param array $vars
+     * @param $exception
+     * @return bool|string
+     */
+	public function load($name, $vars = array(), $exception)
+    {
 		return $this->Zara->compile($name, $vars, new ZaraFactory, $exception)->getCompiled();
 	}
 }

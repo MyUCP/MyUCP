@@ -49,7 +49,7 @@ return [
 		'password'		=>		'',
 		
 		// Название БД.
-		'database'		=>		'myucp',
+		'database'		=>		'myu1cp',
 
 		// Испльзуемая кодировка
 		'charset'   	=> 		'utf8',

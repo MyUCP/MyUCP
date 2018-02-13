@@ -10,6 +10,7 @@
 
 return [
 	'Registry'	            =>	'engine/protected/Registry.php',
+    'Application'	        =>	'engine/protected/Application.php',
 	'Config'	            =>	'engine/protected/Config/Config.php',
 	'Request'	            =>	'engine/protected/Request/Request.php',
     'Header'	            =>	'engine/protected/Request/Header.php',

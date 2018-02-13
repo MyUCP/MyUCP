@@ -3,23 +3,37 @@
 * MyUCP
 */
 
-class Load {
-	private $registry;
+class Load
+{
+    /**
+     * @var Application
+     */
+	private $app;
 
-	public function __construct($registry) {
-		$this->registry = $registry;
+    /**
+     * Load constructor.
+     */
+	public function __construct()
+    {
+		$this->app = app();
 	}
-	
-	public function model(){
+
+    /**
+     * @return bool
+     */
+	public function model()
+    {
 		$names = func_get_args();
+
 		foreach($names[0] as $name){
 			$modelClass = $name . 'Model';
 			$modelPath = APP_DIR . 'models/' . $name . '.php';
 
 			if(is_readable($modelPath)){
 				require_once($modelPath);
+
 				if(class_exists($modelClass)){
-					$this->registry->$modelClass = new $modelClass($this->registry);
+					$this->app->$modelClass = new $modelClass($this->app);
 				}
 			} else {
 				new Debug('Ошибка: Не удалось загрузить модель ' . $name . '!');
@@ -28,9 +42,14 @@ class Load {
 
 		return true;
 	}
-	
-	public function library(){
+
+    /**
+     * @return bool
+     */
+	public function library()
+    {
 		$names = func_get_args();
+
 		foreach($names[0] as $name){
 			$libClass = $name . 'Library';
 			$libPath = ENGINE_DIR . 'lib/' . $name . '.php';
@@ -45,11 +64,16 @@ class Load {
 		return true;
 	}
 
-	public function inject(){
+    /**
+     * @return bool
+     */
+	public function inject()
+    {
 		$names = func_get_args();
+
 		foreach($names[0] as $name){
 			if(class_exists($name)){
-				$this->registry->$name = new $name($this->registry);
+				$this->app->$name = new $name($this->app);
 			}
 		}
 

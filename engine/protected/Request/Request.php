@@ -17,36 +17,81 @@ class Request implements Arrayable
     const METHOD_TRACE = 'TRACE';
     const METHOD_CONNECT = 'CONNECT';
 
+    /**
+     * @var Collection
+     */
     public $attributes;
 
+    /**
+     * @var Collection
+     */
 	public $get;
 
+    /**
+     * @var Collection
+     */
 	public $post;
 
+    /**
+     * @var Collection
+     */
 	public $cookie;
 
+    /**
+     * @var Collection
+     */
 	public $files;
 
+    /**
+     * @var Collection
+     */
 	public $server;
 
+    /**
+     * @var Collection
+     */
 	public $headers;
 
+    /**
+     * @var string
+     */
 	public $method;
 
+    /**
+     * @var bool
+     */
     private $isHostValid = true;
 
+    /**
+     * @var string
+     */
     protected $requestUri;
 
+    /**
+     * @var mixed
+     */
     protected $content;
 
+    /**
+     * @var string
+     */
     protected $baseUrl;
 
+    /**
+     * @var string
+     */
     protected $pathInfo;
 
+    /**
+     * @var string
+     */
     protected $format;
 
     protected static $formats;
-	
+
+    /**
+     * Request constructor.
+     */
 	public function __construct() {
 		$_GET = $this->collect($_GET);
 		$_POST = $this->collect($_POST);
@@ -73,64 +118,109 @@ class Request implements Arrayable
         }
 	}
 
+    /**
+     * @param array $items
+     * @return Collection
+     */
 	private function collect(array $items)
     {
         return new Collection($this->clean($items));
     }
-	
+
+    /**
+     * @param string $data
+     * @return array
+     */
   	private static function clean($data) {
 		if (is_array($data)) {
 	  		foreach ($data as $key => $value) {
 				unset($data[$key]);
-				$data[$key] = registry()->db->escape(self::clean($value));
+				$data[$key] = app()->escape(self::clean($value));
 	  		}
 		} else {
-	  		$data = registry()->db->escape(htmlspecialchars($data, ENT_COMPAT));
+	  		$data = app()->escape(htmlspecialchars($data, ENT_COMPAT));
 		}
 
 		return $data;
 	}
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
 	public static function get($name) {
 	    return request()->get->get($name);
 	}
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
 	public static function post($name) {
         return request()->post->get($name);
 	}
 
+    /**
+     * @param string $name
+     * @param string|null $value
+     * @param int|null $time
+     * @return Cookie|\MyUCP\Cookie\CookieJar|string
+     */
 	public static function cookie($name, $value = null, $time = null) {
 		return cookie($name, $value, $time);
 	}
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
 	public static function server($name) {
         return request()->server->get($name);
 	}
 
+    /**
+     * @return string
+     */
 	public static function ip()
     {
         return request()->server->get('REMOTE_ADDR');
     }
 
+    /**
+     * @param string $name
+     * @return File
+     */
 	public static function file($name) {
 		return new File($name);
 	}
 
+    /**
+     * @return bool
+     */
     public function isXmlHttpRequest()
     {
         return 'XMLHttpRequest' == $this->headers->get('X-REQUESTED-WITH');
     }
 
+    /**
+     * @return bool
+     */
     public static function ajax()
     {
         return request()->isXmlHttpRequest();
     }
 
+    /**
+     * @return string
+     */
     public function userAgent()
     {
         return $this->headers->get('USER_AGENT');
     }
 
+    /**
+     * @return Collection
+     */
     public static function all()
     {
         $items = [];
@@ -145,11 +235,17 @@ class Request implements Arrayable
         return new Collection($items);
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         return $this->all()->toArray();
     }
 
+    /**
+     * @return string
+     */
     public function getMethod()
     {
         if (null === $this->method) {

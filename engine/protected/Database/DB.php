@@ -3,8 +3,16 @@
 * MyUCP
 */
 
-class DB {
+class DB
+{
+    /**
+     * @var Driver
+     */
 	private $driver;
+
+    /**
+     * @var array
+     */
 	private  $defaults = [
 		// Драйвер для работы с БД.
 		// По умолчанию MySQL (mysqli).
@@ -34,12 +42,16 @@ class DB {
 	const RESULT_ASSOC = MYSQLI_ASSOC;
 	const RESULT_NUM   = MYSQLI_NUM;
 
+    /**
+     * DB constructor.
+     * @param array $options
+     */
 	public function __construct($options) {
-		
+
 		$options = array_merge($this->defaults, $options);
 
-		if($options['driver'] == "mysql" or $options['driver'] == 'pdo'){
-			$class = $options['driver'] . 'Driver';
+		if($options['driver'] == "mysql"){
+			$class = MySQLDriver::class;
 		} else {
 			new Debug("Не удалось найти драйвер для работы с базой данных!", 1);
 		}
@@ -496,7 +508,9 @@ class DB {
 		if(empty($values) && !is_array($values))
 			new Debug("Метод concat() ожидает в качестве параметра массив значений", 1);
 
+		$concat = "";
 		$count = count($values);
+
 		foreach ($values as $value) {
 			$concat .= $value;
 

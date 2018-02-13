@@ -78,6 +78,10 @@ class Application
         $this->make("view", new View());
         $this->make("router", new Router());
 
+        if(is_array($this->config->db)) {
+            $this->make("db", new DB($this->make("config")->db));
+        }
+
         $this->initialized = true;
     }
 

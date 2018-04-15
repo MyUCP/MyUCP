@@ -46,8 +46,8 @@ class DB
      * DB constructor.
      * @param array $options
      */
-	public function __construct($options) {
-
+	public function __construct($options)
+    {
 		$options = array_merge($this->defaults, $options);
 
 		if($options['driver'] == "mysql"){

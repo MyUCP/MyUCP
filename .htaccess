@@ -4,14 +4,12 @@ AddDefaultCharset utf-8
 # Запрет листинга директории
 Options -Indexes
 
-RewriteEngine on 
+<IfModule mod_rewrite.c>
+    RewriteEngine on
 
-# Редирект с поддоменов
-#RewriteCond %{HTTP_HOST} ^domain.ru
-#RewriteRule (.*) http://domain.ru/$1 [R=301,L]
+    #
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
 
-# Настройки ЧПУ
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
-RewriteRule ^(.*)$ index.php?r=$1 [L,QSA]
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>

@@ -1,6 +1,6 @@
 <?php
 
-class Application
+class Application implements ArrayAccess
 {
     const VERSION = "5.6.1";
 
@@ -70,8 +70,8 @@ class Application
     public function init()
     {
         $this->make("config", new Config());
-        $this->make("request", new Request());
         $this->make("session", new Session());
+        $this->make("request", new Request());
         $this->make("response", new Response());
         $this->make("load", new Load());
         $this->make("lang", new Translator(new LocalizationLoader(config()->locale, config()->fallback_locale), config()->locale));
@@ -90,6 +90,7 @@ class Application
      */
     public function run()
     {
+        $this->make("router")->loadRoutes(APP_DIR . 'routers.php');
         $this->make("router")->make();
         $this->make("response")->prepare($this->make("request"));
         $this->make("response")->send();
@@ -109,4 +110,50 @@ class Application
 
         return $value;
     }
+
+    /**
+     * Determine if a given offset exists.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function offsetExists($key)
+    {
+        return isset($this->registry->$key);
+    }
+
+    /**
+     * Get the value at a given offset.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function offsetGet($key)
+    {
+        return $this->make($key);
+    }
+
+    /**
+     * Set the value at a given offset.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        $this->make($key, $value);
+    }
+
+    /**
+     * Unset the value at a given offset.
+     *
+     * @param  string  $key
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        unset($this->registry->$key);
+    }
+
 }

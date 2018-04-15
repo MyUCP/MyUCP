@@ -199,7 +199,7 @@ class Request implements Arrayable
      */
     public function isXmlHttpRequest()
     {
-        return 'XMLHttpRequest' == $this->headers->get('X-REQUESTED-WITH');
+        return 'XMLHttpRequest' == $this->headers->get('X_REQUESTED_WITH');
     }
 
     /**
@@ -833,5 +833,26 @@ class Request implements Arrayable
     public function getReferrer()
     {
         return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+    }
+
+    /**
+     * Get the current path info for the request.
+     *
+     * @return string
+     */
+    public function path()
+    {
+        $pattern = trim($this->getPathInfo(), '/');
+        return $pattern == '' ? '/' : $pattern;
+    }
+
+    /**
+     * Get the current encoded path info for the request.
+     *
+     * @return string
+     */
+    public function decodedPath()
+    {
+        return rawurldecode($this->path());
     }
 }

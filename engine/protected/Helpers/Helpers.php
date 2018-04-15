@@ -20,12 +20,15 @@ if(!function_exists('registry')) {
 if(!function_exists('app')) {
 
     /**
-     * @return Application
+     * @return Application|object
      */
-    function app() {
+    function app($name = null) {
         global $app;
 
-        return $app;
+        if(is_null($name))
+            return $app;
+
+        return $app->make($name);
     }
 
 }
@@ -122,7 +125,7 @@ if(!function_exists('redirect')) {
         if(is_null($path)) {
             return $redirect;
         } elseif($path instanceof RouteHelper) {
-            return $redirect->route($path);
+            return $redirect->route($path, $parameters);
         }
 
         return $redirect->to($path);

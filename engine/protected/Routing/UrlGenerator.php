@@ -10,6 +10,13 @@ class UrlGenerator
     protected $routes;
 
     /**
+     * The Request instance
+     *
+     * @var Request
+     */
+    protected $request;
+
+    /**
      * UrlGenerator constructor.
      *
      * @param RouteCollection $routes

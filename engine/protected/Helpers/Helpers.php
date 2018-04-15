@@ -104,10 +104,16 @@ if(!function_exists('route')) {
 
     /**
      * @param null $name
-     * @return RouteHelper
+     * @return Route|null
      */
     function route($name = null){
-		return new RouteHelper($name);
+        if(is_null($name))
+            return app("router")->getCurrentRoute();
+
+        if(!app("router")->has($name))
+            return null;
+
+        return app("router")->getRouteWithName($name);
 	}
 
 }
@@ -115,7 +121,7 @@ if(!function_exists('route')) {
 if(!function_exists('redirect')) {
 
     /**
-     * @param RouteHelper|string $value
+     * @param Route|string $value
      * @param array $parameters if $path is a route
      * @return Redirect
      */
@@ -124,7 +130,7 @@ if(!function_exists('redirect')) {
 
         if(is_null($path)) {
             return $redirect;
-        } elseif($path instanceof RouteHelper) {
+        } elseif($path instanceof Route) {
             return $redirect->route($path, $parameters);
         }
 
@@ -237,10 +243,10 @@ if(!function_exists('redirect_url')) {
     /**
      * @param $name
      * @param array $args
-     * @return RouteHelper
+     * @return string
      */
     function redirect_url($name, $args = []){
-        return (new RouteHelper($name))->getRedirectURL($args);
+        return app("url")->route($name, $args);
     }
 
 }

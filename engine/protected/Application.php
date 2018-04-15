@@ -77,6 +77,7 @@ class Application implements ArrayAccess
         $this->make("lang", new Translator(new LocalizationLoader(config()->locale, config()->fallback_locale), config()->locale));
         $this->make("view", new View());
         $this->make("router", new Router());
+        $this->make("url", new UrlGenerator($this["routes"], $this["request"]));
 
         if(is_array($this->config->db)) {
             $this->make("db", new DB($this->make("config")->db));

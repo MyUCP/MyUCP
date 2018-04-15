@@ -9,4 +9,4 @@
 |
 */
 
-Router::get("/", ["uses" => "HomeController@welcome", "as" => "home"]);
+Router::view("/", "welcome");

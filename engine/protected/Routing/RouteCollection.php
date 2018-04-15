@@ -193,12 +193,12 @@ class RouteCollection implements Countable, IteratorAggregate
         $routes = $this->get($request->getMethod());
 
         foreach ($routes as $route) {
-            if(RouteMatch::parseUri($route, $request)) {
+            if(RouteMatch::validateDomain($route, $request) && RouteMatch::parseUri($route, $request)) {
                 return $route;
             }
         }
 
-        throw new HttpException();
+        throw new HttpException(404);
     }
 
     /**

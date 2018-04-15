@@ -55,6 +55,11 @@ class Route
     public $compiled;
 
     /**
+     * @var array
+     */
+    public $models = [];
+
+    /**
      * Create a new Route instance.
      *
      * @param  array|string  $methods
@@ -144,6 +149,19 @@ class Route
     }
 
     /**
+     * Set the action array for the route.
+     *
+     * @param  array  $action
+     * @return $this
+     */
+    public function setAction(array $action)
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    /**
      * Set a parameter to the given value.
      *
      * @param  string  $name
@@ -166,6 +184,17 @@ class Route
     public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
+    }
+
+    /**
+     * Merge with a new parameters
+     *
+     * @param array $parameters
+     * @return void
+     */
+    public function addParameters(array $parameters)
+    {
+        $this->parameters = array_merge((array) $this->parameters, $parameters);
     }
 
     /**
@@ -236,6 +265,19 @@ class Route
     }
 
     /**
+     * Add or change the route name.
+     *
+     * @param  string  $name
+     * @return $this
+     */
+    public function name($name)
+    {
+        $this->action['as'] = isset($this->action['as']) ? $this->action['as'].$name : $name;
+
+        return $this;
+    }
+
+    /**
      * Get the name of the route instance.
      *
      * @return string
@@ -254,6 +296,33 @@ class Route
     public function named($name)
     {
         return $this->getName() === $name;
+    }
+
+    /**
+     * Set the handler for the route.
+     *
+     * @param  \Closure|string  $action
+     * @return $this
+     */
+    public function uses($action)
+    {
+        return $this->setAction(array_merge($this->action, $this->parseAction([
+            'uses' => $action,
+            'controller' => $action,
+        ])));
+    }
+
+    /**
+     * Bind model to route
+     *
+     * @param string $models
+     * @return $this
+     */
+    public function model(...$models)
+    {
+        $this->models = array_merge($this->models, $models);
+
+        return $this;
     }
 
     /**

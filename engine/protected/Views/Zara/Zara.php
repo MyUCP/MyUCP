@@ -1,28 +1,65 @@
 <?php 
 
-class Zara {
+class Zara
+{
 
 	protected $filename;
+
+    /**
+     * @var string
+     */
 	protected $path;
+
+    /**
+     * @var array
+     */
 	protected $vars;
+
+    /**
+     * @var ZaraCompiler
+     */
 	private $compiler;
+
+    /**
+     * @var ZaraFactory
+     */
 	private $factory;
+
+    /**
+     * @var bool
+     */
 	private $compiled = false;
+
+    /**
+     * @var bool
+     */
 	private $exception = true;
 
-	public function compile($filename, $vars = [], ZaraFactory $factory, $exception){
+    /**
+     * @param string $filename
+     * @param array $vars
+     * @param ZaraFactory $factory
+     * @param bool $exception
+     * @return $this
+     */
+	public function compile($filename, $vars = [], ZaraFactory $factory, $exception = true)
+    {
 		$this->vars = $vars;
 		$this->vars["zara"] = $this;
 		$this->filename = $filename;
 		$this->compiler = new ZaraCompiler;
 		$this->factory = $factory;
 		$this->exception = $exception;
+
 		if($this->searchFile())
 			return $this;
 
 		return $this;
 	}
 
+    /**
+     * @return bool|string
+     */
 	public function getCompiled(){
 		if($this->exception) {
 			extract($this->vars);
@@ -37,6 +74,9 @@ class Zara {
 	  	return false;
 	}
 
+    /**
+     * @return bool|Debug
+     */
 	private function searchFile(){
 		if(file_exists(THEME_DIR . $this->filename . '.zara.php')){
 			$this->path = "./assets/cache/".md5(THEME_DIR . $this->filename . ".zara.php");

@@ -45,6 +45,8 @@ class RouteCompiler
                 $controller = $this->route->getController();
                 $method = $this->route->getControllerMethod();
 
+                $this->bindModels($this->route->models);
+
                 return $this->runController($controller, $method);
             }
 
@@ -53,6 +55,18 @@ class RouteCompiler
 
             return $e->getResponse();
         }
+    }
+
+    /**
+     * Bind models to route
+     *
+     * @param array $models
+     * @return void
+     */
+    public function bindModels($models)
+    {
+        if(!empty($models))
+            call_user_func_array("model", $models);
     }
 
     /**

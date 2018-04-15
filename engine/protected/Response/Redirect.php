@@ -49,7 +49,7 @@ class Redirect
     }
 
     /**
-     * @param string|RouteHelper $route
+     * @param string|Route $route
      * @param array $parameters
      * @param int $status
      * @param array $headers
@@ -62,7 +62,7 @@ class Redirect
             $route = route($route);
         }
 
-        return $this->to($route->getRedirectURL($parameters), $status, $headers);
+        return $this->to(app("url")->toRoute($route, $parameters), $status, $headers);
     }
 
     /**

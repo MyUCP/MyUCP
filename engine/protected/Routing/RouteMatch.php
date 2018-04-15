@@ -76,7 +76,8 @@ class RouteMatch
     public static function parseUri(Route $route, Request $request)
     {
         if(preg_match($route->regexUri, $request->path(), $preg)) {
-            $route->setParameters(static::parseParameters($route, $preg));
+
+            $route->addParameters(static::parseParameters($route, $preg));
 
             return true;
         }
@@ -101,5 +102,62 @@ class RouteMatch
         }
 
         return $parameters;
+    }
+
+    /**
+     * Validate Route domain
+     *
+     * @param Route $route
+     * @param Request $request
+     * @return bool
+     */
+    public static function validateDomain(Route $route, Request $request)
+    {
+        if(!isset($route->action['domain']))
+            return true;
+
+        return self::parseDomain($route, $request);
+    }
+
+    /**
+     * Check the pattern to reflect the current domain
+     *
+     * @param Route $route
+     * @param Request $request
+     * @return bool
+     */
+    public static function parseDomain(Route $route, Request $request)
+    {
+        $domain = $route->action['domain'];
+
+        if($domain == $request->domain()) {
+            return true;
+        }
+
+        $regex = '/' . preg_replace('/\//', '\/', $domain) .  '/';
+        $params = [];
+
+        if(preg_match_all('/\{([a-z]+):(.*?)\}/', $domain, $preg)) {
+            for($i = 0; $i < count($preg[0]); $i++){
+                $params[] = $preg[1][$i];
+                $regex = str_replace($preg[0][$i], '(' . $preg[2][$i] . ')', $regex);
+            }
+
+            if(!(preg_match($regex, $request->domain(), $preg))) {
+                return false;
+            }
+
+            $parameters = [];
+
+            for ($i = 0; $i < count($params); $i++) {
+                $parameters[$params[$i]] = $preg[$i + 1];
+            }
+
+            $route->addParameters($parameters);
+
+            return true;
+        }
+
+        return false;
     }
 }

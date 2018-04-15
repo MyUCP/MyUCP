@@ -607,6 +607,26 @@ class Request implements Arrayable
     }
 
     /**
+     * Get the current domain of application
+     *
+     * @return string
+     */
+    public function getDomain()
+    {
+        return $this->getHost();
+    }
+
+    /**
+     * Get the current domain of application
+     *
+     * @return string
+     */
+    public function domain()
+    {
+        return $this->getDomain();
+    }
+
+    /**
      * Returns the request body content.
      *
      * @param bool $asResource If true, a resource will be returned

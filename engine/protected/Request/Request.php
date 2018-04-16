@@ -236,6 +236,39 @@ class Request implements Arrayable
     }
 
     /**
+     * Get the value of request
+     *
+     * @param string|null $key
+     * @param string|null $defaults
+     * @return mixed
+     */
+    public static function input($key = null, $defaults = null)
+    {
+        return data_get(request()->all(), $key, $defaults);
+    }
+
+    /**
+     * Determine if the request contains a given input item key.
+     *
+     * @param  string|array  $key
+     * @return bool
+     */
+    public static function exists($key)
+    {
+        $keys = is_array($key) ? $key : func_get_args();
+
+        $input = request()->all();
+
+        foreach ($keys as $value) {
+            if (! $input->has($value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @return array
      */
     public function toArray()

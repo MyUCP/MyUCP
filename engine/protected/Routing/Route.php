@@ -450,7 +450,7 @@ class Route
      */
     public static function isCurrent($route)
     {
-        return self::current()->named($route->getName());
+        return self::current() === $route;
     }
 
     /**

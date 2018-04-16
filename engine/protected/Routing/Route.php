@@ -421,4 +421,24 @@ class Route
     {
         return $this->compiled;
     }
+
+    /**
+     * Get the current route
+     *
+     * @return Route
+     */
+    public static function current()
+    {
+        return app("router")->getCurrentRoute();
+    }
+
+    /**
+     * Get the current route name
+     *
+     * @return string
+     */
+    public static function currentRouteName()
+    {
+        return app("router")->getCurrentRoute()->getName();
+    }
 }

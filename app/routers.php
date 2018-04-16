@@ -10,5 +10,3 @@
 */
 
 Router::view("/", "welcome");
-
-Router::view("/test", "test");

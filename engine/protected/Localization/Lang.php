@@ -33,4 +33,12 @@ class Lang
     {
         return registry()->lang->setLocale($locale);
     }
+
+    /**
+     * @return string
+     */
+    public static function currentLocale()
+    {
+        return registry()->lang->currentLocale();
+    }
 }

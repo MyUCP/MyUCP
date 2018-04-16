@@ -439,6 +439,28 @@ class Route
      */
     public static function currentRouteName()
     {
-        return app("router")->getCurrentRoute()->getName();
+        return app("router")->currentRouteName();
+    }
+
+    /**
+     * Determine whether the current route matches the given route.
+     *
+     * @param Route $route
+     * @return bool
+     */
+    public static function isCurrent($route)
+    {
+        return self::current()->named($route->getName());
+    }
+
+    /**
+     * Determine whether the current route's name matches the given name.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public static function isCurrentName($name)
+    {
+        return self::current()->named($name);
     }
 }

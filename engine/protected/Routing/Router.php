@@ -224,7 +224,8 @@ class Router
      */
     public static function condition($condition, $routes)
     {
-        app("router")->group(["condition" => $condition], $routes);
+        if($condition)
+            app("router")->group(["condition" => $condition], $routes);
     }
 
     /**

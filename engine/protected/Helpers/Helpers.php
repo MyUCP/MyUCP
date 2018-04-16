@@ -258,7 +258,11 @@ if(!function_exists('url')) {
      * @return string
      */
     function url($path = null, $args = []){
+
         if($path instanceof Route)
+            return app("url")->route($path, $args);
+
+        if(!is_null(app("routes")->getByName($path)))
             return app("url")->route($path, $args);
 
         if(is_null($path))

@@ -32,7 +32,13 @@ class RouteAction
         // across into the "uses" property that will get fired off by this route.
 
         elseif (! isset($action['uses'])) {
-            $action['uses'] = static::findCallable($action);
+            if(is_string($action)) {
+                $action = [
+                    "uses" => $action
+                ];
+            } else {
+                $action['uses'] = static::findCallable(array_wrap($action['uses']));
+            }
         }
 
         if (is_string($action['uses']) && ! Str::contains($action['uses'], '@')) {

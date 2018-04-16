@@ -584,7 +584,6 @@ class ZaraCompiler
         return "<?php echo lang{$expression}; ?>";
     }
 
-
     /**
      * Register a handler for custom directives.
      *

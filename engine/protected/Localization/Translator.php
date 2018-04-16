@@ -127,4 +127,12 @@ class Translator
         cookie("__lang", $locale)->forever();
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function currentLocale()
+    {
+        return $this->locale;
+    }
 }

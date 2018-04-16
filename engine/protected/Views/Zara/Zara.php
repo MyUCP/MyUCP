@@ -117,4 +117,28 @@ class Zara
     {
         app("view")->getZara()->getCompiler()->directive($name, $handler);
     }
+
+    /**
+     * Register an "if" statement directive.
+     *
+     * @param  string  $name
+     * @param  callable  $callback
+     * @return void
+     */
+    public static function if($name, callable $callback)
+    {
+        app("view")->getZara()->getCompiler()->if($name, $callback);
+    }
+
+    /**
+     * Check the result of a condition.
+     *
+     * @param  string  $name
+     * @param  array  $parameters
+     * @return bool
+     */
+    public static function check($name, ...$parameters)
+    {
+        return app("view")->getZara()->getCompiler()->check($name, $parameters);
+    }
 }

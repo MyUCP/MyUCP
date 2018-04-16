@@ -131,7 +131,8 @@ class Request implements Arrayable
      * @param string $data
      * @return array
      */
-  	private static function clean($data) {
+  	private static function clean($data)
+    {
 		if (is_array($data)) {
 	  		foreach ($data as $key => $value) {
 				unset($data[$key]);
@@ -146,18 +147,22 @@ class Request implements Arrayable
 
     /**
      * @param string $name
+     * @param mixed|null $default
      * @return mixed
      */
-	public static function get($name) {
-	    return request()->get->get($name);
+	public static function get($name, $default = null)
+    {
+	    return request()->get->get($name, $default);
 	}
 
     /**
      * @param string $name
+     * @param mixed|null $default
      * @return mixed
      */
-	public static function post($name) {
-        return request()->post->get($name);
+	public static function post($name, $default = null)
+    {
+        return request()->post->get($name, $default = null);
 	}
 
     /**
@@ -166,16 +171,19 @@ class Request implements Arrayable
      * @param int|null $time
      * @return Cookie|\MyUCP\Cookie\CookieJar|string
      */
-	public static function cookie($name, $value = null, $time = null) {
+	public static function cookie($name, $value = null, $time = null)
+    {
 		return cookie($name, $value, $time);
 	}
 
     /**
      * @param string $name
+     * @param mixed|null $default
      * @return mixed
      */
-	public static function server($name) {
-        return request()->server->get($name);
+	public static function server($name, $default = null)
+    {
+        return request()->server->get($name, $default = null);
 	}
 
     /**

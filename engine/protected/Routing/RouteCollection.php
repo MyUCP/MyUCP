@@ -225,7 +225,7 @@ class RouteCollection implements Countable, IteratorAggregate
      */
     public function match(Request $request)
     {
-        $routes = $this->get($request->getMethod());
+        $routes = $this->get($request->method());
 
         foreach ($routes as $route) {
             if(RouteMatch::validateDomain($route, $request) && RouteMatch::parseUri($route, $request)) {

@@ -244,6 +244,8 @@ class Request implements Arrayable
     }
 
     /**
+     * Returns real method name
+     *
      * @return string
      */
     public function getMethod()
@@ -253,6 +255,24 @@ class Request implements Arrayable
         }
 
         return $this->method;
+    }
+
+    /**
+     * Returns method name
+     *
+     * @return mixed|string
+     */
+    public function method()
+    {
+        if(!$this->isMethod("POST"))
+            return $this->getMethod();
+
+        $verbs = ['PUT', 'PATCH', 'DELETE'];
+
+        if(!in_array($this->post->get("_method", "POST"), $verbs))
+            return $this->getMethod();
+
+        return $this->post->get("_method");
     }
 
     /**

@@ -237,16 +237,34 @@ if(!function_exists('lang')) {
 
 }
 
-
 if(!function_exists('redirect_url')) {
 
     /**
-     * @param $name
+     * @param Route $name
      * @param array $args
      * @return string
      */
     function redirect_url($name, $args = []){
         return app("url")->route($name, $args);
+    }
+
+}
+
+if(!function_exists('url')) {
+
+    /**
+     * @param Route|string $path
+     * @param array $args
+     * @return string
+     */
+    function url($path = null, $args = []){
+        if($path instanceof Route)
+            return app("url")->route($path, $args);
+
+        if(is_null($path))
+            return app("url");
+
+        return app("url")->to($path);
     }
 
 }

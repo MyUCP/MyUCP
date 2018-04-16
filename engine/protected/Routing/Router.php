@@ -428,6 +428,9 @@ class Router
     {
         $this->currentRequest = app("request");
 
+        $this->routes->refreshNameLookups();
+        $this->routes->refreshActionLookups();
+
         $route = $this->findRoute();
 
         $route->compileRoute(app());

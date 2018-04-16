@@ -18,6 +18,14 @@ class View {
 	}
 
     /**
+     * @return Zara
+     */
+	public function getZara()
+    {
+        return $this->Zara;
+    }
+
+    /**
      * @param string $name
      * @param array $vars
      * @param $exception

@@ -60,7 +60,8 @@ class Zara
     /**
      * @return bool|string
      */
-	public function getCompiled(){
+	public function getCompiled()
+    {
 		if($this->exception) {
 			extract($this->vars);
 
@@ -77,7 +78,8 @@ class Zara
     /**
      * @return bool|Debug
      */
-	private function searchFile(){
+	private function searchFile()
+    {
 		if(file_exists(THEME_DIR . $this->filename . '.zara.php')){
 			$this->path = "./assets/cache/".md5(THEME_DIR . $this->filename . ".zara.php");
 			$this->compiler->compile(THEME_DIR . $this->filename . '.zara.php', $this->factory);
@@ -95,4 +97,24 @@ class Zara
 			return false;
 		}
 	}
+
+    /**
+     * @return ZaraCompiler
+     */
+	public function getCompiler()
+    {
+        return $this->compiler;
+    }
+
+    /**
+     * Register a handler for custom directives.
+     *
+     * @param  string  $name
+     * @param  callable  $handler
+     * @return void
+     */
+    public static function directive($name, callable $handler)
+    {
+        app("view")->getZara()->getCompiler()->directive($name, $handler);
+    }
 }

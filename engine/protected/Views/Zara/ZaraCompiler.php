@@ -1,29 +1,87 @@
 <?php 
 
-class ZaraCompiler {
-
+class ZaraCompiler
+{
+    /**
+     * @var array
+     */
 	protected $rawTags = ['{!!', '!!}'];
-    protected $contentTags = ['{{', '}}'];
+
+    /**
+     * @var array
+     */
+	protected $contentTags = ['{{', '}}'];
+
+    /**
+     * @var array
+     */
     protected $escapedTags = ['{{{', '}}}'];
+
+    /**
+     * @var string
+     */
     protected $echoFormat = 'e(%s)';
+
+    /**
+     * @var array
+     */
     protected $compilers = [
         'Extensions',
         'Statements',
         'Comments',
         'Echos',
     ];
+
+    /**
+     * @var array
+     */
     protected $extensions = [];
+
+    /**
+     * @var int
+     */
     protected $forelseCounter = 0;
+
+    /**
+     * @var array
+     */
     protected $footer = [];
+
+    /**
+     * @var ZaraFactory
+     */
     protected $factory;
 
+    /**
+     * @var ZaraService
+     */
+    protected $service;
+
+    /**
+     * @var array
+     */
+    protected $customDirectives = [];
+
+    /**
+     * @param null|string $path
+     * @param ZaraFactory $factory
+     */
     public function compile($path = null, ZaraFactory $factory)
     {
         $this->factory = $factory;
+        $this->service = new ZaraService(
+            str_replace(".zara.php", "", pathinfo($path)['basename'])
+        );
+
         $contents = $this->compileString(file_get_contents($path));
+
 		file_put_contents("./assets/cache/".md5($path)."", $contents);
     }
 
+    /**
+     * @param string $value
+     * @return string
+     */
     public function compileString($value)
     {
         $result = '';
@@ -48,6 +106,10 @@ class ZaraCompiler {
         return $result;
     }
 
+    /**
+     * @param string $token
+     * @return mixed
+     */
     protected function parseToken($token)
     {
         list($id, $content) = $token;
@@ -61,6 +123,10 @@ class ZaraCompiler {
         return $content;
     }
 
+    /**
+     * @param string $value
+     * @return mixed
+     */
     protected function compileExtensions($value)
     {
         foreach ($this->extensions as $compiler) {
@@ -70,20 +136,43 @@ class ZaraCompiler {
         return $value;
     }
 
+    /**
+     * @param string $value
+     * @return mixed
+     */
     protected function compileStatements($value)
     {
-        $callback = function ($match) {
+        return preg_replace_callback('/\B@(\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x',
+            function ($match) {
+                return $this->compileStatement($match);
+            }, $value);
+    }
 
-            if (method_exists($this, $method = 'compile'.ucfirst($match[1]))) {
-                $match[0] = $this->$method($match[3]);
-            } elseif (isset($this->customDirectives[$match[1]])) {
-                $match[0] = call_user_func($this->customDirectives[$match[1]], $match[3]);
-            }
+    protected function compileStatement($match)
+    {
+        if (method_exists($this, $method = 'compile'.ucfirst($match[1]))) {
+            $match[0] = $this->$method($match[3]);
+        } elseif (isset($this->customDirectives[$match[1]])) {
+            $match[0] = $this->callCustomDirective($match[1], $match[3]);
+        }
 
-            return isset($match[3]) ? $match[0] : $match[0].$match[2];
-        };
+        return isset($match[3]) ? $match[0] : $match[0].$match[2];
+    }
 
-        return preg_replace_callback('/\B@(\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x', $callback, $value);
+    /**
+     * Call the given directive with the given value.
+     *
+     * @param  string  $name
+     * @param  string|null  $value
+     * @return string
+     */
+    protected function callCustomDirective($name, $value)
+    {
+        if (Str::startsWith($value, '(') && Str::endsWith($value, ')')) {
+            $value = Str::substr($value, 1, -1);
+        }
+
+        return call_user_func($this->customDirectives[$name], trim($value));
     }
 
     /**
@@ -114,6 +203,10 @@ class ZaraCompiler {
         return $value;
     }
 
+    /**
+     * @param string $value
+     * @return mixed
+     */
     protected function compileRawEchos($value)
     {
         $pattern = sprintf('/(@)?%s\s*(.+?)\s*%s(\r?\n)?/s', $this->rawTags[0], $this->rawTags[1]);
@@ -168,6 +261,11 @@ class ZaraCompiler {
         return $methods;
     }
 
+    /**
+     * @param $haystack
+     * @param $needles
+     * @return bool
+     */
     protected function startsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
@@ -179,6 +277,10 @@ class ZaraCompiler {
         return false;
     }
 
+    /**
+     * @param $value
+     * @return mixed
+     */
     protected function compileRegularEchos($value)
     {
         $pattern = sprintf('/(@)?%s\s*(.+?)\s*%s(\r?\n)?/s', $this->contentTags[0], $this->contentTags[1]);
@@ -194,6 +296,10 @@ class ZaraCompiler {
         return preg_replace_callback($pattern, $callback, $value);
     }
 
+    /**
+     * @param $value
+     * @return mixed
+     */
     protected function compileEscapedEchos($value)
     {
         $pattern = sprintf('/(@)?%s\s*(.+?)\s*%s(\r?\n)?/s', $this->escapedTags[0], $this->escapedTags[1]);
@@ -207,11 +313,19 @@ class ZaraCompiler {
         return preg_replace_callback($pattern, $callback, $value);
     }
 
+    /**
+     * @param $value
+     * @return mixed
+     */
     public function compileEchoDefaults($value)
     {
         return preg_replace('/^(?=\$)(.+?)(?:\s+or\s+)(.+?)$/s', 'isset($1) ? $1 : $2', $value);
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileInject($expression)
     {
         $segments = explode(',', preg_replace("/[\(\)\\\"\']/", '', $expression));
@@ -219,41 +333,64 @@ class ZaraCompiler {
         return '<?php $'.trim($segments[0])." = new ".trim($segments[1])."; ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileYield($expression)
     {
         return "<?php echo \$zara->factory->yieldContent{$expression}; ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileShow($expression)
     {
         return '<?php echo $zara->factory->yieldSection(); ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileSection($expression)
     {
         return "<?php \$zara->factory->startSection{$expression}; ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileAppend($expression)
     {
         return '<?php $zara->factory->appendSection(); ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileEndsection($expression)
     {
         return '<?php $zara->factory->stopSection(); ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileStop($expression)
     {
         return '<?php $zara->factory->stopSection(); ?>';
     }
 
-    protected function compileMethod($expression)
-    {
-        return "<?php echo method_field{$expression}; ?>";
-    }
-
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileExtends($expression)
     {
         if ($this->startsWith($expression, '(')) {
@@ -267,26 +404,46 @@ class ZaraCompiler {
         return '';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileUnless($expression)
     {
         return "<?php if ( ! $expression): ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileEndunless($expression)
     {
         return '<?php endif; ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileFor($expression)
     {
         return "<?php for{$expression}: ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileForeach($expression)
     {
         return "<?php foreach{$expression}: ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileForelse($expression)
     {
         $empty = '$__empty_'.++$this->forelseCounter;
@@ -294,16 +451,28 @@ class ZaraCompiler {
         return "<?php {$empty} = true; foreach{$expression}: {$empty} = false; ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileIf($expression)
     {
         return "<?php if{$expression}: ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileElseif($expression)
     {
         return "<?php elseif{$expression}: ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileEmpty($expression)
     {
         $empty = '$__empty_'.$this->forelseCounter--;
@@ -311,48 +480,115 @@ class ZaraCompiler {
         return "<?php endforeach; if ({$empty}): ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileWhile($expression)
     {
         return "<?php while{$expression}: ?>";
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileEndwhile($expression)
     {
         return '<?php endwhile; ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileEndfor($expression)
     {
         return '<?php endfor; ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileEndforeach($expression)
     {
         return '<?php endforeach; ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileEndcan($expression)
     {
         return '<?php endif; ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileEndcannot($expression)
     {
         return '<?php endif; ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileEndif($expression)
     {
         return '<?php endif; ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileEndforelse($expression)
     {
         return '<?php endif; ?>';
     }
 
+    /**
+     * @param $expression
+     * @return string
+     */
     protected function compileElse($expression)
     {
         return '<?php else: ?>';
+    }
+
+    /**
+     * @param $expression
+     * @return string
+     */
+    protected function compileMethod($expression)
+    {
+        return "<?php echo method_field{$expression}; ?>";
+    }
+
+    /**
+     * @param $expression
+     * @return string
+     */
+    protected function compileLang($expression)
+    {
+        return "<?php echo lang{$expression}; ?>";
+    }
+
+
+    /**
+     * Register a handler for custom directives.
+     *
+     * @param  string  $name
+     * @param  callable  $handler
+     * @return void
+     */
+    public function directive($name, callable $handler)
+    {
+        $this->customDirectives[$name] = $handler;
     }
 }

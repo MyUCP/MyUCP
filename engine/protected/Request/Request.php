@@ -169,7 +169,7 @@ class Request implements Arrayable
      * @param string $name
      * @param string|null $value
      * @param int|null $time
-     * @return Cookie|\MyUCP\Cookie\CookieJar|string
+     * @return Cookie|string
      */
 	public static function cookie($name, $value = null, $time = null)
     {

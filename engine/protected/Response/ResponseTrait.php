@@ -79,7 +79,7 @@ trait ResponseTrait
     /**
      * Add a cookie to the response.
      *
-     * @param  \MyUCP\Cookie\Cookie|mixed  $cookie
+     * @param  Cookie|mixed  $cookie
      * @return $this
      */
     public function cookie($cookie)

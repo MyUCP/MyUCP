@@ -66,6 +66,28 @@ class Redirect
     }
 
     /**
+     * @param string $action
+     * @param array $parameters
+     * @param int $status
+     * @param array $headers
+     */
+    public function action($action, $parameters = [], $status = 302, $headers = [])
+    {
+        $route = app("routes")->getByAction($action);
+
+        return $this->to(app("url")->toRoute($route, $parameters), $status, $headers);
+    }
+
+    /**
+     * @param string $url
+     * @return Redirect
+     */
+    public function away($url)
+    {
+        return $this->to($url);
+    }
+
+    /**
      * @param string $path
      * @param int $status
      * @param array $headers

@@ -73,6 +73,7 @@ class ZaraCompiler {
     protected function compileStatements($value)
     {
         $callback = function ($match) {
+
             if (method_exists($this, $method = 'compile'.ucfirst($match[1]))) {
                 $match[0] = $this->$method($match[3]);
             } elseif (isset($this->customDirectives[$match[1]])) {
@@ -246,6 +247,11 @@ class ZaraCompiler {
     protected function compileStop($expression)
     {
         return '<?php $zara->factory->stopSection(); ?>';
+    }
+
+    protected function compileMethod($expression)
+    {
+        return "<?php echo method_field{$expression}; ?>";
     }
 
     protected function compileExtends($expression)

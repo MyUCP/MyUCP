@@ -1,0 +1,1 @@
+<?php echo method_field("PUT"); ?>

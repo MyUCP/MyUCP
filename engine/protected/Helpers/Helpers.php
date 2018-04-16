@@ -367,3 +367,16 @@ if (! function_exists('value')) {
     }
 
 }
+
+if (! function_exists('method_field')) {
+    /**
+     * Generate a form field to spoof the HTTP verb used by forms.
+     *
+     * @param  string  $method
+     * @return string
+     */
+    function method_field($method)
+    {
+        return '<input type="hidden" name="_method" value="'.$method.'">';
+    }
+}

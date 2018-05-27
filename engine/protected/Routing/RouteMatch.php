@@ -160,4 +160,20 @@ class RouteMatch
 
         return false;
     }
+
+    /**
+     * Verify CSRF token to route, if verification needs
+     *
+     * @param Route $route
+     * @param Request $request
+     *
+     * @return bool
+     */
+    public static function csrfVerify(Route $route, CsrfToken $csrfToken)
+    {
+        if(!$route->csrf_verify)
+            return true;
+
+        return $csrfToken->check();
+    }
 }

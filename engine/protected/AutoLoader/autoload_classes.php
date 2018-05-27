@@ -35,6 +35,7 @@ return [
     'RouteCollection'       =>	'engine/protected/Routing/RouteCollection.php',
     'RouteCompiler'         =>	'engine/protected/Routing/RouteCompiler.php',
     'CompiledRoute'         =>  'engine/protected/Routing/CompiledRoute.php',
+    'CsrfToken'             =>  'engine/protected/Routing/CsrfToken.php',
     'RouteMatch'            =>	'engine/protected/Routing/RouteMatch.php',
     'RouteDependencyResolverTrait'=>'engine/protected/Routing/RouteDependencyResolverTrait.php',
     'UrlGenerator'          =>	'engine/protected/Routing/UrlGenerator.php',

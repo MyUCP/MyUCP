@@ -384,3 +384,27 @@ if (! function_exists('method_field')) {
         return '<input type="hidden" name="_method" value="'.$method.'">';
     }
 }
+
+if (! function_exists('csrf_token')) {
+    /**
+     * Retrieves the value of the current CSRF token
+     *
+     * @return string
+     */
+    function csrf_token()
+    {
+        return app("csrftoken")->token();
+    }
+}
+
+if (! function_exists('csrf_field')) {
+    /**
+     * Generates an HTML hidden input field containing the value of the CSRF token
+     *
+     * @return string
+     */
+    function csrf_field()
+    {
+        return '<input type="hidden" name="_token" value="'. app("csrftoken")->token() .'">';
+    }
+}

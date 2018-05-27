@@ -585,6 +585,24 @@ class ZaraCompiler
     }
 
     /**
+     * @param $expression
+     * @return string
+     */
+    protected function compileCsrf_token($expression)
+    {
+        return "<?php echo csrf_token(); ?>";
+    }
+
+    /**
+     * @param $expression
+     * @return string
+     */
+    protected function compileCsrf_field($expression)
+    {
+        return "<?php echo csrf_field(); ?>";
+    }
+
+    /**
      * Register a handler for custom directives.
      *
      * @param  string  $name

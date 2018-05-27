@@ -73,6 +73,7 @@ class Application implements ArrayAccess
         $this->make("session", new Session());
         $this->make("request", new Request());
         $this->make("response", new Response());
+        $this->make("csrftoken", new CsrfToken($this['request']));
         $this->make("load", new Load());
         $this->make("lang", new Translator(new LocalizationLoader(config()->locale, config()->fallback_locale), config()->locale));
         $this->make("view", new View());

@@ -60,6 +60,11 @@ class Route
     public $models = [];
 
     /**
+     * @var bool
+     */
+    public $csrf_verify = false;
+
+    /**
      * Create a new Route instance.
      *
      * @param  array|string  $methods
@@ -321,6 +326,19 @@ class Route
     public function model(...$models)
     {
         $this->models = array_merge($this->models, $models);
+
+        return $this;
+    }
+
+    /**
+     * Verify CSRF token to route
+     *
+     * @param bool $status
+     * @return $this
+     */
+    public function csrfVerify(bool $status = true)
+    {
+        $this->csrf_verify = true;
 
         return $this;
     }

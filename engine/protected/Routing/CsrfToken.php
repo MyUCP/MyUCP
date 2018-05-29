@@ -45,9 +45,6 @@ class CsrfToken
     {
         $result = $this->token == $this->getTokenFromRequest($this->request);
 
-        if($result)
-            $this->generate();
-
         return $result;
     }
 

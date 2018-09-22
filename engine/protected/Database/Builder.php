@@ -497,7 +497,7 @@ class Builder {
 		if(!empty($this->sql)){
 			$this->sql = " ".$this->join.$this->sql;
 		}
-		$result = $this->db->query("UPDATE ". self::$table ." SET {$this->set} {$this->sql}");
+		$result = $this->db->query("UPDATE ". self::$table ." SET {$this->set} {$this->sql} {$this->limit}");
 		$this->clear();
 
 		return $result;

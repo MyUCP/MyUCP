@@ -2,7 +2,7 @@
 
 class Application implements ArrayAccess
 {
-    const VERSION = "5.6.1";
+    const VERSION = "5.7.1";
 
     /**
      * Application status
@@ -108,7 +108,7 @@ class Application implements ArrayAccess
      */
     public function escape($value)
     {
-        if(!is_null($this->db) || $this->db != false)
+        if(!is_null($this->db) && $this->db !== false)
             return $this->db->escape($value);
 
         return $value;
@@ -159,4 +159,93 @@ class Application implements ArrayAccess
         unset($this->registry->$key);
     }
 
+    /**
+     * Get path to the app directory.
+     *
+     * @param null|string $path
+     * @return string
+     */
+    public function appPath($path = null)
+    {
+        if(is_null($path)) {
+            return APP_DIR;
+        }
+
+        return APP_DIR . $path;
+    }
+
+    /**
+     * Get path to the engine directory.
+     *
+     * @param null|string $path
+     * @return string
+     */
+    public function enginePath($path = null)
+    {
+        if(is_null($path)) {
+            return ENGINE_DIR;
+        }
+
+        return ENGINE_DIR . $path;
+    }
+
+    /**
+     * Get path to the resources directory.
+     *
+     * @param null|string $path
+     * @return string
+     */
+    public function resourcesPath($path = null)
+    {
+        if(is_null($path)) {
+            return RESOURCES_DIR;
+        }
+
+        return RESOURCES_DIR . $path;
+    }
+
+    /**
+     * Get path to the views directory.
+     *
+     * @param null|string $path
+     * @return string
+     */
+    public function viewsPath($path = null)
+    {
+        if(is_null($path)) {
+            return VIEWS_DIR;
+        }
+
+        return VIEWS_DIR . $path;
+    }
+
+    /**
+     * Get path to the assets directory.
+     *
+     * @param null|string $path
+     * @return string
+     */
+    public function assetsPath($path = null)
+    {
+        if(is_null($path)) {
+            return ASSETS_DIR;
+        }
+
+        return ASSETS_DIR . $path;
+    }
+
+    /**
+     * Get path to the config directory.
+     *
+     * @param null|string $path
+     * @return string
+     */
+    public function configPath($path = null)
+    {
+        if(is_null($path)) {
+            return CONFIG_DIR;
+        }
+
+        return CONFIG_DIR . $path;
+    }
 }

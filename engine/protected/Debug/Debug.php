@@ -20,7 +20,7 @@ class Debug extends DebugException {
      */
     public function __construct() {
         $args = func_get_args();
-        (!empty($args[1])) ? $args[1] : "0";
+        (!empty($args[1])) ? $args[1] : 0;
         (!empty($args[2])) ? $args[2] : null;
         $this->error = $args[0];
         if(is_array($this->error)){

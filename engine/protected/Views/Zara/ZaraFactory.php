@@ -1,15 +1,29 @@
 <?php 
 
-class ZaraFactory {
-
+class ZaraFactory
+{
+    /**
+     * @var array
+     */
 	protected $sections = [];
+
+    /**
+     * @var array
+     */
 	protected $sectionStack = [];
 
+    /**
+     * @return mixed
+     */
 	public function yieldSection()
     {
         return $this->yieldContent($this->stopSection());
     }
 
+    /**
+     * @param bool $overwrite
+     * @return mixed
+     */
     public function stopSection($overwrite = false)
     {
         $last = array_pop($this->sectionStack);
@@ -32,6 +46,11 @@ class ZaraFactory {
         $this->sections[$section] = $content;
     }
 
+    /**
+     * @param $section
+     * @param string $default
+     * @return mixed
+     */
     public function yieldContent($section, $default = '')
     {
         $sectionContent = $default;
@@ -47,6 +66,9 @@ class ZaraFactory {
         );
     }
 
+    /**
+     * @return mixed
+     */
     public function appendSection()
     {
         $last = array_pop($this->sectionStack);
@@ -60,6 +82,10 @@ class ZaraFactory {
         return $last;
     }
 
+    /**
+     * @param $section
+     * @param string $content
+     */
     public function startSection($section, $content = '')
     {
         if ($content === '') {
@@ -72,6 +98,10 @@ class ZaraFactory {
     }
 }
 
+/**
+ * @param mixed $val
+ * @return mixed
+ */
 function e($val){
 	return $val;
 }

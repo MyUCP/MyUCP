@@ -383,6 +383,11 @@ class Route
         return $this->controller;
     }
 
+    /**
+     * Load controller class file.
+     *
+     * @return string
+     */
     public function loadController()
     {
         $controllerName = $this->parseControllerCallback()[0];
@@ -394,16 +399,19 @@ class Route
 
             array_pop($path);
 
-            $folder = implode("/", $path);
+            $folder = implode( DIRECTORY_SEPARATOR, $path);
         } else {
             $controller = $controllerName;
         }
 
         if(!isset($folder)){
-            $controllerFile = APP_DIR . 'controllers/' . $controller . '.php';
+            $controllerFile = APP_DIR . 'controllers' . DIRECTORY_SEPARATOR . $controller . '.php';
         } else {
-            $controllerFile = APP_DIR . 'controllers/' . $folder . '/' . $controller . '.php';
+            $controllerFile = APP_DIR . 'controllers' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $controller . '.php';
         }
+
+        if(!file_exists($controllerFile))
+            new Debug("Файл контроллера <b>$controllerName</b> не найден");
 
         require_once($controllerFile);
 

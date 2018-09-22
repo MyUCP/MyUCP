@@ -31,7 +31,7 @@ class View {
      * @param $exception
      * @return bool|string
      */
-	public function load($name, $vars = array(), $exception)
+	public function load($name, $vars = [], $exception = true)
     {
 		return $this->Zara->compile($name, $vars, new ZaraFactory, $exception)->getCompiled();
 	}

@@ -3,6 +3,9 @@
 class Zara
 {
 
+    /**
+     * @var string
+     */
 	protected $filename;
 
     /**
@@ -80,14 +83,14 @@ class Zara
      */
 	private function searchFile()
     {
-		if(file_exists(THEME_DIR . $this->filename . '.zara.php')){
-			$this->path = "./assets/cache/".md5(THEME_DIR . $this->filename . ".zara.php");
-			$this->compiler->compile(THEME_DIR . $this->filename . '.zara.php', $this->factory);
+		if(file_exists(VIEWS_DIR . $this->filename . '.zara.php')){
+			$this->path = "./assets/cache/".md5(VIEWS_DIR . $this->filename . ".zara.php");
+			$this->compiler->compile(VIEWS_DIR . $this->filename . '.zara.php', $this->factory);
 			$this->compiled = true;
 
 			return true;
-		} elseif(file_exists(THEME_DIR . $this->filename . '.php')){
-			$this->path = THEME_DIR . $this->filename . '.php';
+		} elseif(file_exists(VIEWS_DIR . $this->filename . '.php')){
+			$this->path = VIEWS_DIR . $this->filename . '.php';
 
 			return true;
 		} else {

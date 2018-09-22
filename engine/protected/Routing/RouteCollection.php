@@ -226,7 +226,9 @@ class RouteCollection implements Countable, IteratorAggregate
         $routes = $this->get($request->method());
 
         foreach ($routes as $route) {
-            if(RouteMatch::validateDomain($route, $request) && RouteMatch::parseUri($route, $request) && RouteMatch::csrfVerify($route, app("csrftoken"))) {
+            if(RouteMatch::validateDomain($route, $request)
+                && RouteMatch::parseUri($route, $request)
+                && RouteMatch::csrfVerify($route, app("csrftoken"))) {
                 return $route;
             }
         }

@@ -433,9 +433,15 @@ class Router
 
         $route = $this->findRoute();
 
-        $route->compileRoute(app());
+        if($route instanceof Route) {
 
-        return $route->getCompiled();
+            $route->compileRoute(app());
+
+            return $route->getCompiled();
+
+        } else {
+            exit($route->getResponse());
+        }
     }
 
     /**

@@ -70,6 +70,11 @@ class Application implements ArrayAccess
     public function init()
     {
         $this->make("config", new Config());
+
+        if(is_array($this->config->db)) {
+            $this->make("db", new DB($this->make("config")->db));
+        }
+
         $this->make("session", new Session());
         $this->make("request", new Request());
         $this->make("response", new Response());
@@ -79,10 +84,6 @@ class Application implements ArrayAccess
         $this->make("view", new View());
         $this->make("router", new Router());
         $this->make("url", new UrlGenerator($this["routes"], $this["request"]));
-
-        if(is_array($this->config->db)) {
-            $this->make("db", new DB($this->make("config")->db));
-        }
 
         $this->initialized = true;
     }
@@ -107,7 +108,7 @@ class Application implements ArrayAccess
      */
     public function escape($value)
     {
-        if(isset($this->db))
+        if(!is_null($this->db) || $this->db != false)
             return $this->db->escape($value);
 
         return $value;

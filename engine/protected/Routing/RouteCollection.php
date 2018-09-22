@@ -219,9 +219,7 @@ class RouteCollection implements Countable, IteratorAggregate
      * Find the first route matching a given request.
      *
      * @param  Request  $request
-     * @return Route
-     *
-     * @throws HttpException
+     * @return Route|HttpException
      */
     public function match(Request $request)
     {
@@ -233,7 +231,7 @@ class RouteCollection implements Countable, IteratorAggregate
             }
         }
 
-        throw new HttpException(404);
+        return new HttpException(404);
     }
 
     /**

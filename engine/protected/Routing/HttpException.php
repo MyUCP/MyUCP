@@ -30,7 +30,7 @@ class HttpException extends Exception
     public function getResponse()
     {
         if(($view = $this->loadView()) === false)
-            return new Debug("test", "test");
+            return new Debug($this->code, $this->message);
 
         return $view;
     }
@@ -40,6 +40,6 @@ class HttpException extends Exception
      */
     protected function loadView()
     {
-        return view("errors/" . $this->code, ['message' => $this->message, "code" => $this->code], false);
+        return view("errors/" . $this->code, ['message' => $this->message, "code" => $this->code], true);
     }
 }

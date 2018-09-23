@@ -5,8 +5,14 @@
  */
 class LocalizationLoader
 {
-
+    /**
+     * @var string
+     */
     protected $locale;
+
+    /**
+     * @var string
+     */
     protected $fallback_locale;
 
     /**
@@ -22,7 +28,7 @@ class LocalizationLoader
     /**
      * @param $path
      * @return array|mixed
-     * @throws Debug
+     * @throws DebugException
      */
     public function load($path)
     {
@@ -32,7 +38,7 @@ class LocalizationLoader
             if($this->checkLocaleDir($this->fallback_locale)) {
                 return $this->loadLocalizationFile($this->fallback_locale, $path);
             } else {
-                throw new Debug("Резервный язык локализации не найден!");
+                throw new DebugException("Резервный язык локализации не найден!");
             }
         }
 
@@ -43,7 +49,7 @@ class LocalizationLoader
      * @param $locale
      * @param $file
      * @return mixed
-     * @throws Debug
+     * @throws DebugException
      */
     private function loadLocalizationFile($locale, $file)
     {
@@ -52,7 +58,7 @@ class LocalizationLoader
         if(file_exists($file_to_load)) {
             return require_once($file_to_load);
         } else {
-            throw new Debug("Не удалось загрузить файл локализации ". $file);
+            throw new DebugException("Не удалось загрузить файл локализации ". $file);
         }
     }
 

@@ -1,8 +1,10 @@
 <?php 
+/*
+  * MyUCP
+  */
 
 class Zara
 {
-
     /**
      * @var string
      */
@@ -44,8 +46,9 @@ class Zara
      * @param ZaraFactory $factory
      * @param bool $exception
      * @return $this
+     * @throws DebugException
      */
-	public function compile($filename, $vars = [], ZaraFactory $factory, $exception = true)
+	public function compile($filename, $vars = [], ZaraFactory $factory = null, $exception = true)
     {
 		$this->vars = $vars;
 		$this->vars["zara"] = $this;
@@ -79,7 +82,8 @@ class Zara
 	}
 
     /**
-     * @return bool|Debug
+     * @return bool
+     * @throws DebugException
      */
 	private function searchFile()
     {
@@ -94,9 +98,11 @@ class Zara
 
 			return true;
 		} else {
-			if($this->exception) {
-				return new Debug('Ошибка: Не удалось загрузить шаблон ' . $this->filename . '!');
+
+		    if($this->exception) {
+                throw new DebugException('Ошибка: Не удалось загрузить шаблон ' . $this->filename . '!');
 			}
+
 			return false;
 		}
 	}

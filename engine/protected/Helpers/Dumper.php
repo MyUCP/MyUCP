@@ -3,22 +3,21 @@
 * MyUCP
 */
 
-
-class Dumper {
-
+class Dumper
+{
     /**
-     * [__construct description]
-     * @param [type] $value [description]
-     * @param [type] $die   [description]
-     * @param string $func  [description]
+     * Dumper constructor.
+     * @param $value
+     * @param $die
+     * @param string $func
      */
-	public function __construct($value, $die, $func = "dd") {
-
+	public function __construct($value, $die, $func = "dd")
+    {
         if($func == "dd"){
 
             $this->dd($value, $die);
 
-        } elseif($func == "ci"){
+        } elseif($func == "ci") {
 
             $this->ci($value, $die);
 
@@ -26,12 +25,11 @@ class Dumper {
     }
 
     /**
-     * [dd description]
-     * @param  [type] $value [description]
-     * @param  [type] $die   [description]
-     * @return [type]        [description]
+     * @param $value
+     * @param $die
      */
-    private function dd($value, $die) {
+    private function dd($value, $die)
+    {
 
         $this->output($value);
 
@@ -40,13 +38,11 @@ class Dumper {
     }
 
     /**
-     * [ci description]
-     * @param  [type] $value [description]
-     * @param  [type] $die   [description]
-     * @return [type]        [description]
+     * @param $value
+     * @param $die
      */
-    private function ci($value, $die) {
-
+    private function ci($value, $die)
+    {
         $className = get_class($value);
         $methods = get_class_methods($className);
 
@@ -58,12 +54,10 @@ class Dumper {
     }
 
     /**
-     * [output description]
-     * @param  [type] $value [description]
-     * @return [type]        [description]
+     * @param $value
      */
-    private function output($value) {
-
+    private function output($value)
+    {
         echo "<pre>";
         var_dump($value);
         echo "</pre>";

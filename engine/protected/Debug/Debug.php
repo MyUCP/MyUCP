@@ -61,6 +61,7 @@ class Debug
         $result = [];
 
         foreach ($this->trace as $trace) {
+
             $at = "";
 
             if(isset($trace['class']))
@@ -137,7 +138,7 @@ class Debug
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function __toString()
     {
@@ -148,6 +149,6 @@ class Debug
         $traces = $this->traceToReadable();
         $lines = $this->visualizeCode();
 
-        return require_once("DebugViewTemplate.php");
+        return (string) require_once("DebugViewTemplate.php");
     }
 }

@@ -3,7 +3,8 @@
 * MyUCP
 */
 
-class View {
+class View
+{
     /**
      * @var Zara
      */
@@ -30,6 +31,7 @@ class View {
      * @param array $vars
      * @param $exception
      * @return bool|string
+     * @throws DebugException
      */
 	public function load($name, $vars = [], $exception = true)
     {

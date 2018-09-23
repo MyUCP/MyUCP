@@ -220,6 +220,7 @@ class RouteCollection implements Countable, IteratorAggregate
      *
      * @param  Request  $request
      * @return Route|HttpException
+     * @throws HttpException
      */
     public function match(Request $request)
     {
@@ -233,7 +234,7 @@ class RouteCollection implements Countable, IteratorAggregate
             }
         }
 
-        return new HttpException(404);
+        throw new HttpException(404, "Страница не найдена");
     }
 
     /**

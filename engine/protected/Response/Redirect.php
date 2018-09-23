@@ -70,6 +70,7 @@ class Redirect
      * @param array $parameters
      * @param int $status
      * @param array $headers
+     * @return mixed
      */
     public function action($action, $parameters = [], $status = 302, $headers = [])
     {

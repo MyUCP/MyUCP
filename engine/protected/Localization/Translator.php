@@ -1,13 +1,23 @@
 <?php
-
-/**
+/*
  * MyUCP
  */
+
 class Translator
 {
-
+    /**
+     * @var LocalizationLoader
+     */
     protected $loader;
+
+    /**
+     * @var string
+     */
     protected $locale;
+
+    /**
+     * @var array
+     */
     protected $loaded = [];
 
     /**
@@ -82,7 +92,7 @@ class Translator
 
     /**
      * @param $group
-     * @return void
+     * @throws DebugException
      */
     protected function load($group)
     {

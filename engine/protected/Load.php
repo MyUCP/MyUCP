@@ -20,6 +20,7 @@ class Load
 
     /**
      * @return bool
+     * @throws DebugException
      */
 	public function model()
     {
@@ -36,7 +37,7 @@ class Load
 					$this->app->$modelClass = new $modelClass($this->app);
 				}
 			} else {
-				new Debug('Ошибка: Не удалось загрузить модель ' . $name . '!');
+				throw new DebugException('Ошибка: Не удалось загрузить модель ' . $name . '!');
 			}
 		}
 
@@ -45,6 +46,7 @@ class Load
 
     /**
      * @return bool
+     * @throws DebugException
      */
 	public function library()
     {
@@ -57,7 +59,7 @@ class Load
 			if(is_readable($libPath)){
 				require_once($libPath);
 			} else {
-				new Debug('Ошибка: Не удалось загрузить библиотеку ' . $name . '!');
+				throw new DebugException('Ошибка: Не удалось загрузить библиотеку ' . $name . '!');
 			}
 		}
 

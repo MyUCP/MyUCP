@@ -3,57 +3,91 @@
 * MyUCP
 */
 
-class Config {
+class Config 
+{
+    /**
+     * @var array 
+     */
 	private $data = [];
-	
-	public function __construct() {
+
+    /**
+     * Config constructor.
+     * @throws DebugException
+     */
+	public function __construct() 
+    {
 		if(is_readable('./configs/main.php')) {
 			$config = require_once('./configs/main.php');
+
 			$this->data = array_merge($this->data, $config);
+
 			$this->loadConfigs();
             $this->loadCustomFiles();
+
 			return true;
 		}
-		new Debug('Ошибка: Не удалось загрузить файл конфигурации!');
+
+		throw new DebugException('Ошибка: Не удалось загрузить файл конфигурации!');
 	}
-	
-	public function __set($key, $val){
+
+    /**
+     * @param $key
+     * @param $val
+     */
+	public function __set($key, $val)
+    {
 		$this->data[$key] = $val;
 	}
-	
-	public function __get($key){
-		if(isset($this->data[$key])){
+
+    /**
+     * @param mixed $key
+     * @return mixed|null
+     */
+	public function __get($key)
+    {
+		if(isset($this->data[$key])) {
 			return $this->data[$key];
 		}
-		return false;
+
+		return null;
 	}
-	
-	public function loadConfigs(){
+
+    /**
+     * @return bool
+     * @throws DebugException
+     */
+	public function loadConfigs()
+    {
 		$configs = scandir("./configs");
 		array_shift($configs);
 		array_shift($configs);
 
 		foreach($configs as $item){
 			if($item != "main.php" && $item != "autoload_classes.php"){
-				$a .= $item;
-				if(is_readable('./configs/'. $item)) {
-					$config = require_once('./configs/'. $item);
+				if(is_readable(CONFIG_DIR . $item)) {
+					$config = require_once(CONFIG_DIR . $item);
+
 					$configName = substr($item, 0, -4);
+
 					$this->data[$configName] = (object) $config;
-				}
-				new Debug('Ошибка: Не удалось загрузить дополнительный файл конфигурации!');
+				} else {
+                    throw new DebugException('Ошибка: Не удалось загрузить дополнительный файл конфигурации!');
+                }
 			}
 		}
+
 		return true;
 	}
 
+    /**
+     * @return void
+     */
 	private function loadCustomFiles()
     {
         foreach($this->data['load_files'] as $path) {
-            if (file_exists($path)) {
+            if (file_exists($path) && is_readable($path)) {
                 require_once($path);
             }
         }
     }
 }
-?>

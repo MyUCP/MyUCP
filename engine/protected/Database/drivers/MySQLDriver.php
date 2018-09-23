@@ -18,7 +18,7 @@ final class MySQLDriver implements Driver
 	public function __construct($options)
 	{
 	    if(!$this->tryConnect($options)) {
-	        throw new Debug(mysqli_connect_errno()." ".mysqli_connect_error(), "1");
+	        throw new DebugException(mysqli_connect_errno()." ".mysqli_connect_error(), "1");
         }
 
         $this->setCharset($options['charset']);

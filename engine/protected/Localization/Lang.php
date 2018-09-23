@@ -12,7 +12,7 @@ class Lang
      */
     public function has($key)
     {
-        return registry()->lang->has($key);
+        return app()->lang->has($key);
     }
 
     /**
@@ -22,7 +22,7 @@ class Lang
      */
     public static function get($key, $replace = [])
     {
-        return registry()->lang->get($key, $replace);
+        return app()->lang->get($key, $replace);
     }
 
     /**
@@ -31,7 +31,7 @@ class Lang
      */
     public static function setLocale($locale)
     {
-        return registry()->lang->setLocale($locale);
+        return app()->lang->setLocale($locale);
     }
 
     /**
@@ -39,6 +39,6 @@ class Lang
      */
     public static function currentLocale()
     {
-        return registry()->lang->currentLocale();
+        return app()->lang->currentLocale();
     }
 }

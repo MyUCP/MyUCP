@@ -68,6 +68,7 @@ class Application implements ArrayAccess
      * Initialization of the main classes for the project
      *
      * @return $this
+     * @throws DebugException|Exception
      */
     public function init()
     {

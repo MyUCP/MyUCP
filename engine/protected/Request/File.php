@@ -1,7 +1,7 @@
 <?php
 
-class File {
-
+class File
+{
 	public $originalName;
 	public $size;
 	public $mimeType;

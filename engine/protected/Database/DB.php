@@ -53,7 +53,7 @@ class DB
 		if($options['driver'] == "mysql"){
 			$class = MySQLDriver::class;
 		} else {
-			new Debug("Не удалось найти драйвер для работы с базой данных!", 1);
+			throw new DebugException("Не удалось найти драйвер для работы с базой данных!", 1);
 		}
 
 		$this->driver = new $class($options);
@@ -476,7 +476,7 @@ class DB
 	}
 	
 	private function error($err) {
-		new Debug("Ошибка: ".$err, "1");
+		throw new DebugException("Ошибка: ".$err, "1");
 	}
 
 	private function cutStats() {
@@ -506,7 +506,7 @@ class DB
 	public static function concat($values = []) {
 
 		if(empty($values) && !is_array($values))
-			new Debug("Метод concat() ожидает в качестве параметра массив значений", 1);
+			throw new DebugException("Метод concat() ожидает в качестве параметра массив значений", 1);
 
 		$concat = "";
 		$count = count($values);
@@ -521,4 +521,3 @@ class DB
 		return "CONCAT({$concat})";
 	}
 }
-?>

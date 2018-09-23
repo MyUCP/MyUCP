@@ -411,7 +411,7 @@ class Route
         }
 
         if(!file_exists($controllerFile))
-            new Debug("Файл контроллера <b>$controllerName</b> не найден");
+            throw new DebugException("Файл контроллера <b>$controllerName</b> не найден");
 
         require_once($controllerFile);
 

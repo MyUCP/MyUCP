@@ -3,211 +3,399 @@
 * MyUCP
 */
 
-class Model {
-
+class Model
+{
+    /**
+     * @var Registry
+     */
     private $registry;
+
+    /**
+     * @var null|string
+     */
     public $table = null;
+
+    /**
+     * @var string
+     */
     public $primary_key = "id";
 
-    private $Builder;
+    /**
+     * @var Builder
+     */
+    protected $Builder;
 
-    public function __construct($registry) {
+    /**
+     * Model constructor.
+     * @param $registry
+     */
+    public function __construct($registry)
+    {
         $this->registry = $registry;
         $this->Builder = new Builder();
         $this->table = ($this->table == null) ? mb_strtolower(str_replace("Model", "", get_class($this))."s") : $this->table;
         $this->Builder->from($this->table);
     }
 
-    public function __get($key) {
+    /**
+     * @param $key
+     * @return bool|mixed
+     */
+    public function __get($key)
+    {
         return $this->registry->$key;
     }
 
-    public function __set($key, $value) {
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function __set($key, $value)
+    {
         $this->registry->$key = $value;
     }
 
-    public function table($name) {
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function table($name)
+    {
         $this->table = $name;
         $this->Builder->from($this->table);
 
         return $this;
     }
 
-    public function create($data = []){
-
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    public function create($data = [])
+    {
         return $this->Builder->from($this->table)->create($data);
     }
 
-    public function where(){
+    /**
+     * @return $this
+     * @throws DebugException
+     */
+    public function where()
+    {
         $this->Builder->where(func_get_args());
 
         return $this;
     }
 
-    public function orWhere(){
+    /**
+     * @return $this
+     * @throws DebugException
+     */
+    public function orWhere()
+    {
         $this->Builder->orWhere(func_get_args());
 
         return $this;
     }
 
-    public function whereBetween($row, $condition = []){
+    /**
+     * @param $row
+     * @param array $condition
+     * @return $this
+     * @throws DebugException
+     */
+    public function whereBetween($row, $condition = [])
+    {
         $this->Builder->whereBetween($row, $condition);
 
         return $this;
     }
 
-    public function whereNotBetween($row, $condition = []){
+    /**
+     * @param $row
+     * @param array $condition
+     * @return $this
+     * @throws DebugException
+     */
+    public function whereNotBetween($row, $condition = [])
+    {
         $this->Builder->whereNotBetween($row, $condition);
 
         return $this;
     }
 
-    public function whereIn($row, $condition = []){
+    /**
+     * @param $row
+     * @param array $condition
+     * @return $this
+     * @throws DebugException
+     */
+    public function whereIn($row, $condition = [])
+    {
         $this->Builder->whereIn($row, $condition);
 
         return $this;
     }
 
-    public function whereNotIn($row, $condition = []){
+    /**
+     * @param $row
+     * @param array $condition
+     * @return $this
+     * @throws DebugException
+     */
+    public function whereNotIn($row, $condition = [])
+    {
         $this->Builder->whereNotIn($row, $condition);
 
         return $this;
     }
 
-    public function whereNull($row = null){
+    /**
+     * @param null $row
+     * @return $this
+     * @throws DebugException
+     */
+    public function whereNull($row = null)
+    {
         $this->Builder->whereNull($row);
 
         return $this;
     }
 
-    public function whereNotNull($row = null){
+    /**
+     * @param null $row
+     * @return $this
+     * @throws DebugException
+     */
+    public function whereNotNull($row = null)
+    {
         $this->Builder->whereNotNull($row);
 
         return $this;
     }
 
-    public function order($row, $type){
+    /**
+     * @param $row
+     * @param $type
+     * @return $this
+     */
+    public function order($row, $type)
+    {
         $this->Builder->order($row, $type);
         return $this;
     }
 
-    public function select($row){
+    /**
+     * @param $row
+     * @return $this
+     */
+    public function select($row)
+    {
         $this->Builder->select($row);
 
         return $this;
     }
 
-    public function addSelect($row){
+    /**
+     * @param $row
+     * @return $this
+     */
+    public function addSelect($row)
+    {
         $this->Builder->addSelect($row);
 
         return $this;
     }
 
-    public function limit(){
+    /**
+     * @return $this
+     */
+    public function limit()
+    {
         $this->Builder->limit(func_get_args());
 
         return $this;
     }
 
-    public function get(){
-
+    /**
+     * @return mixed
+     */
+    public function get()
+    {
         return $this->Builder->from($this->table)->get();
     }
 
+    /**
+     * @param $key
+     * @return mixed
+     * @throws DebugException
+     */
     public function find($key)
     {
         return $this->Builder->from($this->table)->where($this->primary_key, $key)->first();
     }
 
-    public function first($key = null){
-
+    /**
+     * @param null $key
+     * @return mixed
+     * @throws DebugException
+     */
+    public function first($key = null)
+    {
         if($key == null)
             return $this->Builder->from($this->table)->first();
 
         return $this->Builder->from($this->table)->where($this->primary_key, $key)->first();
     }
 
-    public function firstOrError($key = null){
-
+    /**
+     * @param null $key
+     * @return HttpException
+     * @throws DebugException
+     */
+    public function firstOrError($key = null)
+    {
         if($key == null)
             return $this->Builder->from($this->table)->firstOrError();
 
         return $this->Builder->from($this->table)->where($this->primary_key, $key)->firstOrError();
     }
 
-    public function value($value){
-
+    /**
+     * @param $value
+     * @return mixed
+     */
+    public function value($value)
+    {
         return $this->Builder->from($this->table)->value($value);
     }
 
-    public function count(){
-
+    /**
+     * @return mixed
+     */
+    public function count()
+    {
         return $this->Builder->from($this->table)->count();
     }
 
-    public function max($row = null){
-
+    /**
+     * @param null $row
+     * @return mixed
+     * @throws DebugException
+     */
+    public function max($row = null)
+    {
         return $this->Builder->from($this->table)->max($row);
     }
 
-    public function min($row = null){
-
+    /**
+     * @param null $row
+     * @return mixed
+     * @throws DebugException
+     */
+    public function min($row = null)
+    {
         return $this->Builder->from($this->table)->min($row);
     }
 
-    public function avg($row = null){
-
+    /**
+     * @param null $row
+     * @return mixed
+     * @throws DebugException
+     */
+    public function avg($row = null)
+    {
         return $this->Builder->from($this->table)->avg($row);
     }
 
-    public function sum($row = null){
-
+    /**
+     * @param null $row
+     * @return mixed
+     * @throws DebugException
+     */
+    public function sum($row = null)
+    {
         return $this->Builder->from($this->table)->sum($row);
     }
 
-    public function groupBy($row) {
+    /**
+     * @param $row
+     * @return $this
+     */
+    public function groupBy($row)
+    {
         $this->Builder->groupBy($row);
 
         return $this;
     }
 
-    public function join() {
+    /**
+     * @return $this
+     * @throws DebugException
+     */
+    public function join()
+    {
         $this->Builder->join(func_get_args());
 
         return $this;
     }
 
-    public function leftJoin() {
+    /**
+     * @return $this
+     * @throws DebugException
+     */
+    public function leftJoin()
+    {
         $this->Builder->leftJoin(func_get_args());
 
         return $this;
     }
 
-    public function rightJoin() {
+    /**
+     * @return $this
+     * @throws DebugException
+     */
+    public function rightJoin()
+    {
         $this->Builder->rightJoin(func_get_args());
 
         return $this;
     }
 
-    public function crossJoin() {
+    /**
+     * @return $this
+     * @throws DebugException
+     */
+    public function crossJoin()
+    {
         $this->Builder->crossJoin(func_get_args());
 
         return $this;
     }
 
-    public function set(){
+    /**
+     * @return $this
+     */
+    public function set()
+    {
         $this->Builder->set(func_get_args()[0]);
 
         return $this;
     }
 
-    public function update(){
-
+    /**
+     * @return mixed
+     */
+    public function update()
+    {
         return $this->Builder->from($this->table)->update();
     }
 
-    public function delete(){
-
+    /**
+     * @return mixed
+     */
+    public function delete()
+    {
         return $this->Builder->from($this->table)->delete();
     }
 }

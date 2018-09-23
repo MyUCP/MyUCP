@@ -3,19 +3,37 @@
 * MyUCP
 */
 
-abstract class Controller {
-
+abstract class Controller
+{
+    /**
+     * @var Registry
+     */
 	private $registry;
 
-	public function __construct($registry) {
+    /**
+     * Controller constructor.
+     * @param $registry
+     */
+	public function __construct($registry)
+    {
 		$this->registry = $registry;
 	}
-	
-	public function __get($key) {
+
+    /**
+     * @param $key
+     * @return bool|mixed
+     */
+	public function __get($key)
+    {
 		return $this->registry->$key;
 	}
-	
-	public function __set($key, $value) {
+
+    /**
+     * @param $key
+     * @param $value
+     */
+	public function __set($key, $value)
+    {
 		$this->registry->$key = $value;
 	}
 }

@@ -13,7 +13,7 @@ class Debug
     /**
      * @var int
      */
-    public $code = 0;
+    public $code = 500;
 
     /**
      * @var string
@@ -139,11 +139,12 @@ class Debug
 
     /**
      * @return string
+     * @throws DebugException
      */
     public function __toString()
     {
         if(!config()->debug_mode) {
-            return $this->message;
+            return (new HttpException($this->code, $this->message))->getResponse();
         }
 
         $traces = $this->traceToReadable();

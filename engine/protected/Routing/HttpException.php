@@ -25,14 +25,22 @@ class HttpException extends Exception
     }
 
     /**
-     * @return bool|Debug|mixed
+     * @return bool|mixed
+     * @throws DebugException
      */
     public function getResponse()
     {
-        if(($view = $this->loadView()) === false)
-            return new Debug($this->code, $this->message);
+        try {
+            $view = $this->loadView();
 
-        return $view;
+            return $view;
+        } catch (Exception $e) {
+            $this->code = 500;
+
+            $view = $this->loadView();
+
+            return $view;
+        }
     }
 
     /**

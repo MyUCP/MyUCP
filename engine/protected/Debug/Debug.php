@@ -3,44 +3,151 @@
 * MyUCP
 */
 
-class Debug extends DebugException {
+class Debug
+{
+    /**
+     * @var string
+     */
+    public $message = "Unknown error";
 
-	public $message = "Произошла неизвестная ошибка";
-	public $description = ["Ошибка при работе приложения", 
-                            "Ошибка при работе с базой данных", 
-                            "Внутреняя ошибка фреймворка",
-                            null => "Ошибка при работе приложения"];
-	public $code = 0;
-	public $file;
-	public $line;
-	protected $error;
+    /**
+     * @var int
+     */
+    public $code = 0;
+
+    /**
+     * @var string
+     */
+    public $file;
+
+    /**
+     * @var int
+     */
+    public $line = 0;
+
+    /**
+     * @var array
+     */
+    public $trace = [];
 
     /**
      * Debug constructor.
+     *
+     * @param string $message
+     * @param string $file
+     * @param int $line
+     * @param int $code
+     * @param array $trace
      */
-    public function __construct() {
-        $args = func_get_args();
-        (!empty($args[1])) ? $args[1] : 0;
-        (!empty($args[2])) ? $args[2] : null;
-        $this->error = $args[0];
-        if(is_array($this->error)){
-            if($this->error[0] == 8) return true;
-            $this->message = $this->error[1];
-            $this->file = $this->error[2];
-            $this->line = $this->error[3];
+    public function __construct($message, $file = "", $line = 0, $code = 0, $trace = [])
+    {
+        $this->message = $message;
+        $this->file = $file;
+        $this->line = $line;
+        $this->code = $code;
+
+        if(empty($trace)) {
+            $this->trace = debug_backtrace();
         } else {
-            $this->message = $this->error;
-            $this->code = $args[1];
-            new DebugException($args[0], $args[1], $args[2]);
-        }
-
-        return $this->showError();
-    }
-
-    public function showError(){
-        if(registry()->config->debug_mode){
-    	   require_once("DebugViewTemplate.php");
-           die();
+            $this->trace = $trace;
         }
     }
-} 
+
+    /**
+     * @return array
+     */
+    public function traceToReadable()
+    {
+        $result = [];
+
+        foreach ($this->trace as $trace) {
+            $at = "";
+
+            if(isset($trace['class']))
+                $at .= "<abbr title='". $trace['class'] ."::class'>". $trace['class'] . "</abbr>";
+
+            if(isset($trace['type']))
+                $at .= $trace['type'];
+
+            if(isset($trace['function']))
+                $at .= $trace['function'];
+
+            if(empty($trace['args'])) {
+                $at .= "()";
+            } else {
+                $at .= "(";
+
+                foreach ($trace['args'] as $num => $arg) {
+                    if(is_object($arg)) {
+                        $at .= "<abbr title='". get_class($arg) ."::class'>object(" . get_class($arg) . ")</abbr>";
+                    } else {
+                        $at .= "<abbr title='$arg'>". gettype($arg) ."(" . basename($arg) . ")</abbr>";
+                    }
+
+                    if($num != count($trace['args']) - 1)
+                        $at .= ", ";
+                }
+
+                $at .= ")";
+            }
+
+            $in = basename($trace['file']) . " строка " . $trace['line'];
+            $full_in = $trace['file'] . " строка " . $trace['line'];
+
+            $result[] = [
+                "at" => $at,
+                "in" => $in,
+                "full_in" => $full_in,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return string
+     */
+    private function visualizeCode()
+    {
+        $result = "";
+        $file = file($this->file);
+
+        if($this->line == 0) {
+            $start = 0;
+        } elseif($this->line - 12 >= 0) {
+            $start = $this->line - 12;
+        } else {
+            $start = 0;
+        }
+
+        for($i = $start; $i < $this->line; $i++) {
+            $result .= $file[$i];
+        }
+
+
+        $limit = (count($file) < $this->line + 11 ? count($file) : $this->line + 10);
+
+        for($i = $this->line; $i < $limit; $i++) {
+            $result .= $file[$i];
+        }
+
+        $result = str_replace("<?php", "&lt;?php", $result);
+
+        return $result;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function __toString()
+    {
+        if(!config()->debug_mode) {
+            return $this->message;
+        }
+
+        $traces = $this->traceToReadable();
+        $lines = $this->visualizeCode();
+
+        return require_once("DebugViewTemplate.php");
+    }
+}

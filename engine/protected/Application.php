@@ -66,10 +66,14 @@ class Application implements ArrayAccess
 
     /**
      * Initialization of the main classes for the project
+     *
+     * @return $this
      */
     public function init()
     {
         $this->make("config", new Config());
+
+        $this->make("handleException", new HandleExceptions())->make($this);
 
         if(is_array($this->config->db)) {
             $this->make("db", new DB($this->make("config")->db));
@@ -86,6 +90,8 @@ class Application implements ArrayAccess
         $this->make("url", new UrlGenerator($this["routes"], $this["request"]));
 
         $this->initialized = true;
+
+        return $this;
     }
 
     /**

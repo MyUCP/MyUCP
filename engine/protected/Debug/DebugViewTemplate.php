@@ -67,22 +67,21 @@
     </head>
     <body>
         <div id="sf-resetcontent" class="sf-reset">
-            <h1><?=$this->description[$this->code]?>.</h1>
+            <h1>При работе приложения что-то пошло не так.</h1>
             <h2 class="block_exception clear_fix">
                 <span class="exception_message"><?=$this->message?></span>
             </h2>
             <div class="block">
                 В файле <a title="<?=$this->file?> строка <?=$this->line?>" ondblclick="var f=this.innerHTML;this.innerHTML=this.title;this.title=f;"><?=basename($this->file)?> строка <?=$this->line?></a>
-                <pre class="brush: php; highlight: [<?=$this->line-1?>]; first-line: <?=$this->line-4?>;">
-                    <?=file($this->file)[$this->line-4]?>
-                    <?=file($this->file)[$this->line-3]?>
-                    <?=file($this->file)[$this->line-2]?>
-                    <?=file($this->file)[$this->line-1]?>
-                    <?=file($this->file)[$this->line]?>
-                    <?=file($this->file)[$this->line+1]?>
-                    <?=file($this->file)[$this->line+2]?>
-                    <?=file($this->file)[$this->line+3]?>
-                </pre>
+                <pre class="brush: php; highlight: [<?=$this->line?>]; first-line: <?=(($this->line - 11) >= 0 ? ($this->line - 11) : 1)?>;"><?=$lines?></pre>
+
+                <ul class="traces">
+                    <?php foreach($traces as $trace): ?>
+                    <li>
+                        <?=$trace['at']?> в <a title="<?=$trace['full_in']?>" ondblclick="var f=this.innerHTML;this.innerHTML=this.title;this.title=f;"><?=$trace['in']?></a>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
         </div>
     </body>

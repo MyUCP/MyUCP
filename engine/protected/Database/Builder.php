@@ -112,7 +112,7 @@ class Builder {
 					$this->sql .= " AND {$condition[0]} {$condition[1]} ".$value;
 				}
 			} else {
-				new Debug("Оператор <b>{$condition[1]}</b> не найден!", 1);
+				throw new DebugException("Оператор <b>{$condition[1]}</b> не найден!", 1);
 			}
 		}
 
@@ -123,7 +123,7 @@ class Builder {
 		$condition = (is_array(func_get_args()[0])) ? func_get_args()[0] : func_get_args();
 
 		if($this->presence === false)
-			new Debug("Использование метода orWhere() без метода where() невозможно", 1);
+			throw new DebugException("Использование метода orWhere() без метода where() невозможно", 1);
 
         if(!isset($condition[1])) {
             $this->sql .= " OR ". $condition[0];
@@ -137,7 +137,7 @@ class Builder {
 			if(in_array($condition[1], $this->operators)){
 				$this->sql .= " OR {$condition[0]} {$condition[1]} '{$condition[2]}'";
 			} else {
-				new Debug("Оператор <b>{$condition[1]}</b> не найден!", 1);
+				throw new DebugException("Оператор <b>{$condition[1]}</b> не найден!", 1);
 			}
 		}
 
@@ -150,7 +150,7 @@ class Builder {
 			$this->sql .= "WHERE ";
 
 		if(!is_array($condition))
-			new Debug("В качестве второго аргумента метод whereBetween() ожидает массив", 1);
+			throw new DebugException("В качестве второго аргумента метод whereBetween() ожидает массив", 1);
 
 		if($this->presence === false){
 			$this->sql .= "{$row} BETWEEN '{$condition[0]}' AND '{$condition[1]}'";
@@ -168,7 +168,7 @@ class Builder {
 			$this->sql .= "WHERE ";
 
 		if(!is_array($condition))
-			new Debug("В качестве второго аргумента метод whereNotBetween() ожидает массив", 1);
+			throw new DebugException("В качестве второго аргумента метод whereNotBetween() ожидает массив", 1);
 
 		if($this->presence === false){
 			$this->sql .= "{$row} NOT BETWEEN '{$condition[0]}' AND '{$condition[1]}'";
@@ -186,7 +186,7 @@ class Builder {
 			$this->sql .= "WHERE ";
 
 		if(!is_array($condition))
-			new Debug("В качестве второго аргумента метод whereIn() ожидает массив", 1);
+			throw new DebugException("В качестве второго аргумента метод whereIn() ожидает массив", 1);
 
 		$values = "(";
 
@@ -214,7 +214,7 @@ class Builder {
 			$this->sql .= "WHERE ";
 
 		if(!is_array($condition))
-			new Debug("В качестве второго аргумента метод whereNotIn() ожидает массив", 1);
+			throw new DebugException("В качестве второго аргумента метод whereNotIn() ожидает массив", 1);
 
 		$values = "(";
 
@@ -242,7 +242,7 @@ class Builder {
 			$this->sql .= "WHERE ";
 
 		if(empty($row))
-			new Debug("В качестве аргумента метод whereNull() ожидает название поля", 1);
+			throw new DebugException("В качестве аргумента метод whereNull() ожидает название поля", 1);
 
 		if($this->presence === false){
 			$this->sql .= "ISNULL({$row})";
@@ -260,7 +260,7 @@ class Builder {
 			$this->sql .= "WHERE ";
 
 		if(empty($row))
-			new Debug("В качестве аргумента метод whereNotNull() ожидает название поля", 1);
+			throw new DebugException("В качестве аргумента метод whereNotNull() ожидает название поля", 1);
 
 		if($this->presence === false){
 			$this->sql .= "NOT ISNULL({$row})";
@@ -343,7 +343,7 @@ class Builder {
 
 	public function max($row = null){
 		if(empty($row)) {
-			new Debug("Для метода max() необходимо указать параметр с названием поля", 1);
+			throw new DebugException("Для метода max() необходимо указать параметр с названием поля", 1);
 		}
 
 		$result = $this->db->getOne("SELECT MAX({$row}) FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
@@ -354,7 +354,7 @@ class Builder {
 
 	public function min($row = null){
 		if(empty($row)) {
-			new Debug("Для метода min() необходимо указать параметр с названием поля", 1);
+			throw new DebugException("Для метода min() необходимо указать параметр с названием поля", 1);
 		}
 
 		$result = $this->db->getOne("SELECT MIN({$row}) FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
@@ -365,7 +365,7 @@ class Builder {
 
 	public function avg($row = null){
 		if(empty($row)) {
-			new Debug("Для метода avg() необходимо указать параметр с названием поля", 1);
+			throw new DebugException("Для метода avg() необходимо указать параметр с названием поля", 1);
 		}
 
 		$result = $this->db->getOne("SELECT AVG({$row}) FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
@@ -376,7 +376,7 @@ class Builder {
 
 	public function sum($row = null){
 		if(empty($row)) {
-			new Debug("Для метода sum() необходимо указать параметр с названием поля", 1);
+			throw new DebugException("Для метода sum() необходимо указать параметр с названием поля", 1);
 		}
 
 		$result = $this->db->getOne("SELECT SUM({$row}) FROM ". self::$table ." ".$this->join.$this->sql.$this->group.$this->order.$this->limit);
@@ -395,16 +395,16 @@ class Builder {
 		$params = (is_array(func_get_args()[0])) ? func_get_args()[0] : func_get_args();
 
 		if(empty($params[0]))
-			new Debug("В качестве первого параметра метода join() ожидается название таблицы", 1);
+			throw new DebugException("В качестве первого параметра метода join() ожидается название таблицы", 1);
 
 		if(empty($params[2]))
-			new Debug("Не указано условие для метода join()", 1);
+			throw new DebugException("Не указано условие для метода join()", 1);
 
 		if(empty($params[1]) or empty($params[3]))
-			new Debug("Не указаны поля для метода join()", 1);
+			throw new DebugException("Не указаны поля для метода join()", 1);
 
 		if(!empty($this->join))
-			new Debug("В запросе не может присутствовать больше одного объеденения строк JOIN", 1);
+			throw new DebugException("В запросе не может присутствовать больше одного объеденения строк JOIN", 1);
 
 		$this->join = "INNER JOIN {$params[0]} ON {$params[1]} {$params[2]} {$params[3]} ";
 
@@ -415,16 +415,16 @@ class Builder {
 		$params = (is_array(func_get_args()[0])) ? func_get_args()[0] : func_get_args();
 
 		if(empty($params[0]))
-			new Debug("В качестве первого параметра метода leftJoin() ожидается название таблицы", 1);
+			throw new DebugException("В качестве первого параметра метода leftJoin() ожидается название таблицы", 1);
 
 		if(empty($params[2]))
-			new Debug("Не указано условие для метода leftJoin()", 1);
+			throw new DebugException("Не указано условие для метода leftJoin()", 1);
 
 		if(empty($params[1]) or empty($params[3]))
-			new Debug("Не указаны поля для метода leftJoin()", 1);
+			throw new DebugException("Не указаны поля для метода leftJoin()", 1);
 
 		if(!empty($this->join))
-			new Debug("В запросе не может присутствовать больше одного объеденения строк JOIN", 1);
+			throw new DebugException("В запросе не может присутствовать больше одного объеденения строк JOIN", 1);
 
 		$this->join = "LEFT JOIN {$params[0]} ON {$params[1]} {$params[2]} {$params[3]} ";
 
@@ -435,16 +435,16 @@ class Builder {
 		$params = (is_array(func_get_args()[0])) ? func_get_args()[0] : func_get_args();
 
 		if(empty($params[0]))
-			new Debug("В качестве первого параметра метода rightJoin() ожидается название таблицы", 1);
+			throw new DebugException("В качестве первого параметра метода rightJoin() ожидается название таблицы", 1);
 
 		if(empty($params[2]))
-			new Debug("Не указано условие для метода rightJoin()", 1);
+			throw new DebugException("Не указано условие для метода rightJoin()", 1);
 
 		if(empty($params[1]) or empty($params[3]))
-			new Debug("Не указаны поля для метода rightJoin()", 1);
+			throw new DebugException("Не указаны поля для метода rightJoin()", 1);
 
 		if(!empty($this->join))
-			new Debug("В запросе не может присутствовать больше одного объеденения строк JOIN", 1);
+			throw new DebugException("В запросе не может присутствовать больше одного объеденения строк JOIN", 1);
 
 		$this->join = "RIGHT JOIN {$params[0]} ON {$params[1]} {$params[2]} {$params[3]} ";
 
@@ -454,10 +454,10 @@ class Builder {
 	public function crossJoin($table = null) {
 
 		if(empty($table))
-			new Debug("В метод crossJoin() не передан параметр с названием таблицы", 1);
+			throw new DebugException("В метод crossJoin() не передан параметр с названием таблицы", 1);
 
 		if(!empty($this->join))
-			new Debug("В запросе не может присутствовать больше одного объеденения строк JOIN", 1);
+			throw new DebugException("В запросе не может присутствовать больше одного объеденения строк JOIN", 1);
 
 		$this->join = "CROSS JOIN {$table} ";
 
@@ -516,7 +516,7 @@ class Builder {
 	public function increment($num) {
 
 		if($num < 1)
-			new Debug("Метод increment() в качестве аргумента может принять только число", 1);
+			throw new DebugException("Метод increment() в качестве аргумента может принять только число", 1);
 
 		return $this->db->query("ALTER TABLE ". self::$table ." AUTO_INCREMENT = {$num}");
 	}

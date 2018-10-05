@@ -16,8 +16,8 @@ class Config
      */
 	public function __construct() 
     {
-		if(is_readable('./configs/main.php')) {
-			$config = require_once('./configs/main.php');
+		if(is_readable(CONFIG_DIR . 'main.php')) {
+			$config = require_once(CONFIG_DIR . 'main.php');
 
 			$this->data = array_merge($this->data, $config);
 

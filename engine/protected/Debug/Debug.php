@@ -62,6 +62,9 @@ class Debug
 
         foreach ($this->trace as $trace) {
 
+            if(!isset($trace['file']))
+                continue;
+
             $at = "";
 
             if(isset($trace['class']))

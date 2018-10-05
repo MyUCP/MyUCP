@@ -58,8 +58,21 @@ return [
 	],
     */
 
-    //Список пользовательских файлов для загрузки
+    // Список пользовательских файлов для загрузки
     'load_files'          =>      [
-        "app/helpers/Custom.php",
+        //
     ],
+
+    // Список расширений
+    'extensions'   =>  [
+        \Extensions\Example\Example::class,
+
+
+        // Список расширений которые будут инициализированы при запуске приложения
+        // Обязательно должны реализовывать класс BootExtensionable
+        'boot'  =>  [
+            \Extensions\ExampleBoot\ExampleBoot::class,
+        ],
+    ],
+
 ];

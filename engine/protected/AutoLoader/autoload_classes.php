@@ -59,4 +59,8 @@ return [
     'Collection'            =>  'engine/protected/Collection/Collection.php',
     'Arrayable'             =>  'engine/protected/Collection/Arrayable.php',
     'Jsonable'              =>  'engine/protected/Collection/Jsonable.php',
+
+    \MyUCP\Extension\Extension::class => 'engine/protected/Extension/Extension.php',
+    \MyUCP\Extension\Extensionable::class => 'engine/protected/Extension/Extensionable.php',
+    \MyUCP\Extension\BootExtensionable::class => 'engine/protected/Extension/BootExtensionable.php',
 ];

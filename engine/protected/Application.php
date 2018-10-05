@@ -90,6 +90,8 @@ class Application implements ArrayAccess
         $this->make("router", new Router());
         $this->make("url", new UrlGenerator($this["routes"], $this["request"]));
 
+        $this->make("extension", new \MyUCP\Extension\Extension($this));
+
         $this->initialized = true;
 
         return $this;

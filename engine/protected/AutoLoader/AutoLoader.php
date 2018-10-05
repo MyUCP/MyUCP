@@ -6,9 +6,9 @@
 class AutoLoader
 {
     /**
-     * @var string
+     * @var array
      */
-    protected $path;
+    protected $path = [];
 
     /**
      * @var string
@@ -49,7 +49,7 @@ class AutoLoader
      */
 	public function getPath()
     {
-		if(!empty($this->path[$this->className])) {
+		if(isset($this->path[$this->className])) {
 			return $this->path[$this->className];
 		} else {
 			throw new DebugException("Не найден путь автозагрузки файла для класса: ".$this->className);

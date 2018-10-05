@@ -31,7 +31,7 @@ class Session
         $this->key = $key;
 
         if($value != null) {
-            if (gettype($value) == "object") {
+            if ($value instanceof Closure) {
                 $this->put($key, $value());
             } else {
                 $this->put($key, $value);

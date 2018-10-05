@@ -33,8 +33,6 @@ class Extension
         $this->app = $app;
 
         $this->load();
-
-        $this->boot();
     }
 
     /**
@@ -64,7 +62,7 @@ class Extension
     /**
      * @return void
      */
-    protected function boot()
+    public function boot()
     {
         foreach ($this->bootedExtensions as $extension => $instance)
         {

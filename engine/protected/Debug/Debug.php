@@ -83,7 +83,9 @@ class Debug
 
                 foreach ($trace['args'] as $num => $arg) {
                     if(is_object($arg)) {
-                        $at .= "<abbr title='". get_class($arg) ."::class'>object(" . get_class($arg) . ")</abbr>";
+                        $at .= "<abbr title='" . get_class($arg) . "::class'>object(" . get_class($arg) . ")</abbr>";
+                    } elseif(is_array($arg)) {
+                        $at .= "<abbr title='array of ". count($arg) ."'>array()</abbr>";
                     } else {
                         $at .= "<abbr title='$arg'>". gettype($arg) ."(" . basename($arg) . ")</abbr>";
                     }

@@ -41,6 +41,11 @@ class Zara
 	private $exception = true;
 
     /**
+     * @var array
+     */
+	private $preLoadPaths = [];
+
+    /**
      * @param string $filename
      * @param array $vars
      * @param ZaraFactory $factory
@@ -87,24 +92,37 @@ class Zara
      */
 	private function searchFile()
     {
-		if(file_exists(VIEWS_DIR . $this->filename . '.zara.php')){
-			$this->path = "./assets/cache/".md5(VIEWS_DIR . $this->filename . ".zara.php");
+		if(file_exists(VIEWS_DIR . $this->filename . '.zara.php')) {
+			$this->path = ASSETS_DIR . "cache" . DIRECTORY_SEPARATOR . md5(VIEWS_DIR . $this->filename . ".zara.php");
 			$this->compiler->compile(VIEWS_DIR . $this->filename . '.zara.php', $this->factory);
 			$this->compiled = true;
 
 			return true;
-		} elseif(file_exists(VIEWS_DIR . $this->filename . '.php')){
-			$this->path = VIEWS_DIR . $this->filename . '.php';
+		} elseif(file_exists(VIEWS_DIR . $this->filename . '.php')) {
+            $this->path = VIEWS_DIR . $this->filename . '.php';
 
-			return true;
-		} else {
+            return true;
+        } elseif(key_exists($this->filename, $this->preLoadPaths)) {
+            if(file_exists($this->preLoadPaths[$this->filename])) {
+                if(mb_stripos($this->preLoadPaths[$this->filename], ".zara.php") === false) {
+                    $this->path = $this->preLoadPaths[$this->filename];
 
-		    if($this->exception) {
-                throw new DebugException('Ошибка: Не удалось загрузить шаблон ' . $this->filename . '!');
-			}
+                    return true;
+                } else {
+                    $this->path = ASSETS_DIR . "cashe" . DIRECTORY_SEPARATOR . md5($this->preLoadPaths[$this->filename]);
+                    $this->compiler->compile($this->preLoadPaths[$this->filename], $this->factory);
+                    $this->compiled = true;
 
-			return false;
+                    return true;
+                }
+            }
 		}
+
+        if($this->exception) {
+            throw new DebugException('Ошибка: Не удалось загрузить шаблон [' . $this->filename . ']');
+        }
+
+        return false;
 	}
 
     /**
@@ -149,5 +167,24 @@ class Zara
     public static function check($name, ...$parameters)
     {
         return app("view")->getZara()->getCompiler()->check($name, $parameters);
+    }
+
+    /**
+     * @param string $name
+     * @param string $path
+     */
+    public function addPreLoadPath(string $name, string $path)
+    {
+        $this->preLoadPaths[$name] = $path;
+    }
+
+    /**
+     * @param string $name
+     * @param string $path
+     * @return mixed
+     */
+    public static function preLoad(string $name, string $path)
+    {
+        return app("view")->getZara()->addPreLoadPath($name, $path);
     }
 }

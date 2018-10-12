@@ -408,3 +408,27 @@ if (! function_exists('csrf_field')) {
         return '<input type="hidden" name="_token" value="'. app("csrftoken")->token() .'">';
     }
 }
+
+if (! function_exists('extension')) {
+    /**
+     * Run extension
+     *
+     * @return \MyUCP\Extension\Extensionable
+     */
+    function extension($extension, ...$args)
+    {
+        return app("extension")->run($extension, ...$args);
+    }
+}
+
+if (! function_exists('ext')) {
+    /**
+     * Run extension
+     *
+     * @return \MyUCP\Extension\Extensionable
+     */
+    function ext($extension, ...$args)
+    {
+        return extension($extension, ...$args);
+    }
+}

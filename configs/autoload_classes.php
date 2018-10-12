@@ -10,7 +10,9 @@
 
 return [
 
-    //
+    // Extensions
     \Extensions\ExampleBoot\ExampleBoot::class => EXTENSIONS_DIR . 'ExampleBoot/ExampleBoot.php',
     \Extensions\Example\Example::class => EXTENSIONS_DIR . 'Example/Example.php',
+
+    //
 ];

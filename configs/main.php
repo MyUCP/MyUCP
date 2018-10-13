@@ -50,11 +50,10 @@ return [
 		'password'		=>		'',
 
 		// Название БД.
-		'database'		=>		'myucp',
+		'database'		=>		'test',
 
 		// Испльзуемая кодировка
 		'charset'   	=> 		'utf8',
-
 	],
     */
 
@@ -66,12 +65,16 @@ return [
     // Список расширений
     'extensions'   =>  [
         "Example" => \Extensions\Example\Example::class,
+        "Validate" => \Extensions\Validate\Validate::class,
 
 
         // Список расширений которые будут инициализированы при запуске приложения
         // Обязательно должны реализовывать класс BootExtensionable
         'boot'  =>  [
             "ExampleBoot" => \Extensions\ExampleBoot\ExampleBoot::class,
+
+            //
+            "Auth" => \Extensions\Auth\Auth::class,
         ],
     ],
 

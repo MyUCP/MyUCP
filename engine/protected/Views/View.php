@@ -37,4 +37,14 @@ class View
     {
 		return $this->Zara->compile($name, $vars, new ZaraFactory, $exception)->getCompiled();
 	}
+
+    /**
+     * @param string $name
+     * @param string $path
+     * @return mixed
+     */
+    public static function preLoad(string $name, string $path)
+    {
+        return Zara::preLoad($name, $path);
+    }
 }

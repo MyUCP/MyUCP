@@ -33,7 +33,7 @@ class Session
 
 		$this->data = &$_SESSION;
 
-		$this->flash = &$this->data['flash'];
+		$this->flash = &$this->data['_flash'];
 
         return $this;
 	}
@@ -92,10 +92,13 @@ class Session
      */
 	public function flash($name, $value = null)
     {
-        if($value != null)
-            $this->data['_flash'][$name] = $value;
+        if(!is_null($value))
+            $this->flash[$name] = $value;
 
-        return $this->data['_flash'][$name];
+        if(isset($this->flash[$name]))
+            return $this->flash[$name];
+
+        return null;
     }
 
     /**
@@ -104,7 +107,6 @@ class Session
      */
     public function has($name = null)
     {
-
         if(isset($this->data[$name]))
             return true;
 

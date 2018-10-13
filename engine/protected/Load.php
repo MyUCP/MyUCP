@@ -27,18 +27,25 @@ class Load
 		$names = func_get_args();
 
 		foreach($names[0] as $name){
-			$modelClass = $name . 'Model';
-			$modelPath = APP_DIR . 'models/' . $name . '.php';
 
-			if(is_readable($modelPath)){
-				require_once($modelPath);
+			if(!file_exists($this->app->appPath('models' . DIRECTORY_SEPARATOR . $name . 'Model.php'))) {
+			    if(!file_exists($this->app->appPath('models' . DIRECTORY_SEPARATOR . $name . '.php')))
+                    throw new DebugException('Ошибка: Не удалось загрузить модель ' . $name);
 
-				if(class_exists($modelClass)){
-					$this->app->$modelClass = new $modelClass($this->app);
-				}
-			} else {
-				throw new DebugException('Ошибка: Не удалось загрузить модель ' . $name . '!');
-			}
+                require_once($this->app->appPath('models' . DIRECTORY_SEPARATOR . $name . '.php'));
+
+                if(class_exists($name)){
+                    $this->app->$name = new $name($this->app);
+                }
+            } else {
+                require_once($this->app->appPath('models/' . $name . 'Model.php'));
+
+                $modelClass = $name . "Model";
+
+                if(class_exists($modelClass)){
+                    $this->app->$modelClass = new $modelClass($this->app);
+                }
+            }
 		}
 
 		return true;

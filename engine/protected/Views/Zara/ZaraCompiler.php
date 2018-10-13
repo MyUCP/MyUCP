@@ -159,7 +159,7 @@ class ZaraCompiler
     protected function compileStatement($match)
     {
         if (method_exists($this, $method = 'compile'.ucfirst($match[1]))) {
-            $match[0] = $this->$method($match[3]);
+            $match[0] = $this->$method((isset($match[3]) ? $match[3] : ""));
         } elseif (isset($this->customDirectives[$match[1]])) {
             $match[0] = $this->callCustomDirective($match[1], $match[3]);
         }

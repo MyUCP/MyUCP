@@ -109,7 +109,7 @@ class Zara
 
                     return true;
                 } else {
-                    $this->path = ASSETS_DIR . "cashe" . DIRECTORY_SEPARATOR . md5($this->preLoadPaths[$this->filename]);
+                    $this->path = ASSETS_DIR . "cache" . DIRECTORY_SEPARATOR . md5($this->preLoadPaths[$this->filename]);
                     $this->compiler->compile($this->preLoadPaths[$this->filename], $this->factory);
                     $this->compiled = true;
 

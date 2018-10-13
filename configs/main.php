@@ -47,10 +47,10 @@ return [
 		'username'		=>		'root',
 
 		// Пароль пользователя СУБД.
-		'password'		=>		'',
+		'password'		=>		'password',
 
 		// Название БД.
-		'database'		=>		'test',
+		'database'		=>		'database',
 
 		// Испльзуемая кодировка
 		'charset'   	=> 		'utf8',

@@ -9,7 +9,12 @@ use MyUCP\Extension\Extensionable;
 
 class Example implements Extensionable
 {
-    function run(\Application $app, ...$args)
+    public function __construct(\Application $app)
+    {
+        //
+    }
+
+    public function run()
     {
         //
     }

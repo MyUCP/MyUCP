@@ -9,13 +9,13 @@ use MyUCP\Extension\BootExtensionable;
 
 class ExampleBoot implements BootExtensionable
 {
-    function bootstrap(\Application $app)
+    public function bootstrap(\Application $app)
     {
         //
     }
 
-    function run(\Application $app, ...$args)
+    public function run(...$args)
     {
-        // TODO: Implement run() method.
+        //
     }
 }

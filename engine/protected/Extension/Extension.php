@@ -10,6 +10,11 @@ class Extension
     /**
      * @var array
      */
+    protected $alias = [];
+
+    /**
+     * @var array
+     */
     protected $extensions = [];
 
     /**
@@ -42,19 +47,21 @@ class Extension
     {
         $extensions = config()->extensions;
 
-        foreach($extensions['boot'] as $extension)
+        foreach($extensions['boot'] as $alias => $extension)
         {
             $implements = class_implements($extension);
 
             if(!in_array(BootExtensionable::class, $implements))
                 throw new \DebugException("Расширение {$extension} не реализует интерфейс " . BootExtensionable::class . " для инициализации его при запуске приложения");
 
+            $this->alias[$alias] = $extension;
             $this->bootedExtensions[$extension] = null;
         }
 
         unset($extensions['boot']);
 
-        foreach ($extensions as $extension) {
+        foreach ($extensions as $alias => $extension) {
+            $this->alias[$alias] = $extension;
             $this->extensions[$extension] = null;
         }
     }
@@ -72,13 +79,18 @@ class Extension
     }
 
     /**
-     * @param $extension
+     * @param $alias
      * @param array $args
      * @return Extensionable
      * @throws \DebugException
      */
-    public function run($extension, ...$args)
+    public function run($alias, ...$args)
     {
+        if(!isset($this->alias[$alias]))
+            throw new \DebugException("{$alias} не является расширением");
+
+        $extension = $this->alias[$alias];
+
         if(!$this->isExtensions($extension))
             throw new \DebugException("Класс {$extension} не является расширением");
 
@@ -89,20 +101,25 @@ class Extension
             return $this->extensions[$extension];
         }
 
-        $this->extensions[$extension] = new $extension();
-        $this->extensions[$extension]->run($this->app, ...$args);
+        $this->extensions[$extension] = new $extension($this->app, ...$args);
+        $this->extensions[$extension]->run();
 
         return $this->extensions[$extension];
     }
 
     /**
-     * @param $extension
+     * @param $alias
      * @param mixed ...$args
      * @return Extensionable
      * @throws \DebugException
      */
-    public function reRun($extension, ...$args)
+    public function reRun($alias, ...$args)
     {
+        if(!isset($this->alias[$alias]))
+            throw new \DebugException("{$alias} не является расширением");
+
+        $extension = $this->alias[$alias];
+
         if(!$this->isExtensions($extension))
             throw new \DebugException("Класс {$extension} не является расширением");
 

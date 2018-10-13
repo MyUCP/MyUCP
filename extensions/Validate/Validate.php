@@ -9,9 +9,14 @@ use MyUCP\Extension\Extensionable;
 
 class Validate implements Extensionable
 {
-    public function run(\Application $app, ...$args)
+    public function __construct(\Application $app)
     {
-        return $this;
+
+    }
+
+    public function run()
+    {
+        //
     }
 
     /**

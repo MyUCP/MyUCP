@@ -3,13 +3,13 @@
 * MyUCP
 */
 
-
 if(!function_exists('registry')) {
 
     /**
      * @return Registry
      */
-    function registry() {
+    function registry()
+    {
 	    global $registry;
 
 	    return $registry;
@@ -20,9 +20,11 @@ if(!function_exists('registry')) {
 if(!function_exists('app')) {
 
     /**
+     * @param null|mixed $name
      * @return Application|object
      */
-    function app($name = null) {
+    function app($name = null)
+    {
         global $app;
 
         if(is_null($name))
@@ -38,9 +40,11 @@ if(!function_exists('dd')) {
     /**
      * @param $value
      * @param bool $die
+     * @return Dumper
      */
-    function dd($value, $die = true) {
-	    new Dumper($value, $die);
+    function dd($value, $die = true)
+    {
+	    return new Dumper($value, $die);
 	}
 
 }
@@ -49,9 +53,11 @@ if(!function_exists('ci')) {
 
     /**
      * @param $value
+     * @return Dumper
      */
-    function ci($value) {
-	    new Dumper($value, false, "ci");
+    function ci($value)
+    {
+	    return new Dumper($value, false, "ci");
 	}
 
 }
@@ -61,8 +67,9 @@ if(!function_exists('view')) {
     /**
      * @return mixed
      */
-    function view($name, $vars = [], $exception = true){
-        return registry()->view->load($name, $vars, $exception);
+    function view($name, $vars = [], $exception = true)
+    {
+        return app('view')->load($name, $vars, $exception);
     }
 
 }
@@ -72,8 +79,9 @@ if(!function_exists('model')) {
     /**
      * @return mixed
      */
-    function model(){
-		return registry()->load->model(func_get_args());
+    function model()
+    {
+		return app('load')->model(func_get_args());
 	}
 
 }
@@ -83,8 +91,9 @@ if(!function_exists('library')) {
     /**
      * @return mixed
      */
-    function library(){
-		return registry()->load->library(func_get_args());
+    function library()
+    {
+		return app('load')->library(func_get_args());
 	}
 
 }
@@ -94,8 +103,9 @@ if(!function_exists('inject')) {
     /**
      * @return mixed
      */
-    function inject(){
-		return registry()->load->inject(func_get_args());
+    function inject()
+    {
+		return app('load')->inject(func_get_args());
 	}
 
 }
@@ -106,7 +116,8 @@ if(!function_exists('route')) {
      * @param null $name
      * @return Route|null
      */
-    function route($name = null){
+    function route($name = null)
+    {
         if(is_null($name))
             return app("router")->getCurrentRoute();
 
@@ -125,7 +136,8 @@ if(!function_exists('redirect')) {
      * @param array $parameters if $path is a route
      * @return Redirect
      */
-    function redirect($path = null, $parameters = []) {
+    function redirect($path = null, $parameters = [])
+    {
         $redirect = new Redirect();
 
         if(is_null($path)) {
@@ -144,7 +156,8 @@ if(!function_exists('refresh')) {
     /**
      * @return mixed
      */
-    function refresh(){
+    function refresh()
+    {
 		return redirect(route());
 	}
 
@@ -158,7 +171,8 @@ if(!function_exists('cookie')) {
      * @param int $minutes
      * @return Cookie|string
      */
-    function cookie($name, $value = null, $minutes = null) {
+    function cookie($name, $value = null, $minutes = null)
+    {
         if(is_null($value)) {
             return request()->cookie->get($name);
         }
@@ -174,11 +188,12 @@ if(!function_exists('config')) {
      * @param null $config
      * @return bool|mixed
      */
-    function config($config = null) {
+    function config($config = null)
+    {
 		if(!empty($config))
-			return registry()->config->$config;
+			return app()->config->$config;
 
-		return registry()->config;
+		return app()->config;
 	}
 
 }
@@ -190,7 +205,8 @@ if(!function_exists('abort')) {
      * @param $code
      * @return HttpException
      */
-    function abort($code) {
+    function abort($code)
+    {
 		return new HttpException($code);
 	}
 
@@ -201,11 +217,14 @@ if(!function_exists('session')) {
     /**
      * @param $name
      * @param null $value
-     * @return mixed
+     * @return mixed|Session
      */
-    function session($name, $value = null) {
+    function session($name = null, $value = null)
+    {
+        if(is_null($name))
+            return app("session");
 
-        return registry()->session->get($name, $value);
+        return app('session')->get($name, $value);
     }
 
 }
@@ -217,9 +236,9 @@ if(!function_exists('flash')) {
      * @param null $value
      * @return mixed
      */
-    function flash($name, $value = null) {
-
-        return registry()->session->flash($name, $value);
+    function flash($name, $value = null)
+    {
+        return session()->flash($name, $value);
     }
 
 }
@@ -231,7 +250,8 @@ if(!function_exists('lang')) {
      * @param array $replace
      * @return mixed
      */
-    function lang($key, $replace = []) {
+    function lang($key, $replace = [])
+    {
         return Lang::get($key, $replace);
     }
 
@@ -244,7 +264,8 @@ if(!function_exists('redirect_url')) {
      * @param array $args
      * @return string
      */
-    function redirect_url($name, $args = []){
+    function redirect_url($name, $args = [])
+    {
         return app("url")->route($name, $args);
     }
 
@@ -257,8 +278,8 @@ if(!function_exists('url')) {
      * @param array $args
      * @return string
      */
-    function url($path = null, $args = []){
-
+    function url($path = null, $args = [])
+    {
         if($path instanceof Route)
             return app("url")->route($path, $args);
 
@@ -338,9 +359,12 @@ if(!function_exists('request')) {
     /**
      * @return Request
      */
-    function request() {
+    function request($key = null)
+    {
+        if(is_null($key))
+            return app('request');
 
-        return registry()->request;
+        return app('request')->input($key);
     }
 
 }
@@ -350,9 +374,12 @@ if(!function_exists('response')) {
     /**
      * @return Response
      */
-    function response() {
+    function response($content = null)
+    {
+        if(is_null($content))
+            return app('response');
 
-        return registry()->response;
+        return app('response')->setContent($content);
     }
 
 }

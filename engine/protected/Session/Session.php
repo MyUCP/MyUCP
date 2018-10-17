@@ -92,8 +92,10 @@ class Session
      */
 	public function flash($name, $value = null)
     {
-        if(!is_null($value))
+        if(!is_null($value)) {
             $this->flash[$name] = $value;
+            $this->reflash();
+        }
 
         if(isset($this->flash[$name]))
             return $this->flash[$name];

@@ -27,7 +27,7 @@ class Redirect
      */
     public function __construct()
     {
-
+        //
     }
 
     /**
@@ -123,14 +123,22 @@ class Redirect
     }
 
     /**
-     * @param $name
-     * @param $value
+     * @param array|string $name
+     * @param mixed $value
      *
      * @return Redirect
      */
     public function with($name, $value)
     {
-        return $this->flash($name, $value);
+        if(is_array($name))
+            return $this->flash($name, $value);
+
+        foreach ($name as $key => $value)
+        {
+            $this->flash($key, $value);
+        }
+
+        return $this;
     }
 
     /**

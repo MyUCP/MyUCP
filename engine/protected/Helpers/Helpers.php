@@ -294,6 +294,19 @@ if(!function_exists('url')) {
 
 }
 
+if(!function_exists('asset')) {
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    function asset($path)
+    {
+        return app("url")->asset($path);
+    }
+
+}
+
 if (! function_exists('data_get')) {
 
     /**

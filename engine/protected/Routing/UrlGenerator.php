@@ -168,6 +168,6 @@ class UrlGenerator
         // file in the paths. If it does, we will remove it since it is not needed
         // for asset paths, but only for routes to endpoints in the application.
 
-        return '/asset/'.trim($path, '/');
+        return trim(config()->url, "/") . '/assets/' . trim($path, '/');
     }
 }

@@ -2,67 +2,161 @@
 
 class File
 {
-	public $originalName;
-	public $size;
-	public $mimeType;
-	public $error;
-	public $dirName;
-	public $tmpPath;
-	public $md5_file;
-	public $extension;
+    /**
+     * @var string
+     */
+	protected $originalName;
 
-	private $file;
-	
-	public function __construct($name) {
+    /**
+     * @var int
+     */
+	protected $size;
 
-		$this->file = $_FILES[$name];
+    /**
+     * @var string
+     */
+	protected $mimeType;
+
+    /**
+     * @var int
+     */
+	protected $error;
+
+    /**
+     * @var string
+     */
+	protected $dirName;
+
+    /**
+     * @var string
+     */
+	protected $tmpPath;
+
+    /**
+     * @var string
+     */
+	protected $md5_file;
+
+    /**
+     * @var string
+     */
+	protected $extension;
+
+    /**
+     * @var array
+     */
+	protected $file;
+
+    /**
+     * File constructor.
+     * @param $file
+     */
+	public function __construct($file)
+    {
+		$this->file = $file;
+
 		$this->getInfoFile();
 
 		return $this;
 	}
 
-	public function move($path = null, $name = null) {
-
-		$path = ($path == null) ? "./assets/files/" : $path;
+    /**
+     * @param null|string $path
+     * @param null|string $name
+     * @return bool
+     */
+	public function move($path = null, $name = null)
+    {
+		$path = ($path == null) ? app()->assetsPath('files/') : $path;
 		$name = ($name == null) ? md5($this->getOriginalName()). "." . $this->getExtension() : $name;
 
-		return copy($this->getTmpPath(), $path.$name);
+		if(copy($this->getTmpPath(), $path.$name))
+		    return $path.$name;
+
+		return false;
 	}
-	
-	public function getExtension() {
+
+    /**
+     * Alias: move()
+     *
+     * @param null $path
+     * @param null $name
+     * @return bool
+     */
+	public function save($path = null, $name = null)
+    {
+        return $this->move($path, $name);
+    }
+
+    /**
+     * @return string
+     */
+	public function getExtension()
+    {
 		return $this->extension;
 	}
 
-	public function getMd5() {
+    /**
+     * @return string
+     */
+	public function getMd5()
+    {
 		return $this->md5_file;
 	}
 
-	public function getTmpPath() {
+    /**
+     * @return mixed
+     */
+	public function getTmpPath()
+    {
 		return str_replace('\\\\\\\\', "\\", $this->tmpPath);
 	}
 
-	public function getPath() {
+    /**
+     * @return string
+     */
+	public function getPath()
+    {
 		return $this->dirName;
 	}
 
-	public function getError() {
+    /**
+     * @return int
+     */
+	public function getError()
+    {
 		return $this->error;
 	}
 
-	public function getMimeType() {
+    /**
+     * @return string
+     */
+	public function getMimeType()
+    {
 		return $this->mimeType;
 	}
 
-	public function getSize() {
+    /**
+     * @return int
+     */
+	public function getSize()
+    {
 		return $this->size;
 	}
 
-	public function getOriginalName() {
+    /**
+     * @return string
+     */
+	public function getOriginalName()
+    {
 		return $this->originalName;
 	}
 
-  	private function getInfoFile() {
-
+    /**
+     *
+     */
+  	protected function getInfoFile()
+    {
   		$file = new SplFileInfo($this->file['tmp_name']);
   		$originalFile = new SplFileInfo($this->file['name']);
 

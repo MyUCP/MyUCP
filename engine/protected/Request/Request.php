@@ -87,17 +87,21 @@ class Request implements Arrayable
      */
     protected $format;
 
+    /**
+     * @var
+     */
     protected static $formats;
 
     /**
      * Request constructor.
      */
-	public function __construct() {
+	public function __construct()
+    {
 		$_GET = $this->collect($_GET);
 		$_POST = $this->collect($_POST);
 		$_REQUEST = $this->collect($_REQUEST);
 		$_COOKIE = $this->collect($_COOKIE);
-		$_FILES = $this->collect($_FILES);
+		$_FILES = $this->collectFiles($_FILES);
 		$_SERVER = $this->collect($_SERVER);
 
 		$this->attributes = new Collection();
@@ -125,6 +129,37 @@ class Request implements Arrayable
 	private function collect(array $items)
     {
         return new Collection($this->clean($items));
+    }
+
+    /**
+     * @param array $files
+     * @return Collection
+     */
+    protected function collectFiles(array $files)
+    {
+        $collect = new Collection([]);
+
+        foreach ($files as $name => $file) {
+            if(is_array($file['name'])) {
+                $collectOfFiles = new Collection([]);
+
+                foreach ($file['name'] as $index => $value) {
+                    $collectOfFiles->put($index, new File([
+                        'name' => $file['name'][$index],
+                        'type' => $file['type'][$index],
+                        'tmp_name' => $file['tmp_name'][$index],
+                        'error' => $file['error'][$index],
+                        'size' => $file['size'][$index],
+                    ]));
+                }
+
+                $collect->put($name, $collectOfFiles);
+            } else {
+                $collect->put($name, new File($file));
+            }
+        }
+
+        return $collect;
     }
 
     /**

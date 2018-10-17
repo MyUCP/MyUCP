@@ -72,11 +72,14 @@ class Application implements ArrayAccess
      */
     public function init()
     {
+        $this->make("dotenv", new \MyUCP\Dotenv\Dotenv(ENV));
+        $this->make("dotenv")->load();
+
         $this->make("config", new Config());
 
         $this->make("handleException", new HandleExceptions())->make($this);
 
-        if(is_array($this->config->db)) {
+        if(env("APP_DB", false)) {
             $this->make("db", new DB($this->make("config")->db));
         }
 

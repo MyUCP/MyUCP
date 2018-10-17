@@ -11,15 +11,15 @@
 return [
 
 	// Режим откладки, рекомендуется использовать во время разработки
-	'debug_mode'	=>		true,
+	'debug_mode'	=>		env("APP_DEBUG", true),
 
 	// URL вашего сайта.
 	// Будет использовано при формировании URL адреса
-	'url'			=>		'http://example.com/',
+	'url'			=>		env("APP_URL", "http://localhost/"),
 	
 	// Ключ приложения
 	// Будет использоват в шифровке данных
-	'app_key'		=>		"empty",
+	'app_key'		=>		env("APP_KEY", "empty"),
 
     // Язык локализации который бдет использоватся на сайте
     'locale'        =>      'ru',
@@ -28,34 +28,31 @@ return [
     'fallback_locale'=>     'ru',
 
 	// Данные Базы Данных
-    /* Для работы базы данных необходимо расскоментировать данный блок
 	'db'			=>		[
-
 		// Драйвер для работы с БД.
 		// По умолчанию MySQL (mysqli).
-		'driver'		=>		'mysql',
+		'driver'		=>		env("DB_DRIVER", "driver"),
 
 		// Тип СУБД.
 		// По умолчанию поддерживается только СУБД MySQL (mysql).
-		'type'			=>		'mysql',
+		'type'			=>		env("DB_CONNECTION", "mysql"),
 
 		// Хост БД.
 		// Пример: localhost, 127.0.0.1, db.example.com и пр.
-		'hostname'		=>		'localhost',
+		'hostname'		=>		env("DB_HOST", "localhost"),
 
 		// Имя пользователя СУБД.
-		'username'		=>		'root',
+		'username'		=>		env("DB_USERNAME", "root"),
 
 		// Пароль пользователя СУБД.
-		'password'		=>		'password',
+		'password'		=>		env("DB_PASSWORD", "secret"),
 
 		// Название БД.
-		'database'		=>		'database',
+		'database'		=>		env("DB_DATABASE", "myucp"),
 
 		// Испльзуемая кодировка
-		'charset'   	=> 		'utf8',
+		'charset'   	=> 		env("DB_CHARSET", "utf8"),
 	],
-    */
 
     // Список пользовательских файлов для загрузки
     'load_files'          =>      [

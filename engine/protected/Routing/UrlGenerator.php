@@ -25,6 +25,7 @@ class UrlGenerator
     function __construct(RouteCollection $routes, Request $request)
     {
         $this->routes = $routes;
+
         $this->request = $request;
     }
 
@@ -55,7 +56,7 @@ class UrlGenerator
             return $path;
         }
 
-        return "/";
+        return config()->url . trim($path, "/");
     }
 
     /**
@@ -69,6 +70,7 @@ class UrlGenerator
         if (! preg_match('~^(#|//|https?://|mailto:|tel:)~', $path)) {
             return filter_var($path, FILTER_VALIDATE_URL) !== false;
         }
+
         return true;
     }
 
@@ -117,7 +119,7 @@ class UrlGenerator
      */
     public function toRoute(Route $route, $parameters = [])
     {
-        return $this->getFromRegexUrl($route->uri(), $parameters);
+        return  $this->to($this->getFromRegexUrl($route->uri(), $parameters));
     }
 
     /**
@@ -136,6 +138,17 @@ class UrlGenerator
         }
 
         return (isset($url)) ? "/" . trim($url, "/") : "/" . trim($uri, "/");
+    }
+
+    /**
+     * Determine if the given path is a local.
+     *
+     * @param $url
+     * @return bool
+     */
+    protected function isLocalUrl($url)
+    {
+        return !(Str::startsWith($url, "http://") || Str::startsWith($url, "https://"));
     }
 
     /**

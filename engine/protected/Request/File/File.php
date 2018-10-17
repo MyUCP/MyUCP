@@ -49,13 +49,17 @@ class File
 
     /**
      * File constructor.
-     * @param $file
+     * @param array $file
+     * @throws UploadException
      */
 	public function __construct($file)
     {
 		$this->file = $file;
 
 		$this->getInfoFile();
+
+		if($this->getError() != UPLOAD_ERR_OK)
+		    throw new UploadException($this->getError());
 
 		return $this;
 	}

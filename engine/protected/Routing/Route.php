@@ -65,6 +65,16 @@ class Route
     public $csrf_verify = false;
 
     /**
+     * @var Router
+     */
+    protected $router;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    /**
      * Create a new Route instance.
      *
      * @param  array|string  $methods
@@ -320,7 +330,7 @@ class Route
     /**
      * Bind model to route
      *
-     * @param string $models
+     * @param mixed ...$models
      * @return $this
      */
     public function model(...$models)
@@ -359,6 +369,7 @@ class Route
      * @param Application $app
      *
      * @return void
+     * @throws HttpException
      */
     public function compileRoute($app)
     {
@@ -371,6 +382,7 @@ class Route
      * Get the controller instance for the route.
      *
      * @return mixed
+     * @throws DebugException
      */
     public function getController()
     {
@@ -387,6 +399,7 @@ class Route
      * Load controller class file.
      *
      * @return string
+     * @throws DebugException
      */
     public function loadController()
     {

@@ -56,7 +56,7 @@ class UrlGenerator
             return $path;
         }
 
-        return config()->url . trim($path, "/");
+        return rtrim(config()->url, "/") . "/" . trim($path, "/");
     }
 
     /**
@@ -131,13 +131,15 @@ class UrlGenerator
      */
     protected function getFromRegexUrl($uri, $params)
     {
+        $url = $uri;
+
         if(!empty($params)) {
             foreach ($params as $key => $value) {
-                $url = preg_replace('/\{(['. $key .']+):(.*?)\}/', $value, $uri);
+                $url = preg_replace('/\{(['. $key .']+):(.*?)\}/', $value, $url);
             }
         }
 
-        return (isset($url)) ? "/" . trim($url, "/") : "/" . trim($uri, "/");
+        return "/" . trim($url, "/");
     }
 
     /**
@@ -168,6 +170,6 @@ class UrlGenerator
         // file in the paths. If it does, we will remove it since it is not needed
         // for asset paths, but only for routes to endpoints in the application.
 
-        return trim(config()->url, "/") . '/assets/' . trim($path, '/');
+        return rtrim(config()->url, "/") . '/assets/' . trim($path, '/');
     }
 }

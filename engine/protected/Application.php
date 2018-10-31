@@ -72,6 +72,12 @@ class Application implements ArrayAccess
      */
     public function init()
     {
+        if(!file_exists(ENV . DIRECTORY_SEPARATOR . ".env")) {
+            if(!copy(ENV . DIRECTORY_SEPARATOR . ".env.example", ENV . DIRECTORY_SEPARATOR . ".env")) {
+                throw new Exception("Doest not exists [.env] or [.env.example] files.");
+            }
+        }
+
         $this->make("dotenv", new \MyUCP\Dotenv\Dotenv(ENV));
         $this->make("dotenv")->load();
 

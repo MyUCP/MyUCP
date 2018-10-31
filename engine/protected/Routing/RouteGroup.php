@@ -71,6 +71,6 @@ class RouteGroup
 
     public static function validateDomain($regex, Request $request)
     {
-
+        //
     }
 }

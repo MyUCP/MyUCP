@@ -28,12 +28,13 @@ class CsrfToken
      * CSRF Token generating
      *
      * @return void
+     * @throws Exception
      */
     public function generate()
     {
         $this->token = md5(Request::ip() . config()->app_key . random_bytes(32));
 
-        session("_csrf_token", $this->token);
+        app('session')->put("_csrf_token", $this->token);
     }
 
     /**

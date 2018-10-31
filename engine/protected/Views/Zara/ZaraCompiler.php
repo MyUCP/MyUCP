@@ -570,6 +570,8 @@ class ZaraCompiler
     }
 
     /**
+     * @method()
+     *
      * @param $expression
      * @return string
      */
@@ -579,6 +581,8 @@ class ZaraCompiler
     }
 
     /**
+     * @lang()
+     *
      * @param $expression
      * @return string
      */
@@ -588,6 +592,8 @@ class ZaraCompiler
     }
 
     /**
+     * @csrf_token()
+     *
      * @param $expression
      * @return string
      */
@@ -597,12 +603,25 @@ class ZaraCompiler
     }
 
     /**
+     * @csrf_field()
+     *
      * @param $expression
      * @return string
      */
     protected function compileCsrf_field($expression)
     {
         return "<?php echo csrf_field(); ?>";
+    }
+
+    /**
+     * @asset()
+     *
+     * @param $expression
+     * @return string
+     */
+    protected function compileAsset($expression)
+    {
+        return "<?php echo asset$expression; ?>";
     }
 
     /**

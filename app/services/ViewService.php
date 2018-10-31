@@ -7,10 +7,15 @@ namespace App\services;
 
 class ViewService
 {
-    public function __construct($viewName, $vars = [])
+    public function __construct()
     {
 
         //
+
+    }
+
+    public function render($viewName, $vars = [])
+    {
 
     }
 }

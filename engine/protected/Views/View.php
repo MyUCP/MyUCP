@@ -18,7 +18,7 @@ class View
     /**
      * @var \App\services\ViewService
      */
-	protected $service;
+	protected $service = null;
 
     /**
      * View constructor.
@@ -45,7 +45,10 @@ class View
      */
 	public function load($name, $vars = [], $exception = true)
     {
-        $this->service = new \App\services\ViewService($name, $vars);
+        if(is_null($this->service))
+            $this->service = new \App\services\ViewService();
+
+        $this->service->render($name, $vars);
 
         $vars = array_merge($vars, $this->share);
 

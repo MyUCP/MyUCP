@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Maxim
- * Date: 11/1/2018
- * Time: 12:28 AM
+ * MyUCP
  */
 
 namespace App\services;

@@ -47,7 +47,6 @@ return [
 	'Zara'		            =>	'engine/protected/Views/Zara/Zara.php',
 	'ZaraCompiler'          =>  'engine/protected/Views/Zara/ZaraCompiler.php',
 	'ZaraFactory'           =>	'engine/protected/Views/Zara/ZaraFactory.php',
-    'ZaraService'           =>	'app/services/ZaraService.php',
     'HandleExceptions'		=>	'engine/protected/Debug/HandleExceptions.php',
 	'Debug'		            =>	'engine/protected/Debug/Debug.php',
 	'DebugException'        =>	'engine/protected/Debug/DebugException.php',

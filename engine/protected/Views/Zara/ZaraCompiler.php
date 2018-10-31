@@ -56,7 +56,7 @@ class ZaraCompiler
     protected $factory;
 
     /**
-     * @var ZaraService
+     * @var \App\services\ZaraService
      */
     protected $service;
 
@@ -77,7 +77,7 @@ class ZaraCompiler
     public function compile($path = null, ZaraFactory $factory)
     {
         $this->factory = $factory;
-        $this->service = new ZaraService(
+        $this->service = new \App\services\ZaraService(
             str_replace(".zara.php", "", pathinfo($path)['basename'])
         );
 

@@ -38,6 +38,11 @@ class Router
     protected $groupStack = [];
 
     /**
+     * @var \App\services\RouteService
+     */
+    protected $service;
+
+    /**
      * Create a new Router instance.
      *
      * @return void
@@ -333,6 +338,24 @@ class Router
         } else {
             require $routes;
         }
+    }
+
+    /**
+     * Load RouteService
+     *
+     * @return void
+     */
+    public function loadRouteService()
+    {
+        $this->service = new \App\services\RouteService($this);
+    }
+
+    /**
+     * @return \App\services\RouteService
+     */
+    public function getRouteService()
+    {
+        return $this->service;
     }
 
     /**

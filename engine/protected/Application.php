@@ -112,6 +112,7 @@ class Application implements ArrayAccess
     public function run()
     {
         $this->make("extension")->boot();
+        $this->make("router")->loadRouteService();
         $this->make("router")->loadRoutes(APP_DIR . 'routers.php');
         $this->make("router")->make();
         $this->make("response")->prepare($this->make("request"));

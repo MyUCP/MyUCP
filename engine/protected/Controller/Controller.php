@@ -36,4 +36,19 @@ abstract class Controller
     {
 		$this->registry->$key = $value;
 	}
+
+    /**
+     * @param $name
+     * @param array $paramters
+     * @return mixed
+     */
+    public function view($name, $paramters = [])
+    {
+        return view($name, $paramters);
+    }
+
+    public function model(...$models)
+    {
+        return model(...$models);
+    }
 }

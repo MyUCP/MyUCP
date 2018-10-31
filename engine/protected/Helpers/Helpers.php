@@ -134,19 +134,20 @@ if(!function_exists('redirect')) {
     /**
      * @param Route|string $value
      * @param array $parameters if $path is a route
+     * @param int $status
      * @return Redirect
      */
-    function redirect($path = null, $parameters = [])
+    function redirect($path = null, $parameters = [], $status = 302)
     {
         $redirect = new Redirect();
 
         if(is_null($path)) {
             return $redirect;
         } elseif($path instanceof Route) {
-            return $redirect->route($path, $parameters);
+            return $redirect->route($path, $parameters, $status);
         }
 
-        return $redirect->to($path);
+        return $redirect->to($path, $status);
 	}
 
 }

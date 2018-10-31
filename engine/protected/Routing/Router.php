@@ -157,30 +157,37 @@ class Router
     /**
      * Register a new route responding a view.
      *
-     * @param  string  $uri
-     * @param  string  $viewName
-     * @param  \Closure|array|string|null  $action
+     * @param  string $uri
+     * @param  string $viewName
+     * @param array $parameters
      * @return Route
      */
-    public static function view($uri, $viewName, $action = null)
+    public static function view($uri, $viewName, $parameters = [])
     {
-        return self::any($uri, $action)->uses(function () use ($viewName) {
-            return view($viewName);
+        return self::any($uri, null)->uses(function () use ($viewName, $parameters) {
+            return view($viewName, $parameters);
         });
     }
 
     /**
      * Register a new route responding a redirect.
      *
-     * @param  string  $uri
-     * @param  Route|string  $to
-     * @param  \Closure|array|string|null  $action
+     * @param  string|array $uri
+     * @param  Route|string $to
+     * @param int $status
      * @return Route
      */
-    public static function redirect($uri, $to, $action = null)
+    public static function redirect($uri, $to, $status = 302)
     {
-        return self::any($uri, $action)->uses(function () use ($to) {
-            return redirect($to);
+        $parameters = [];
+
+        if(is_array($uri)) {
+            $parameters = $uri['parameters'];
+            $uri = $uri['uri'];
+        }
+
+        return self::any($uri, null)->uses(function () use ($to, $parameters, $status) {
+            return redirect($to, $parameters, $status);
         });
     }
 

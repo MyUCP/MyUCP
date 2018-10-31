@@ -8,7 +8,17 @@ class View
     /**
      * @var Zara
      */
-	private $Zara;
+	protected $Zara;
+
+    /**
+     * @var array
+     */
+	protected $share = [];
+
+    /**
+     * @var \App\services\ViewService
+     */
+	protected $service;
 
     /**
      * View constructor.
@@ -35,6 +45,10 @@ class View
      */
 	public function load($name, $vars = [], $exception = true)
     {
+        $this->service = new \App\services\ViewService($name, $vars);
+
+        $vars = array_merge($vars, $this->share);
+
 		return $this->Zara->compile($name, $vars, new ZaraFactory, $exception)->getCompiled();
 	}
 
@@ -46,5 +60,23 @@ class View
     public static function preLoad(string $name, string $path)
     {
         return Zara::preLoad($name, $path);
+    }
+
+    /**
+     * @param array $vars
+     */
+    public function shareData($vars = [])
+    {
+        $this->share = $vars;
+    }
+
+    /**
+     * Static alias: shareData()
+     *
+     * @param array $vars
+     */
+    public static function share($vars = [])
+    {
+        app('view')->shareData($vars);
     }
 }

@@ -94,6 +94,7 @@ class Request implements Arrayable
 
     /**
      * Request constructor.
+     * @throws UploadException
      */
 	public function __construct()
     {
@@ -134,6 +135,7 @@ class Request implements Arrayable
     /**
      * @param array $files
      * @return Collection
+     * @throws UploadException
      */
     protected function collectFiles(array $files)
     {
@@ -233,8 +235,9 @@ class Request implements Arrayable
      * @param string $name
      * @return File
      */
-	public static function file($name) {
-		return new File($name);
+	public static function file($name)
+    {
+		return request()->files->get($name);
 	}
 
     /**
@@ -304,6 +307,39 @@ class Request implements Arrayable
 
         foreach ($keys as $value) {
             if (! $input->has($value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Determine if the request contains a given input item key.
+     * Alias ::exists()
+     *
+     * @param  string|array  $key
+     * @return bool
+     */
+    public static function has($key)
+    {
+        return self::exists($key);
+    }
+
+    /**
+     * Determine if the request contains a given file.
+     *
+     * @param $name
+     * @return bool
+     */
+    public static function hasFile($name)
+    {
+        $names = is_array($name) ? $name : func_get_args();
+
+        $files = request()->files;
+
+        foreach ($names as $value) {
+            if (! $files->has($value)) {
                 return false;
             }
         }

@@ -52,7 +52,7 @@ class Router
         $this->routes = new RouteCollection;
         $this->currentRequest = $request ?: app("request");
 
-        app()->make("routes", $this->routes);
+        app()->alias("routes", RouteCollection::class, $this->routes);
     }
 
     /**

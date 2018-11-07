@@ -48,10 +48,14 @@ class Application implements ArrayAccess
     {
         if(isset($this->alias[$name])) {
             $alias = $this->alias[$name];
+
             return $this->registry->$alias;
         }
 
-        return $this->registry->$name;
+        if(isset($this->registry->$name))
+            return $this->registry->$name;
+
+        return false;
     }
 
     /**
@@ -62,12 +66,39 @@ class Application implements ArrayAccess
     public function make($name, $instance = null)
     {
         if($instance == null) {
+            if($this->$name === false) {
+                return $this->make($name, new $name);
+            }
+
             return $this->$name;
         }
 
         return $this->$name = $instance;
     }
 
+    /**
+     * Make new instance with parameters
+     *
+     * @param $name
+     * @param array $parameters
+     * @return bool|mixed|null
+     */
+    public function makeWith($name, $parameters = [])
+    {
+        if(isset($this->$name))
+            return $this->make($name);
+
+        return $this->make($name, new $name(...$parameters));
+    }
+
+    /**
+     * Make alias for instance or only name
+     *
+     * @param $alias
+     * @param null $name
+     * @param null $instance
+     * @return bool|mixed|null
+     */
     public function alias($alias, $name = null, $instance = null)
     {
         if(is_null($name)) {
@@ -77,6 +108,19 @@ class Application implements ArrayAccess
         $this->alias[$alias] = $name;
 
         return $this->make($name, $instance);
+    }
+
+    /**
+     * Make alias for new instance with parameters
+     *
+     * @param $alias
+     * @param $name
+     * @param array $parameters
+     * @return bool|mixed|null
+     */
+    public function aliasWith($alias, $name, $parameters = [])
+    {
+        return $this->alias($alias, $name, $this->makeWith($name, $parameters));
     }
 
     /**
@@ -101,28 +145,28 @@ class Application implements ArrayAccess
             }
         }
 
-        $this->make(\MyUCP\Dotenv\Dotenv::class, new \MyUCP\Dotenv\Dotenv(ENV));
+        $this->makeWith(\MyUCP\Dotenv\Dotenv::class, [ENV]);
         $this->make("dotenv")->load();
 
-        $this->make(Config::class, new Config());
+        $this->make(Config::class);
 
-        $this->make(HandleExceptions::class, new HandleExceptions())->make($this);
+        $this->make(HandleExceptions::class)->make($this);
 
         if(env("APP_DB", false)) {
-            $this->make(DB::class, new DB($this->make("config")->db));
+            $this->makeWith(DB::class, [$this->make("config")->db]);
         }
 
-        $this->make(Session::class, new Session());
-        $this->make(Request::class, new Request());
-        $this->make(Response::class, new Response());
-        $this->make(CsrfToken::class, new CsrfToken($this['request']));
-        $this->make(Load::class, new Load());
-        $this->make(Translator::class, new Translator(new LocalizationLoader(config()->locale, config()->fallback_locale), config()->locale));
-        $this->make(View::class, new View());
-        $this->make(Router::class, new Router());
-        $this->make(UrlGenerator::class, new UrlGenerator($this["routes"], $this["request"]));
+        $this->make(Session::class);
+        $this->make(Request::class);
+        $this->make(Response::class);
+        $this->makeWith(CsrfToken::class,[$this['request']]);
+        $this->make(Load::class);
+        $this->makeWith(Translator::class, [new LocalizationLoader(config()->locale, config()->fallback_locale), config()->locale]);
+        $this->make(View::class);
+        $this->make(Router::class);
+        $this->makeWith(UrlGenerator::class, [$this["routes"], $this["request"]]);
 
-        $this->make(\MyUCP\Extension\Extension::class, new \MyUCP\Extension\Extension($this));
+        $this->makeWith(\MyUCP\Extension\Extension::class, [$this]);
 
         $this->initialized = true;
 

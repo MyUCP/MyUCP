@@ -143,6 +143,9 @@ class Application implements ArrayAccess
         $this->make("session")->unsetFlash();
     }
 
+    /**
+     * Make default aliases
+     */
     protected function makeAliases()
     {
         $this->alias = [
@@ -161,6 +164,17 @@ class Application implements ArrayAccess
             "url" => UrlGenerator::class,
             "extension" => \MyUCP\Extension\Extension::class,
         ];
+    }
+
+    public function has($name)
+    {
+        if(isset($this->alias[$name]))
+            return true;
+
+        if(isset($this->registry->$name))
+            return true;
+
+        return false;
     }
 
     /**

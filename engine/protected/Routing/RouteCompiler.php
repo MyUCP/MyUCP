@@ -109,7 +109,7 @@ class RouteCompiler
      *
      * @return CompiledRoute
      *
-     * @throws HttpException
+     * @throws ReflectionException
      */
     protected function runController($controller, $method)
     {

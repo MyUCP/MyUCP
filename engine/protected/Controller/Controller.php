@@ -6,17 +6,17 @@
 abstract class Controller
 {
     /**
-     * @var Registry
+     * @var Application
      */
-	private $registry;
+	private $app;
 
     /**
      * Controller constructor.
-     * @param $registry
+     * @param $app
      */
-	public function __construct($registry)
+	public function __construct($app)
     {
-		$this->registry = $registry;
+		$this->app = $app;
 	}
 
     /**
@@ -25,7 +25,7 @@ abstract class Controller
      */
 	public function __get($key)
     {
-		return $this->registry->$key;
+		return $this->app->make($key);
 	}
 
     /**
@@ -34,7 +34,7 @@ abstract class Controller
      */
 	public function __set($key, $value)
     {
-		$this->registry->$key = $value;
+		$this->app->make($key, $value);
 	}
 
     /**

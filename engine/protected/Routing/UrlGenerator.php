@@ -34,9 +34,19 @@ class UrlGenerator
      *
      * @return string
      */
-    public function current()
+    public static function current()
     {
-        return $this->to($this->request->getPathInfo());
+        return request()->getPathInfo();
+    }
+
+    /**
+     * Get the current Route instance.
+     *
+     * @return string
+     */
+    public static function currentRoute()
+    {
+        return request()->getRoute();
     }
 
     /**

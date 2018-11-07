@@ -1007,4 +1007,24 @@ class Request implements Arrayable
     {
         return rawurldecode($this->path());
     }
+
+    /**
+     * Get current route instance
+     *
+     * @return null|Route
+     */
+    public static function route()
+    {
+        return request()->getRoute();
+    }
+
+    /**
+     * Get current route instance
+     *
+     * @return null|Route
+     */
+    public function getRoute()
+    {
+        return route();
+    }
 }

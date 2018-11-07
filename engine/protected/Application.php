@@ -16,12 +16,19 @@ class Application implements ArrayAccess
     private $registry;
 
     /**
+     * @var array
+     */
+    protected $alias = [];
+
+    /**
      * Application constructor.
      * @param Registry $registry
      */
     public function __construct($registry)
     {
         $this->registry = $registry;
+
+        $this->makeAliases();
     }
 
     /**
@@ -39,21 +46,37 @@ class Application implements ArrayAccess
      */
     public function __get($name)
     {
+        if(isset($this->alias[$name])) {
+            $alias = $this->alias[$name];
+            return $this->registry->$alias;
+        }
+
         return $this->registry->$name;
     }
 
     /**
      * @param $name
-     * @param null $value
+     * @param null $instance
      * @return bool|mixed|null
      */
-    public function make($name, $value = null)
+    public function make($name, $instance = null)
     {
-        if($value == null) {
+        if($instance == null) {
             return $this->$name;
         }
 
-        return $this->$name = $value;
+        return $this->$name = $instance;
+    }
+
+    public function alias($alias, $name = null, $instance = null)
+    {
+        if(is_null($name)) {
+            return $this->make($alias);
+        }
+
+        $this->alias[$alias] = $name;
+
+        return $this->make($name, $instance);
     }
 
     /**
@@ -78,28 +101,28 @@ class Application implements ArrayAccess
             }
         }
 
-        $this->make("dotenv", new \MyUCP\Dotenv\Dotenv(ENV));
+        $this->make(\MyUCP\Dotenv\Dotenv::class, new \MyUCP\Dotenv\Dotenv(ENV));
         $this->make("dotenv")->load();
 
-        $this->make("config", new Config());
+        $this->make(Config::class, new Config());
 
-        $this->make("handleException", new HandleExceptions())->make($this);
+        $this->make(HandleExceptions::class, new HandleExceptions())->make($this);
 
         if(env("APP_DB", false)) {
-            $this->make("db", new DB($this->make("config")->db));
+            $this->make(DB::class, new DB($this->make("config")->db));
         }
 
-        $this->make("session", new Session());
-        $this->make("request", new Request());
-        $this->make("response", new Response());
-        $this->make("csrftoken", new CsrfToken($this['request']));
-        $this->make("load", new Load());
-        $this->make("lang", new Translator(new LocalizationLoader(config()->locale, config()->fallback_locale), config()->locale));
-        $this->make("view", new View());
-        $this->make("router", new Router());
-        $this->make("url", new UrlGenerator($this["routes"], $this["request"]));
+        $this->make(Session::class, new Session());
+        $this->make(Request::class, new Request());
+        $this->make(Response::class, new Response());
+        $this->make(CsrfToken::class, new CsrfToken($this['request']));
+        $this->make(Load::class, new Load());
+        $this->make(Translator::class, new Translator(new LocalizationLoader(config()->locale, config()->fallback_locale), config()->locale));
+        $this->make(View::class, new View());
+        $this->make(Router::class, new Router());
+        $this->make(UrlGenerator::class, new UrlGenerator($this["routes"], $this["request"]));
 
-        $this->make("extension", new \MyUCP\Extension\Extension($this));
+        $this->make(\MyUCP\Extension\Extension::class, new \MyUCP\Extension\Extension($this));
 
         $this->initialized = true;
 
@@ -118,6 +141,26 @@ class Application implements ArrayAccess
         $this->make("response")->prepare($this->make("request"));
         $this->make("response")->send();
         $this->make("session")->unsetFlash();
+    }
+
+    protected function makeAliases()
+    {
+        $this->alias = [
+            "dotenv" => \MyUCP\Dotenv\Dotenv::class,
+            "config" => Config::class,
+            "handleException" => HandleExceptions::class,
+            "db" => DB::class,
+            "session" => Session::class,
+            "request" => Request::class,
+            "response" => Response::class,
+            "csrftoken" => CsrfToken::class,
+            "load" => Load::class,
+            "lang" => Translator::class,
+            "view" => View::class,
+            "router" => Router::class,
+            "url" => UrlGenerator::class,
+            "extension" => \MyUCP\Extension\Extension::class,
+        ];
     }
 
     /**

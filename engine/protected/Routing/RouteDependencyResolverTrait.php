@@ -5,10 +5,11 @@ trait RouteDependencyResolverTrait
     /**
      * Resolve the object method's type-hinted dependencies.
      *
-     * @param  array  $parameters
-     * @param  object  $instance
-     * @param  string  $method
+     * @param  array $parameters
+     * @param  object $instance
+     * @param  string $method
      * @return array
+     * @throws ReflectionException
      */
     protected function resolveClassMethodDependencies(array $parameters, $instance, $method)
     {

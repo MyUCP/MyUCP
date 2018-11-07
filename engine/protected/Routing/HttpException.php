@@ -18,15 +18,16 @@ class HttpException extends Exception
      * @param $code
      * @param null $message
      */
-    public function __construct($code, $message = null)
+    public function __construct($code, $message = "Страница не найдена")
     {
+        parent::__construct($message, $code);
+
         $this->code = $code;
         $this->message = $message;
     }
 
     /**
      * @return bool|mixed
-     * @throws DebugException
      */
     public function getResponse()
     {

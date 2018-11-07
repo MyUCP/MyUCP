@@ -69,7 +69,7 @@
         <div id="sf-resetcontent" class="sf-reset">
             <h1>При работе приложения что-то пошло не так.</h1>
             <h2 class="block_exception clear_fix">
-                <span class="exception_message"><?=$this->message?></span>
+                <span class="exception_message"><?=$this->message ?? $this->code?></span>
             </h2>
             <div class="block">
                 В файле <a title="<?=$this->file?> строка <?=$this->line?>" ondblclick="var f=this.innerHTML;this.innerHTML=this.title;this.title=f;"><?=basename($this->file)?> строка <?=$this->line?></a>

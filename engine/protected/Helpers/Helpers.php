@@ -204,11 +204,11 @@ if(!function_exists('abort')) {
 
     /**
      * @param $code
-     * @return HttpException
+     * @throws HttpException
      */
-    function abort($code)
+    function abort($code = 404, $message = "Страница не найдена")
     {
-		return new HttpException($code);
+		throw new HttpException($code, $message);
 	}
 
 }

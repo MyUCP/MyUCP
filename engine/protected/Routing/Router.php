@@ -455,6 +455,7 @@ class Router
      *
      * @return mixed
      * @throws HttpException
+     * @throws DebugException
      */
     public function make()
     {

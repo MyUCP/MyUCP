@@ -300,6 +300,7 @@ class Response
      * @return $this
      *
      * @throws UnexpectedValueException
+     * @throws DebugException
      */
     public function setContent($content)
     {
@@ -318,6 +319,11 @@ class Response
         // that might be thrown and have their errors obscured by PHP's handling.
         elseif ($content instanceof Renderable) {
             $content = $content->render();
+        }
+
+        // If the content instance of the "HttException"
+        elseif ($content instanceof HttpException) {
+            $content = $content->getResponse();
         }
 
         // If this content instanceof the "Redirect"
@@ -703,5 +709,16 @@ class Response
                 $this->headers->remove('Cache-Control');
             }
         }
+    }
+
+    /**
+     * Page not found
+     *
+     * @param string $message
+     * @return HttpException
+     */
+    public function notFound($message = "Страница не найдена")
+    {
+        return new HttpException(404, $message);
     }
 }

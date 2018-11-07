@@ -383,6 +383,7 @@ class Route
      *
      * @return void
      * @throws HttpException
+     * @throws DebugException
      */
     public function compileRoute($app)
     {

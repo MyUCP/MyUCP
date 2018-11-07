@@ -1,6 +1,6 @@
 <?php
 
-class HttpResponseException extends Exception
+class HttpResponseException extends HttpException
 {
 
 }

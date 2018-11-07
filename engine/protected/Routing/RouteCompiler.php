@@ -37,24 +37,20 @@ class RouteCompiler
      * @return CompiledRoute
      *
      * @throws HttpException
+     * @throws DebugException
      */
     public function compile()
     {
-        try {
-            if ($this->isControllerAction()) {
-                $controller = $this->route->getController();
-                $method = $this->route->getControllerMethod();
+        if ($this->isControllerAction()) {
+            $controller = $this->route->getController();
+            $method = $this->route->getControllerMethod();
 
-                $this->bindModels($this->route->models);
+            $this->bindModels($this->route->models);
 
-                return $this->runController($controller, $method);
-            }
-
-            return $this->runCallable();
-        } catch (HttpException $e) {
-
-            return $e->getResponse();
+            return $this->runController($controller, $method);
         }
+
+        return $this->runCallable();
     }
 
     /**

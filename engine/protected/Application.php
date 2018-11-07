@@ -66,7 +66,7 @@ class Application implements ArrayAccess
     public function make($name, $instance = null)
     {
         if($instance == null) {
-            if($this->$name === false) {
+            if(!$this->has($name)) {
                 return $this->make($name, new $name);
             }
 
@@ -85,7 +85,7 @@ class Application implements ArrayAccess
      */
     public function makeWith($name, $parameters = [])
     {
-        if(isset($this->$name))
+        if($this->has($name))
             return $this->make($name);
 
         return $this->make($name, new $name(...$parameters));
@@ -215,7 +215,7 @@ class Application implements ArrayAccess
         if(isset($this->alias[$name]))
             return true;
 
-        if(isset($this->registry->$name))
+        if($this->registry->$name !== false)
             return true;
 
         return false;

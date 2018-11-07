@@ -107,6 +107,9 @@ class Application implements ArrayAccess
 
         $this->alias[$alias] = $name;
 
+        if(is_null($instance))
+            return $this->make($name);
+
         return $this->make($name, $instance);
     }
 

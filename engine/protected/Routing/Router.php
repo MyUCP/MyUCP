@@ -268,7 +268,7 @@ class Router
     protected function updateGroupStack(array $attributes)
     {
         if (! empty($this->groupStack)) {
-            $attributes = RouteGroup::merge($attributes, end($this->groupStack));
+            $attributes = $this->mergeWithLastGroup($attributes);
         }
 
         $this->groupStack[] = $attributes;
@@ -454,6 +454,7 @@ class Router
      * Make the request to the application.
      *
      * @return mixed
+     * @throws HttpException
      */
     public function make()
     {
@@ -478,6 +479,7 @@ class Router
      * Find the route matching a given request.
      *
      * @return Route
+     * @throws HttpException
      */
     protected function findRoute()
     {
@@ -495,21 +497,12 @@ class Router
      */
     public function hasGroupStack()
     {
-        return ! empty($this->groupStack);
+        return !empty($this->groupStack);
     }
 
     public function mergeGroupAttributesIntoRoute(Route $route)
     {
-        foreach ($this->groupStack as $group)
-        {
-            if(isset($group['domain'])) {
-                $route->action['domain'] = $group['domain'];
-            }
-
-            if(isset($group['as'])) {
-                $route->name($group['as'].$route->getName());
-            }
-        }
+        $route->setAction($this->mergeWithLastGroup($route->getAction()));
     }
 
     /**

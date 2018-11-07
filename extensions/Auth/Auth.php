@@ -29,30 +29,14 @@ class Auth implements BootExtensionable
 
         $this->config = config('auth');
 
-        $auth = $this;
-
         // Определение путей для шаблонов расширения
         View::preLoad("auth.common", $this->path('resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'auth.common.zara.php'));
         View::preLoad("auth.login", $this->path('resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'auth.login.zara.php'));
         View::preLoad("auth.register", $this->path('resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'auth.register.zara.php'));
 
         // Определение маршрутов для расширения
-        Router::condition(!Auth::check(), function() use ($auth) {
-            Router::view('login', 'auth.login');
-            Router::view('register', 'auth.register');
 
-            Router::post('login', function () use ($auth) {
-
-                // Вызываем функцию авторизации, передав данные из формы
-                return $auth->login(Request::post('email'), Request::post('password'));
-            })->name('auth.login')->csrfVerify();
-
-            Router::post('register', function () use ($auth) {
-
-                // Вызываем функцию авторизации, передав данные из формы
-                return $auth->register(Request::post('email'), Request::post('password'), Request::post('password_repeat'));
-            })->name('auth.register')->csrfVerify();
-        });
+        Router::name('auth.', $this->path('routes.php'));
     }
 
     /**
@@ -120,6 +104,13 @@ class Auth implements BootExtensionable
         ]);
 
         return redirect('/login')->with('success', 'Вы успешно зарегестрировались');
+    }
+
+    public function logout()
+    {
+        session()->forget("_u_id");
+
+        return redirect('/');
     }
 
     /**

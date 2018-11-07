@@ -73,8 +73,13 @@ class Extension
     {
         foreach ($this->bootedExtensions as $extension => $instance)
         {
-            $this->bootedExtensions[$extension] = (new $extension())->bootstrap($this->app);
+            $this->bootedExtensions[$extension] = (new $extension($this->app));
             $this->extensions[$extension] = &$this->bootedExtensions[$extension];
+
+            /**
+             * Boot extensions after initialization
+             */
+            $this->extensions[$extension]->bootstrap($this->app);
         }
     }
 

@@ -293,6 +293,19 @@ class Route
     }
 
     /**
+     * Change the route name
+     *
+     * @param $name
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->action['as'] = $name;
+
+        return $this;
+    }
+
+    /**
      * Get the name of the route instance.
      *
      * @return string

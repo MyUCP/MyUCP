@@ -59,7 +59,7 @@ trait RouteDependencyResolverTrait
         $class = $parameter->getClass();
 
         if ($class && ! $this->alreadyInParameters($class->name, $parameters)) {
-            return app()->make($class->name);
+            return app()->makeWith($class->name, $parameters);
         }
     }
 

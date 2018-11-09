@@ -30,11 +30,13 @@ class Builder {
 	private $presence = false;
 	public static $table;
 
-	public function __construct() {
-		$this->db = registry()->db;
+	public function __construct()
+    {
+		$this->db = app()->db;
 	}
 
-	public static function table($name) {
+	public static function table($name)
+    {
 		self::$table = $name;
 
 		return new self;

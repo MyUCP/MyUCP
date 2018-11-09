@@ -42,6 +42,7 @@ return [
     'UrlGenerator'          =>	'engine/protected/Routing/UrlGenerator.php',
 	'HttpException'         =>  'engine/protected/Routing/HttpException.php',
 	'Controller'            => 	'engine/protected/Controller/Controller.php',
+    'ControllerLoader'      => 	'engine/protected/Controller/ControllerLoader.php',
 	'Model'		            =>	'engine/protected/Model/Model.php',
 	'View'		            =>	'engine/protected/Views/View.php',
 	'Zara'		            =>	'engine/protected/Views/Zara/Zara.php',

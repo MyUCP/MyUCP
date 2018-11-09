@@ -3,8 +3,10 @@
 namespace Extensions\Auth;
 
 use Application;
+use Controller;
+use Extensions\Auth\controllers\TestController;
+use Extensions\Auth\controllers\UserController;
 use MyUCP\Extension\BootExtensionable;
-use Request;
 use Router;
 use View;
 
@@ -33,6 +35,10 @@ class Auth implements BootExtensionable
         View::preLoad("auth.common", $this->path('resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'auth.common.zara.php'));
         View::preLoad("auth.login", $this->path('resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'auth.login.zara.php'));
         View::preLoad("auth.register", $this->path('resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'auth.register.zara.php'));
+
+        // Определение контроллера
+
+        Controller::alias(UserController::class, $this->path('controllers/UserController.php'));
 
         // Определение маршрутов для расширения
 
@@ -106,11 +112,14 @@ class Auth implements BootExtensionable
         return redirect('/login')->with('success', 'Вы успешно зарегестрировались');
     }
 
+    /**
+     * Деавторизировать пользователя
+     *
+     * @return \Session
+     */
     public function logout()
     {
-        session()->forget("_u_id");
-
-        return redirect('/');
+        return session()->forget("_u_id");
     }
 
     /**

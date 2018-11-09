@@ -419,28 +419,7 @@ class Route
     {
         $controllerName = $this->parseControllerCallback()[0];
 
-        if(strpos($controllerName, ".")){
-            $path = explode(".", $controllerName);
-
-            $controller = array_shift(array_reverse($path));
-
-            array_pop($path);
-
-            $folder = implode( DIRECTORY_SEPARATOR, $path);
-        } else {
-            $controller = $controllerName;
-        }
-
-        if(!isset($folder)){
-            $controllerFile = APP_DIR . 'controllers' . DIRECTORY_SEPARATOR . $controller . '.php';
-        } else {
-            $controllerFile = APP_DIR . 'controllers' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $controller . '.php';
-        }
-
-        if(!file_exists($controllerFile))
-            throw new DebugException("Файл контроллера <b>$controllerName</b> не найден");
-
-        require_once($controllerFile);
+        $controller = Controller::load($controllerName);
 
         return $controller;
     }
@@ -462,7 +441,7 @@ class Route
      */
     protected function parseControllerCallback()
     {
-        return Str::parseCallback($this->action['uses']);
+        return Str::parseCallback($this->action['uses'], 'index');
     }
 
     /**

@@ -52,7 +52,7 @@ class Application implements ArrayAccess
             return $this->registry->$alias;
         }
 
-        if(isset($this->registry->$name))
+        if($this->registry->$name !== false)
             return $this->registry->$name;
 
         return false;
@@ -246,7 +246,7 @@ class Application implements ArrayAccess
      */
     public function offsetExists($key)
     {
-        return isset($this->registry->$key);
+        return $this->registry->$key !== false;
     }
 
     /**

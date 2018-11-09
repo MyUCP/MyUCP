@@ -6,9 +6,9 @@
 class Model
 {
     /**
-     * @var Registry
+     * @var Application
      */
-    private $registry;
+    private $app;
 
     /**
      * @var null|string
@@ -29,9 +29,9 @@ class Model
      * Model constructor.
      * @param $registry
      */
-    public function __construct($registry)
+    public function __construct($app)
     {
-        $this->registry = $registry;
+        $this->app = $app;
         $this->Builder = new Builder();
         $this->table = ($this->table == null) ? mb_strtolower(str_replace("Model", "", get_class($this))."s") : $this->table;
         $this->Builder->from($this->table);

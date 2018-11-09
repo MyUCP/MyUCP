@@ -2,13 +2,12 @@
 
 namespace Extensions\Auth;
 
+use View;
+use Router;
 use Application;
 use Controller;
-use Extensions\Auth\controllers\TestController;
 use Extensions\Auth\controllers\UserController;
 use MyUCP\Extension\BootExtensionable;
-use Router;
-use View;
 
 class Auth implements BootExtensionable
 {

@@ -5,9 +5,9 @@
 
 namespace Extensions\ExampleBoot;
 
-use MyUCP\Extension\BootExtensionable;
+use MyUCP\Extension\BootExtension;
 
-class ExampleBoot implements BootExtensionable
+class ExampleBoot extends BootExtension
 {
     public function bootstrap(\Application $app)
     {

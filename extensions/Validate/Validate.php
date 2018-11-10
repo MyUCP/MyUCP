@@ -5,15 +5,10 @@
 
 namespace Extensions\Validate;
 
-use MyUCP\Extension\Extensionable;
+use MyUCP\Extension\BaseExtension;
 
-class Validate implements Extensionable
+class Validate extends BaseExtension
 {
-    public function __construct(\Application $app)
-    {
-
-    }
-
     public function run()
     {
         //

@@ -5,15 +5,10 @@
 
 namespace Extensions\Example;
 
-use MyUCP\Extension\Extensionable;
+use MyUCP\Extension\BaseExtension;
 
-class Example implements Extensionable
+class Example extends BaseExtension
 {
-    public function __construct(\Application $app)
-    {
-        //
-    }
-
     public function run()
     {
         //

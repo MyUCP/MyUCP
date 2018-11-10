@@ -49,10 +49,10 @@ class Extension
 
         foreach($extensions['boot'] as $alias => $extension)
         {
-            $implements = class_implements($extension);
+            $extends = class_parents($extension);
 
-            if(!in_array(BootExtensionable::class, $implements))
-                throw new \DebugException("Расширение {$extension} не реализует интерфейс " . BootExtensionable::class . " для инициализации его при запуске приложения");
+            if(!isset($extends[BootExtension::class]))
+                throw new \DebugException("Расширение {$extension} не реализует интерфейс " . BootExtension::class . " для инициализации его при запуске приложения");
 
             $this->alias[$alias] = $extension;
             $this->bootedExtensions[$extension] = null;
@@ -152,9 +152,9 @@ class Extension
      */
     protected function isExtensions($extension)
     {
-        $implements = class_implements($extension);
+        $implements = class_parents($extension);
 
-        if(!in_array(Extensionable::class, $implements))
+        if(!in_array(BaseExtension::class, $implements))
             return false;
 
         return true;

@@ -130,7 +130,7 @@ class Redirect
      */
     public function with($name, $value)
     {
-        if(is_array($name))
+        if(!is_array($name))
             return $this->flash($name, $value);
 
         foreach ($name as $key => $value)

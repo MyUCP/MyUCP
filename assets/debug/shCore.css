@@ -79,6 +79,7 @@
 
 .syntaxhighlighter .line
 {
+	//
 }
 
 .syntaxhighlighter .no-wrap .line .content
@@ -116,6 +117,7 @@
 
 .syntaxhighlighter .line .spaces
 {
+	//
 }
 
 /* Disable border and margin on the lines when no gutter option is set */

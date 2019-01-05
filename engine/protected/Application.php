@@ -85,7 +85,7 @@ class Application implements ArrayAccess
      */
     public function makeWith($name, $parameters = [])
     {
-        if($this->has($name))
+        if($this->has($name) && empty($parameters))
             return $this->make($name);
 
         return $this->make($name, new $name(...$parameters));

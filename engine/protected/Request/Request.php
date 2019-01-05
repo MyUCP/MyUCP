@@ -480,19 +480,19 @@ class Request implements Arrayable
         // Does the baseUrl have anything in common with the request_uri?
         $requestUri = $this->getRequestUri();
 
-        if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, $baseUrl)) {
+        if ($baseUrl && false !== ($prefix = $this->getUrlencodedPrefix($requestUri, $baseUrl))) {
             // full $baseUrl matches
             return $prefix;
         }
 
-        if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, rtrim(dirname($baseUrl), '/'.DIRECTORY_SEPARATOR).'/')) {
+        if ($baseUrl && false !== ($prefix = $this->getUrlencodedPrefix($requestUri, rtrim(dirname($baseUrl), '/'.DIRECTORY_SEPARATOR).'/'))) {
             // directory portion of $baseUrl matches
             return rtrim($prefix, '/'.DIRECTORY_SEPARATOR);
         }
 
         $truncatedRequestUri = $requestUri;
 
-        if (false !== $pos = strpos($requestUri, '?')) {
+        if (false !== ($pos = strpos($requestUri, '?'))) {
             $truncatedRequestUri = substr($requestUri, 0, $pos);
         }
 
@@ -506,7 +506,7 @@ class Request implements Arrayable
         // If using mod_rewrite or ISAPI_Rewrite strip the script filename
         // out of baseUrl. $pos !== 0 makes sure it is not matching a value
         // from PATH_INFO or QUERY_STRING
-        if (strlen($requestUri) >= strlen($baseUrl) && (false !== $pos = strpos($requestUri, $baseUrl)) && $pos !== 0) {
+        if (strlen($requestUri) >= strlen($baseUrl) && (false !== ($pos = strpos($requestUri, $baseUrl))) && $pos !== 0) {
             $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
         }
 
@@ -541,7 +541,7 @@ class Request implements Arrayable
      */
     public function getUri()
     {
-        if (null !== $qs = $this->getQueryString()) {
+        if (null !== ($qs = $this->getQueryString())) {
             $qs = '?'.$qs;
         }
 
@@ -711,8 +711,8 @@ class Request implements Arrayable
      */
     public function getHost()
     {
-        if (!$host = $this->headers->get('HOST')) {
-            if (!$host = $this->server->get('SERVER_NAME')) {
+        if (!($host = $this->headers->get('HOST'))) {
+            if (!($host = $this->server->get('SERVER_NAME'))) {
                 $host = $this->server->get('SERVER_ADDR', '');
             }
         }

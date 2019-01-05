@@ -217,15 +217,15 @@ if(!function_exists('session')) {
 
     /**
      * @param $name
-     * @param null $value
+     * @param null $default
      * @return mixed|Session
      */
-    function session($name = null, $value = null)
+    function session($name = null, $default = null)
     {
         if(is_null($name))
             return app("session");
 
-        return app('session')->get($name, $value);
+        return app('session')->get($name, $default);
     }
 
 }

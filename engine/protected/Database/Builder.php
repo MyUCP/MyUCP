@@ -16,16 +16,11 @@ class Builder
     protected $lastQuery;
 
     /**
-     * @var Builder
+     * @return Builder
      */
-    protected static $instance;
-
     public static function getInstance()
     {
-        if(is_null(self::$instance))
-            self::$instance = new self;
-
-        return self::$instance;
+        return app()->make(Builder::class);
     }
 
     /**
@@ -56,6 +51,10 @@ class Builder
         return $instance;
     }
 
+    /**
+     * @param $table
+     * @return Query
+     */
     public static function table($table)
     {
         $instance = self::getInstance();

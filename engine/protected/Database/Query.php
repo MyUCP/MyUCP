@@ -189,6 +189,16 @@ class Query
     }
 
     /**
+     * @param $column
+     * @param mixed ...$columns
+     * @return Query
+     */
+    public function addSelect($column, ...$columns)
+    {
+        return $this->select($column, ...$columns);
+    }
+
+    /**
      * @param string $column
      * @param string $as
      * @return Query

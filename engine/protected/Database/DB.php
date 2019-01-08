@@ -491,8 +491,13 @@ class DB
 		$this->driver->close();
 	}
 
-	public static function raw($sql) {
-		return $sql;
+    /**
+     * @param string $query
+     * @return RawQuery
+     */
+	public static function raw($query)
+    {
+		return new RawQuery($query);
 	}
 
 	public function escape($value)

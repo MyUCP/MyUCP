@@ -25,6 +25,8 @@ return [
     'HttpResponseException' =>	'engine/protected/Response/HttpResponseException.php',
     'Redirect'	            =>	'engine/protected/Response/Redirect.php',
 	'Builder'	            =>	'engine/protected/Database/Builder.php',
+    'Query'	                =>	'engine/protected/Database/Query.php',
+    'RawQuery'	            =>	'engine/protected/Database/RawQuery.php',
 	'DB'		            =>	'engine/protected/Database/DB.php',
     'Driver'		        =>	'engine/protected/Database/drivers/Driver.php',
 	'MySQLDriver'           =>	'engine/protected/Database/drivers/MySQLDriver.php',

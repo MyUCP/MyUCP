@@ -10,3 +10,15 @@
 */
 
 Router::view("/", "welcome");
+
+Router::any('test', function() {
+    dd(
+
+        Builder::table('users')->take(1)
+            ->selectAs('user_id', 'id')
+            ->where('user_name', 'Maxim')
+
+
+
+    );
+});

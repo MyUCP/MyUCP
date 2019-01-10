@@ -515,3 +515,16 @@ if (! function_exists('env')) {
         return $value;
     }
 }
+
+if (! function_exists('collect')) {
+    /**
+     * Create a collection from the given value.
+     *
+     * @param  mixed  $value
+     * @return Collection
+     */
+    function collect($value = null)
+    {
+        return new Collection($value);
+    }
+}

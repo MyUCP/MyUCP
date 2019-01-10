@@ -70,6 +70,11 @@ class Query
     protected $wheres = [];
 
     /**
+     * @var array
+     */
+    protected $sets = [];
+
+    /**
      * Query constructor.
      */
     public function __construct($table = null)
@@ -86,9 +91,9 @@ class Query
      * @param string[] ...$tables
      * @return Query
      */
-    public static function table($table, ...$tables)
+    public static function table($table, ...$_)
     {
-        return (new self())->from($table, ...$tables);
+        return (new self())->from($table, ...$_);
     }
 
     /**
@@ -96,7 +101,7 @@ class Query
      * @param string[] ...$tables
      * @return Query
      */
-    public function from($table, ...$tables)
+    public function from($table, ...$_)
     {
         // Определяем, является ли переданное значение выражением
         // если оно таковым есть, получаем его значение
@@ -108,8 +113,8 @@ class Query
 
         // Если остальные переданные параметры не пусты
         // то добавляем их как отдельные элементы
-        if(!empty($tables)) {
-            foreach ($tables as $table) {
+        if(!empty($_)) {
+            foreach ($_ as $table) {
                 if($this->isRaw($table)) {
                     $this->tables[] = $this->getValue($table);
                 } else {
@@ -796,7 +801,81 @@ class Query
      */
     public function toSql()
     {
+        if(!empty($this->sets)) {
+            return $this->getUpdateSql();
+        }
 
+        return $this->getSelectSql();
+    }
+
+    /**
+     * @param array $values
+     * @return Query
+     */
+    public function set(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->sets[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $values
+     * @return string
+     */
+    public function update(array $values = [])
+    {
+        if(!empty($values))
+            $this->set($values);
+
+        return $this->db->query($this->getUpdateSql());
+    }
+
+    public function get($columns = ['*'])
+    {
+        //
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUpdateSql()
+    {
+        $table = $this->getTable(true);
+
+        $columns = collect($this->sets)->map(function ($value, $key) {
+            return $this->getColumn($key).' = '.$this->getParameter($value);
+        })->implode(', ');
+
+        $wheres = $this->getWheres();
+
+        $limit = $this->getLimit();
+
+        return trim("update {$table} set $columns $wheres $limit");
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSelectSql()
+    {
+        $table = $this->getTable();
+
+        $columns = $this->columnize($this->columns);
+
+        $wheres = $this->getWheres();
+
+        $groups = $this->columnize($this->groups);
+
+        $having = $this->getHavings();
+
+        $orders = $this->getOrders();
+
+        $limit = $this->getLimit();
+
+        return trim("select {$columns} from {$table} $wheres $groups $having $orders $limit");
     }
 
     /**
@@ -848,12 +927,25 @@ class Query
     }
 
     /**
+     * @param $value
+     * @return string
+     */
+    public function getColumn($value)
+    {
+        if($this->isRaw($value)) {
+            return $this->getValue($value);
+        }
+
+        return $value;
+    }
+
+    /**
      * @param array $columns
      * @return string
      */
     public function columnize(array $columns)
     {
-        return implode(', ', $columns);
+        return implode(', ',  array_map([$this, 'getColumn'], $columns));
     }
 
     /**
@@ -863,6 +955,107 @@ class Query
     public function parameterize(array $values)
     {
         return implode(', ', array_map([$this, 'getParameter'], $values));
+    }
+
+    /**
+     * @param array $orders
+     * @return string
+     */
+    protected function getOrders()
+    {
+        if (! empty($this->orders)) {
+            return 'order by '.implode(', ', $this->getOrdersToArray($this->orders));
+        }
+
+        return '';
+    }
+
+    /**
+     * @param  array $orders
+     * @return array
+     */
+    protected function getOrdersToArray($orders)
+    {
+        return array_map(function ($order) {
+            return ! isset($order['sql'])
+                ? $this->getColumn($order['column']).' '.$order['direction']
+                : $order['sql'];
+        }, $orders);
+    }
+
+    /**
+     * @param $having
+     * @return string
+     */
+    protected function getBasicHaving($having)
+    {
+        $column = $this->getColumn($having['column']);
+
+        $parameter = $this->getParameter($having['value']);
+
+        return $having['boolean'].' '.$column.' '.$having['operator'].' '.$parameter;
+    }
+
+    /**
+     * @param $having
+     * @return string
+     */
+    protected function getHavingBetween($having)
+    {
+        $between = $having['not'] ? 'not between' : 'between';
+
+        $column = $this->getColumn($having['column']);
+
+        $min = $this->getParameter(reset($having['values']));
+
+        $max = $this->getParameter(end($having['values']));
+
+        return $having['boolean'].' '.$column.' '.$between.' '.$min.' and '.$max;
+    }
+
+    /**
+     * @param array $having
+     * @return string
+     */
+    protected function getHaving(array $having)
+    {
+        if ($having['type'] === 'Raw') {
+            return $having['boolean'].' '.$having['sql'];
+        } elseif ($having['type'] === 'between') {
+            return $this->getHavingBetween($having);
+        }
+
+        return $this->getBasicHaving($having);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getHavings()
+    {
+        if(empty($this->havings))
+            return '';
+
+        $sql = implode(' ', array_map([$this, 'getHaving'], $this->havings));
+
+        return 'having '. $this->removeLeadingBoolean($sql);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getLimit()
+    {
+        if(is_null($this->limit) && is_null($this->offset))
+            return '';
+
+        if(is_null($this->offset) && !is_null($this->limit))
+            return 'limit '. $this->limit;
+
+        if(is_null($this->limit) && !is_null($this->offset))
+            return 'offset '. $this->offset;
+
+        return 'limit'. $this->offset .' '. $this->limit;
     }
 
     /**
@@ -902,5 +1095,221 @@ class Query
     {
         return !in_array(strtolower($operator), $this->operators, true) &&
                 !in_array(strtolower($operator), $this->operators, true);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getWheresToArray()
+    {
+        return collect($this->wheres)->map(function ($where) {
+            return $where['boolean'].' '.$this->{"getWhere{$where['type']}"}($where);
+        })->all();
+    }
+
+    /**
+     * @param $value
+     * @return null|string|string[]
+     */
+    protected function removeLeadingBoolean($value)
+    {
+        return preg_replace('/and |or /i', '', $value, 1);
+    }
+
+    /**
+     * @param $sql
+     * @return string
+     */
+    protected function concatenateWhereClauses($sql)
+    {
+        return 'where '.$this->removeLeadingBoolean(implode(' ', $sql));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getWheres()
+    {
+        if (empty($this->wheres)) {
+            return '';
+        }
+
+        if (count($sql = $this->getWheresToArray()) > 0) {
+            return $this->concatenateWhereClauses($sql);
+        }
+
+        return '';
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereRaw($where)
+    {
+        return $where['sql'];
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereBasic($where)
+    {
+        $value = $this->getParameter($where['value']);
+
+        return $this->getColumn($where['column']).' '.$where['operator'].' '.$value;
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereIn($where)
+    {
+        if (!empty($where['values'])) {
+            return $this->getColumn($where['column']).' in ('.$this->parameterize($where['values']).')';
+        }
+
+        return '0 = 1';
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereNotIn($where)
+    {
+        if (! empty($where['values'])) {
+            return $this->getColumn($where['column']).' not in ('.$this->parameterize($where['values']).')';
+        }
+
+        return '1 = 1';
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereNotInRaw($where)
+    {
+        if (! empty($where['values'])) {
+            return $this->getColumn($where['column']).' not in ('.implode(', ', $where['values']).')';
+        }
+
+        return '1 = 1';
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereInRaw($where)
+    {
+        if (!empty($where['values'])) {
+            return $this->getColumn($where['column']).' in ('.implode(', ', $where['values']).')';
+        }
+
+        return '0 = 1';
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereNull($where)
+    {
+        return $this->getColumn($where['column']).' is null';
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereNotNull($where)
+    {
+        return $this->getColumn($where['column']).' is not null';
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereBetween($where)
+    {
+        $between = $where['not'] ? 'not between' : 'between';
+
+        $min = $this->getParameter(reset($where['values']));
+
+        $max = $this->getParameter(end($where['values']));
+
+        return $this->getColumn($where['column']).' '.$between.' '.$min.' and '.$max;
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereDate($where)
+    {
+        return $this->getDateBasedWhere('date', $where);
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereTime($where)
+    {
+        return $this->getDateBasedWhere('time', $where);
+    }
+    /**
+     * Compile a "where day" clause.
+     *
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereDay($where)
+    {
+        return $this->getDateBasedWhere('day', $where);
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereMonth($where)
+    {
+        return $this->getDateBasedWhere('month', $where);
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function getWhereYear($where)
+    {
+        return $this->getDateBasedWhere('year', $where);
+    }
+
+    /**
+     * @param  string  $type
+     * @param  array  $where
+     * @return string
+     */
+    protected function getDateBasedWhere($type, $where)
+    {
+        $value = $this->getParameter($where['value']);
+
+        return $type.'('.$this->getColumn($where['column']).') '.$where['operator'].' '.$value;
+    }
+
+    /**
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereColumn($where)
+    {
+        return $this->getColumn($where['first']).' '.$where['operator'].' '.$this->getColumn($where['second']);
     }
 }

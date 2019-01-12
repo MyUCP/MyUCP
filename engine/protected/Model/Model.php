@@ -8,17 +8,17 @@ class Model
     /**
      * @var Application
      */
-    private $app;
+    protected $app;
 
     /**
      * @var null|string
      */
-    public $table = null;
+    protected $table = null;
 
     /**
      * @var string
      */
-    public $primary_key = "id";
+    protected $primary_key = "id";
 
     /**
      * Model constructor.
@@ -29,7 +29,21 @@ class Model
     {
         $this->app = $app;
 
-        $this->table = ($this->table == null) ? mb_strtolower(str_replace("Model", "", get_class($this))."s") : $this->table;
+        $this->table = $this->getTable();
+    }
+
+    /**
+     * @return mixed|null|string
+     */
+    public function getTable()
+    {
+        if (is_null($this->table)) {
+            return str_replace(
+                '\\', '', Str::snake(plural_phrase(str_replace("Model", "", class_basename($this))))
+            );
+        }
+
+        return $this->table;
     }
 
     /**

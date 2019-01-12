@@ -528,3 +528,41 @@ if (! function_exists('collect')) {
         return new Collection($value);
     }
 }
+
+if (! function_exists('class_basename')) {
+    /**
+     * Get the class "basename" of the given object / class.
+     *
+     * @param  string|object  $class
+     * @return string
+     */
+    function class_basename($class)
+    {
+        $class = is_object($class) ? get_class($class) : $class;
+
+        return basename(str_replace('\\', '/', $class));
+    }
+}
+
+if (! function_exists('plural_phrase')) {
+    /**
+     * @param string $phrase
+     * @return string
+     */
+    function plural_phrase($phrase){
+        $plural = "";
+
+        for($i=0; $i < strlen($phrase); $i++) {
+            if($i == strlen($phrase) - 1) {
+                $plural .= ($phrase[$i] == 'y') ? 'ies' : (
+                ($phrase[$i] == 's' || $phrase[$i] == 'x' || $phrase[$i] == 'z' || $phrase[$i] == 'ch' || $phrase[$i] == 'sh' ) ?
+                    $phrase[$i].'es' : $phrase[$i].'s'
+                );
+            } else {
+                $plural .= $phrase[$i];
+            }
+        }
+
+        return $plural;
+    }
+}

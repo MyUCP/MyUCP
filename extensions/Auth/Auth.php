@@ -61,11 +61,11 @@ class Auth extends BootExtension
         $this->app->User->primary_key = $this->config->rows['id'];
 
         if(!($user = $this->app->User->where($this->config->rows['email'], $email)->first())) {
-            return redirect('/login?error=true')->with('error', 'Email введен неверно');
+            return redirect('/login')->with('error', 'Email введен неверно 1');
         }
 
         if(!password_verify($password, $user[$this->config->rows['password']]))
-            return redirect('/login?error=true')->with('error', 'Пароль введен неверно');
+            return redirect('/login')->with('error', 'Пароль введен неверно 2');
 
         app('session')->put('_u_id', $user[$this->config->rows['id']]);
 
@@ -90,12 +90,15 @@ class Auth extends BootExtension
         $validate = ext("Validate");
 
         if(!$validate->email($email))
-            return redirect('/register?error=true')->with('error', 'Email введен неверно');
+            return redirect('/register')->with('error', 'Email введен неверно');
 
         if($password != $password_repeat)
-            return redirect('/register?error=true')->with('error', 'Пароли не совпадают');
+            return redirect('/register')->with('error', 'Пароли не совпадают');
 
         $hash = password_hash($password, PASSWORD_DEFAULT);
+
+        if(!is_null($this->app->User->where($this->config->rows['email'], '=', $email)->first()))
+            return redirect('/register')->with('error', 'Введенный вами Email занят');
 
         $this->app->User->create([
             $this->config->rows['email'] => $email,

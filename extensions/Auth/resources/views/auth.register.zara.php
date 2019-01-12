@@ -4,8 +4,8 @@
 <div class="row">
     <div class="col-lg-12">
         <h1 class="mt-5">Регистрация</h1>
-        @if(Request::exists('error'))
-        <div class="alert alert-danger"><b>Ошибка!</b> Email или пароль введены неверно.</div>
+        @if(!empty(flash('error')))
+        <div class="alert alert-danger"><b>Ошибка!</b> {{ flash('error') }}</div>
         @endif
     </div>
     <form class="col-lg-5" method="post" action="{{ url('auth.register') }}">

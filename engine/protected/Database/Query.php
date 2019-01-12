@@ -889,7 +889,7 @@ class Query
 
     public function value($column)
     {
-        $this->select = [];
+        $this->columns = [];
 
         $result = (array) $this->first([$column]);
 
@@ -952,6 +952,9 @@ class Query
         return $this->getAggregate($column, __FUNCTION__);
     }
 
+    /**
+     * @return FALSE|resource
+     */
     public function delete()
     {
         $wheres = is_array($this->wheres) ? $this->getWheres() : '';

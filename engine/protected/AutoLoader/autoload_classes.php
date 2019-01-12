@@ -27,6 +27,7 @@ return [
 	'Builder'	            =>	'engine/protected/Database/Builder.php',
     'Query'	                =>	'engine/protected/Database/Query.php',
     'RawQuery'	            =>	'engine/protected/Database/RawQuery.php',
+    'DBCollection'	        =>	'engine/protected/Database/DBCollection.php',
 	'DB'		            =>	'engine/protected/Database/DB.php',
     'Driver'		        =>	'engine/protected/Database/drivers/Driver.php',
 	'MySQLDriver'           =>	'engine/protected/Database/drivers/MySQLDriver.php',

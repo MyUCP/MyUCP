@@ -128,7 +128,7 @@ class Query
 
     public function fromAs($table, $as)
     {
-        $query = new RawQuery('('. $table .') as ' . $as);
+        $query = $this->raw('('. $table .') as ' . $as);
 
         return $this->from($query);
     }
@@ -165,27 +165,33 @@ class Query
 
     /**
      * @param string $column
-     * @param  array|mixed $columns
+     * @param array $_
      * @return $this
      */
-    public function select($column = "*", ...$columns)
+    public function select($column = "*", ...$_)
     {
-        // Определяем, является ли переданное значение выражением
-        // если оно таковым есть, получаем его значение
-        if($this->isRaw($column)) {
-            $this->columns[] = $this->getValue($column);
-        } else {
-            $this->columns[] = $column;
+        if(!in_array($column, $this->columns)) {
+            // Определяем, является ли переданное значение выражением
+            // если оно таковым есть, получаем его значение
+            if($this->isRaw($column)) {
+                $this->columns[] = $this->getValue($column);
+            } else {
+                $this->columns[] = $column;
+            }
         }
 
         // Если остальные переданные параметры не пусты
         // то добавляем их как отдельные элементы
-        if(!empty($columns)) {
-            foreach ($columns as $column) {
-                if($this->isRaw($column)) {
-                    $this->columns[] = $this->getValue($column);
-                } else {
-                    $this->columns[] = $column;
+        if(!empty($_)) {
+            foreach ($_ as $column) {
+                if(!in_array($column, $this->columns)) {
+                    // Определяем, является ли переданное значение выражением
+                    // если оно таковым есть, получаем его значение
+                    if($this->isRaw($column)) {
+                        $this->columns[] = $this->getValue($column);
+                    } else {
+                        $this->columns[] = $column;
+                    }
                 }
             }
         }
@@ -195,12 +201,12 @@ class Query
 
     /**
      * @param $column
-     * @param mixed ...$columns
+     * @param array $_
      * @return Query
      */
-    public function addSelect($column, ...$columns)
+    public function addSelect($column, ...$_)
     {
-        return $this->select($column, ...$columns);
+        return $this->select($column, ...$_);
     }
 
     /**
@@ -210,7 +216,7 @@ class Query
      */
     public function selectAs($column, $as)
     {
-        $query = new RawQuery('('. $column .') as ' . $as);
+        $query = $this->raw('('. $column .') as ' . $as);
 
         return $this->select($query);
     }
@@ -221,7 +227,7 @@ class Query
      */
     public function selectRaw($raw)
     {
-        return $this->select(new RawQuery($raw));
+        return $this->select($this->raw($raw));
     }
 
     /**
@@ -428,7 +434,7 @@ class Query
         }
 
         if (Str::contains($column, '->') && is_bool($value)) {
-            $value = new RawQuery($value ? 'true' : 'false');
+            $value = $this->raw($value ? 'true' : 'false');
         }
 
         $type = 'Basic';
@@ -833,9 +839,203 @@ class Query
         return $this->db->query($this->getUpdateSql());
     }
 
-    public function get($columns = ['*'])
+    /**
+     * @param array $columns
+     * @return DBCollection
+     */
+    public function get(array $columns = ['*'])
     {
-        //
+        if($columns != ["*"]) {
+            $this->select(...$columns);
+        }
+
+        $sql = $this->getSelectSql();
+
+        return Builder::collection($this->db->getAll($sql), $this);
+    }
+
+    /**
+     * @param array $columns
+     * @return array|FALSE
+     */
+    public function first(array $columns = ['*'])
+    {
+        if($columns != ["*"]) {
+            $this->select(...$columns);
+        }
+
+        $sql = $this->getSelectSql();
+
+        return $this->db->getRow($sql);
+    }
+
+    /**
+     * @param array $columns
+     * @param string $exception
+     * @param int $code
+     * @param string $message
+     * @return array|FALSE
+     * @throws Exception|HttpException
+     */
+    public function firstOrError(array $columns = ['*'], $exception = HttpException::class, $code = 404, $message = "Страница не найдена")
+    {
+        $result = $this->first($columns);
+
+        if($this->db->affectedRows() == 0)
+            throw new $exception($code, $message);
+
+        return $result;
+    }
+
+    public function value($column)
+    {
+        $this->select = [];
+
+        $result = (array) $this->first([$column]);
+
+        return count($result) > 0 ? reset($result) : null;
+    }
+
+    /**
+     * @param string $column
+     * @return FALSE|int
+     */
+    public function count($column = "*")
+    {
+        return (int) $this->getAggregate($column, __FUNCTION__);
+    }
+
+    /**
+     * @param $column
+     * @return FALSE|mixed
+     */
+    public function max($column)
+    {
+        return $this->getAggregate($column, __FUNCTION__);
+    }
+
+    /**
+     * @param $column
+     * @return FALSE|mixed
+     */
+    public function min($column)
+    {
+        return $this->getAggregate($column, __FUNCTION__);
+    }
+
+    /**
+     * @param $column
+     * @return FALSE|mixed
+     */
+    public function avg($column)
+    {
+        return $this->getAggregate($column, __FUNCTION__);
+    }
+
+    /**
+     * Alias for the "avg" method.
+     *
+     * @param $column
+     * @return FALSE|mixed
+     */
+    public function average($column)
+    {
+        return $this->avg($column);
+    }
+
+    /**
+     * @param $column
+     * @return FALSE|mixed
+     */
+    public function sum($column)
+    {
+        return $this->getAggregate($column, __FUNCTION__);
+    }
+
+    public function delete()
+    {
+        $wheres = is_array($this->wheres) ? $this->getWheres() : '';
+
+        $limit = $this->getLimit();
+
+        $sql = trim("delete from {$this->getTable(true)} $wheres $limit");
+
+        return $this->db->query($sql);
+    }
+
+    /**
+     * @param $column
+     * @param int $amount
+     * @param array $extra
+     * @return string
+     */
+    public function increment($column, $amount = 1, array $extra = [])
+    {
+        if (! is_numeric($amount)) {
+            throw new InvalidArgumentException('Передано не числовое значение в метод инкремента.');
+        }
+
+        $wrapped = $this->getColumn($column);
+
+        $columns = array_merge([$column => $this->raw("$wrapped + $amount")], $extra);
+
+        return $this->update($columns);
+    }
+
+    /**
+     * @param $column
+     * @param int $amount
+     * @param array $extra
+     * @return string
+     */
+    public function decrement($column, $amount = 1, array $extra = [])
+    {
+        if (! is_numeric($amount)) {
+            throw new InvalidArgumentException('Передано не числовое значение в метод декрмента.');
+        }
+
+        $wrapped = $this->getColumn($column);
+
+        $columns = array_merge([$column => $this->raw("$wrapped - $amount")], $extra);
+
+        return $this->update($columns);
+    }
+
+    /**
+     * @return FALSE|resource
+     */
+    public function truncate()
+    {
+        $tables = $this->getTable();
+
+        $sql = "truncate $tables";
+
+        return $this->db->query($sql);
+    }
+
+    /**
+     * @param $value
+     * @return RawQuery
+     */
+    public function raw($value)
+    {
+        return RawQuery::raw($value);
+    }
+
+    /**
+     * @param $column
+     * @param $function
+     * @return FALSE|mixed
+     */
+    protected function getAggregate($column, $function)
+    {
+        $column = $this->getColumn($column);
+
+        $this->select($this->raw($function . "({$column}) as aggregate"));
+
+        $sql = $this->getSelectSql();
+
+        return $this->db->getOne($sql);
     }
 
     /**
@@ -864,6 +1064,8 @@ class Query
         $table = $this->getTable();
 
         $columns = $this->columnize($this->columns);
+
+        $columns = empty($columns) ? "*" : $columns;
 
         $wheres = $this->getWheres();
 

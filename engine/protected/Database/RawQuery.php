@@ -20,6 +20,15 @@ class RawQuery
     }
 
     /**
+     * @param $query
+     * @return RawQuery
+     */
+    public static function raw($query)
+    {
+        return new self($query);
+    }
+
+    /**
      * @param string $query
      * @return $this
      */

@@ -84,6 +84,25 @@ class Builder
     }
 
     /**
+     * @param $table
+     * @return FALSE|resource
+     */
+    public static function truncate($table)
+    {
+        return Query::table($table)->truncate();
+    }
+
+    /**
+     * @param array $result
+     * @param Query $query
+     * @return DBCollection
+     */
+    public static function collection(array $result, Query $query)
+    {
+        return new DBCollection($result, $query);
+    }
+
+    /**
      * @param Query $query
      * @return Query
      */

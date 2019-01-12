@@ -15,10 +15,10 @@ class HttpException extends Exception
     /**
      * HttpException constructor.
      *
-     * @param $code
-     * @param null $message
+     * @param int $code
+     * @param string $message
      */
-    public function __construct($code, $message = "Страница не найдена")
+    public function __construct($code = 404, $message = "Страница не найдена")
     {
         parent::__construct($message, $code);
 

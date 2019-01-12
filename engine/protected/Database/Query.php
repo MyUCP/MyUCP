@@ -75,7 +75,13 @@ class Query
     protected $sets = [];
 
     /**
+     * @var array
+     */
+    protected $joins = [];
+
+    /**
      * Query constructor.
+     * @param null $table
      */
     public function __construct($table = null)
     {
@@ -88,7 +94,7 @@ class Query
 
     /**
      * @param string $table
-     * @param string[] ...$tables
+     * @param array $_
      * @return Query
      */
     public static function table($table, ...$_)
@@ -98,7 +104,7 @@ class Query
 
     /**
      * @param string $table
-     * @param string[] ...$tables
+     * @param array $_
      * @return Query
      */
     public function from($table, ...$_)
@@ -803,6 +809,68 @@ class Query
     }
 
     /**
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $type
+     * @return $this
+     */
+    public function join($table, $first, $operator = null, $second = null, $type = 'inner')
+    {
+        if(is_null($second)) {
+            $second = $operator;
+            $operator = "=";
+        }
+
+        if($this->invalidOperator($operator)) {
+            $operator = "=";
+        }
+
+        $this->joins[] = compact(
+            'type', 'table', 'first', 'operator', 'second'
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @return Query
+     */
+    public function leftJoin($table, $first, $operator = null, $second = null)
+    {
+        return $this->join($table, $first, $operator, $second, 'left');
+    }
+
+    /**
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @return Query
+     */
+    public function rightJoin($table, $first, $operator = null, $second = null)
+    {
+        return $this->join($table, $first, $operator, $second, 'right');
+    }
+
+    /**
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @return Query
+     */
+    public function crossJoin($table, $first, $operator = null, $second = null)
+    {
+        return $this->join($table, $first, $operator, $second, 'cross');
+    }
+
+    /**
      * @return string
      */
     public function toSql()
@@ -887,6 +955,10 @@ class Query
         return $result;
     }
 
+    /**
+     * @param $column
+     * @return mixed|null
+     */
     public function value($column)
     {
         $this->columns = [];
@@ -1026,6 +1098,22 @@ class Query
     }
 
     /**
+     * @return string
+     */
+    protected function getJoins()
+    {
+        return collect($this->joins)->map(function ($join) {
+            $table = $this->isRaw($join['table']) ? $this->getValue($join['table']) : $join['table'];
+
+            $first = $this->isRaw($join['first']) ? $this->getValue($join['first']) : $this->getColumn($join['first']);
+
+            $second = $this->isRaw($join['second']) ? $this->getValue($join['second']) : $this->getColumn($join['second']);
+
+            return trim("{$join['type']} join {$table} on {$first} {$join['operator']} {$second}");
+        })->implode(' ');
+    }
+
+    /**
      * @param $column
      * @param $function
      * @return FALSE|mixed
@@ -1064,11 +1152,13 @@ class Query
      */
     protected function getSelectSql()
     {
-        $table = $this->getTable();
-
         $columns = $this->columnize($this->columns);
 
         $columns = empty($columns) ? "*" : $columns;
+
+        $table = $this->getTable();
+
+        $joins = $this->getJoins();
 
         $wheres = $this->getWheres();
 
@@ -1080,7 +1170,7 @@ class Query
 
         $limit = $this->getLimit();
 
-        return trim("select {$columns} from {$table} $wheres $groups $having $orders $limit");
+        return trim("select {$columns} from {$table} $joins $wheres $groups $having $orders $limit");
     }
 
     /**
@@ -1141,6 +1231,12 @@ class Query
             return $this->getValue($value);
         }
 
+        if(false === mb_stripos($value, ".")) {
+            [$table, $column] = explode(".", $value);
+
+            return $table . "." . $this->getColumn($column);
+        }
+
         return $value;
     }
 
@@ -1163,7 +1259,6 @@ class Query
     }
 
     /**
-     * @param array $orders
      * @return string
      */
     protected function getOrders()
@@ -1278,6 +1373,7 @@ class Query
         } elseif ($this->invalidOperatorAndValue($operator, $value)) {
             throw new InvalidArgumentException('Недопустимая комбинация оператора и значения.');
         }
+
         return [$value, $operator];
     }
 
@@ -1303,11 +1399,12 @@ class Query
     }
 
     /**
+     * @param $wheres
      * @return array
      */
-    protected function getWheresToArray()
+    protected function getWheresToArray($wheres)
     {
-        return collect($this->wheres)->map(function ($where) {
+        return collect($wheres)->map(function ($where) {
             return $where['boolean'].' '.$this->{"getWhere{$where['type']}"}($where);
         })->all();
     }
@@ -1339,7 +1436,7 @@ class Query
             return '';
         }
 
-        if (count($sql = $this->getWheresToArray()) > 0) {
+        if (count($sql = $this->getWheresToArray($this->wheres)) > 0) {
             return $this->concatenateWhereClauses($sql);
         }
 

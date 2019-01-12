@@ -39,7 +39,9 @@ class Model
     {
         if (is_null($this->table)) {
             return str_replace(
-                '\\', '', Str::snake(plural_phrase(str_replace("Model", "", class_basename($this))))
+                '\\', '', Str::snake(plural_phrase(
+                    str_replace("Model", "", class_basename($this))
+                ))
             );
         }
 
@@ -296,7 +298,7 @@ class Model
      * @param $id
      * @param array $columns
      * @return array|FALSE
-     * @throws HttpException
+     * @throws Exception|HttpException
      */
     public function findOrError($id, $columns = ['*'])
     {
@@ -367,47 +369,52 @@ class Model
     }
 
     /**
-     * @return $this
-     * @throws DebugException
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $type
+     * @return Query
      */
-    public function join()
+    public function join($table, $first, $operator = null, $second = null, $type = 'inner')
     {
-//        $this->Builder->join(func_get_args());
-//
-//        return $this;
+        return $this->query()->join($table, $first, $operator, $second, $type);
     }
 
     /**
-     * @return $this
-     * @throws DebugException
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @return Query
      */
-    public function leftJoin()
+    public function leftJoin($table, $first, $operator = null, $second = null)
     {
-//        $this->Builder->leftJoin(func_get_args());
-//
-//        return $this;
+        return $this->query()->leftJoin($table, $first, $operator, $second);
     }
 
     /**
-     * @return $this
-     * @throws DebugException
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @return Query
      */
-    public function rightJoin()
+    public function rightJoin($table, $first, $operator = null, $second = null)
     {
-//        $this->Builder->rightJoin(func_get_args());
-//
-//        return $this;
+        return $this->query()->rightJoin($table, $first, $operator, $second);
     }
 
     /**
-     * @return $this
-     * @throws DebugException
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @return Query
      */
-    public function crossJoin()
+    public function crossJoin($table, $first, $operator = null, $second = null)
     {
-//        $this->Builder->crossJoin(func_get_args());
-//
-//        return $this;
+        return $this->query()->crossJoin($table, $first, $operator, $second);
     }
 
     /**

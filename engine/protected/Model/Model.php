@@ -21,20 +21,15 @@ class Model
     public $primary_key = "id";
 
     /**
-     * @var Builder
-     */
-    protected $Builder;
-
-    /**
      * Model constructor.
-     * @param $registry
+     *
+     * @param Application $app
      */
     public function __construct($app)
     {
         $this->app = $app;
-        $this->Builder = new Builder();
+
         $this->table = ($this->table == null) ? mb_strtolower(str_replace("Model", "", get_class($this))."s") : $this->table;
-        $this->Builder->from($this->table);
     }
 
     /**
@@ -43,7 +38,7 @@ class Model
      */
     public function __get($key)
     {
-        return $this->registry->$key;
+        return $this->app->$key;
     }
 
     /**
@@ -52,7 +47,7 @@ class Model
      */
     public function __set($key, $value)
     {
-        $this->registry->$key = $value;
+        $this->app->$key = $value;
     }
 
     /**
@@ -62,271 +57,299 @@ class Model
     public function table($name)
     {
         $this->table = $name;
-        $this->Builder->from($this->table);
 
         return $this;
     }
 
     /**
      * @param array $data
+     * @return bool|resource
+     */
+    public function create(array $data)
+    {
+        return $this->query()->insertGetId($data);
+    }
+
+    /**
+     * @param $column
+     * @param null $operator
+     * @param null $value
+     * @param string $boolean
+     * @return Query
+     */
+    public function where($column, $operator = null, $value = null, $boolean = 'and')
+    {
+        return $this->query()->where($column, $operator, $value, $boolean);
+    }
+
+    /**
+     * @param $column
+     * @param null $operator
+     * @param null $value
+     * @return Query
+     */
+    public function orWhere($column, $operator = null, $value = null)
+    {
+        return $this->query()->orWhere($column, $operator, $value);
+    }
+
+    /**
+     * @param $column
+     * @param array $values
+     * @param string $boolean
+     * @param bool $not
+     * @return Query
+     */
+    public function whereBetween($column, array $values, $boolean = 'and', $not = false)
+    {
+        return $this->query()->whereBetween($column, $values, $boolean, $not);
+    }
+
+    /**
+     * @param $column
+     * @param array $values
+     * @param string $boolean
+     * @return Query
+     */
+    public function whereNotBetween($column, array $values, $boolean = 'and')
+    {
+        return $this->query()->whereNotBetween($column, $values, $boolean);
+    }
+
+    /**
+     * @param $column
+     * @param $values
+     * @param string $boolean
+     * @param bool $not
+     * @return Query
+     */
+    public function whereIn($column, $values, $boolean = 'and', $not = false)
+    {
+        return $this->query()->whereIn($column, $values, $boolean, $not);
+    }
+
+    /**
+     * @param $column
+     * @param $values
+     * @param string $boolean
+     * @return Query
+     */
+    public function whereNotIn($column, $values, $boolean = 'and')
+    {
+        return $this->query()->whereNotIn($column, $values, $boolean);
+    }
+
+    /**
+     * @param $column
+     * @param string $boolean
+     * @param bool $not
+     * @return Query
+     */
+    public function whereNull($column, $boolean = 'and', $not = false)
+    {
+        return $this->query()->whereNull($column, $boolean, $not);
+    }
+
+    /**
+     * @param $column
+     * @param string $boolean
      * @return mixed
      */
-    public function create($data = [])
+    public function whereNotNull($column, $boolean = 'and')
     {
-        return $this->Builder->from($this->table)->create($data);
+        return $this->query()->whereNotNull($column, $boolean);
     }
 
     /**
-     * @return $this
-     * @throws DebugException
+     * @param $column
+     * @param string $direction
+     * @return Query
      */
-    public function where()
+    public function orderBy($column, $direction = 'asc')
     {
-        $this->Builder->where(func_get_args());
-
-        return $this;
+        return $this->query()->orderBy($column, $direction);
     }
 
     /**
-     * @return $this
-     * @throws DebugException
+     * @param $column
+     * @param string $direction
+     * @return Query
      */
-    public function orWhere()
+    public function order($column, $direction = 'asc')
     {
-        $this->Builder->orWhere(func_get_args());
-
-        return $this;
+        return $this->orderBy($column, $direction);
     }
 
     /**
-     * @param $row
-     * @param array $condition
-     * @return $this
-     * @throws DebugException
+     * @param  string  $column
+     * @return Query
      */
-    public function whereBetween($row, $condition = [])
+    public function orderByDesc($column)
     {
-        $this->Builder->whereBetween($row, $condition);
-
-        return $this;
+        return $this->query()->orderByDesc($column);
     }
 
     /**
-     * @param $row
-     * @param array $condition
-     * @return $this
-     * @throws DebugException
+     * @param  string  $column
+     * @return Query
      */
-    public function whereNotBetween($row, $condition = [])
+    public function latest($column)
     {
-        $this->Builder->whereNotBetween($row, $condition);
-
-        return $this;
+        return $this->query()->latest($column);
     }
 
     /**
-     * @param $row
-     * @param array $condition
-     * @return $this
-     * @throws DebugException
+     * @param  string  $column
+     * @return Query
      */
-    public function whereIn($row, $condition = [])
+    public function oldest($column)
     {
-        $this->Builder->whereIn($row, $condition);
-
-        return $this;
+        return $this->query()->oldest($column);
     }
 
     /**
-     * @param $row
-     * @param array $condition
-     * @return $this
-     * @throws DebugException
+     * @param string $column
+     * @param array $_
+     * @return Query
      */
-    public function whereNotIn($row, $condition = [])
+    public function select($column = "*", ...$_)
     {
-        $this->Builder->whereNotIn($row, $condition);
-
-        return $this;
+        return $this->query()->select($column, ...$_);
     }
 
     /**
-     * @param null $row
-     * @return $this
-     * @throws DebugException
+     * @param string $column
+     * @param array $_
+     * @return Query
      */
-    public function whereNull($row = null)
+    public function addSelect($column = "*", ...$_)
     {
-        $this->Builder->whereNull($row);
-
-        return $this;
+        return $this->query()->addSelect($column, ...$_);
     }
 
     /**
-     * @param null $row
-     * @return $this
-     * @throws DebugException
+     * @param $offset
+     * @param null $limit
+     * @return Query
      */
-    public function whereNotNull($row = null)
+    public function limit($offset, $limit = null)
     {
-        $this->Builder->whereNotNull($row);
-
-        return $this;
+        return $this->query()->limit($offset, $limit);
     }
 
     /**
-     * @param $row
-     * @param $type
-     * @return $this
+     * @param array $columns
+     * @return DBCollection
      */
-    public function order($row, $type)
+    public function get(array $columns = ['*'])
     {
-        $this->Builder->order($row, $type);
-        return $this;
+        return $this->query()->get($columns);
     }
 
     /**
-     * @param $row
-     * @return $this
-     */
-    public function select($row)
-    {
-        $this->Builder->select($row);
-
-        return $this;
-    }
-
-    /**
-     * @param $row
-     * @return $this
-     */
-    public function addSelect($row)
-    {
-        $this->Builder->addSelect($row);
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function limit()
-    {
-        $this->Builder->limit(func_get_args());
-
-        return $this;
-    }
-
-    /**
+     * @param $id
+     * @param array $columns
      * @return mixed
      */
-    public function get()
+    public function find($id, $columns = ['*'])
     {
-        return $this->Builder->from($this->table)->get();
+        return $this->query()->where($this->primary_key, "=", $id)->first($columns);
     }
 
     /**
-     * @param $key
-     * @return mixed
-     * @throws DebugException
-     */
-    public function find($key)
-    {
-        return $this->Builder->from($this->table)->where($this->primary_key, $key)->first();
-    }
-
-    /**
-     * @param null $key
-     * @return mixed
-     * @throws DebugException
-     */
-    public function first($key = null)
-    {
-        if($key == null)
-            return $this->Builder->from($this->table)->first();
-
-        return $this->Builder->from($this->table)->where($this->primary_key, $key)->first();
-    }
-
-    /**
-     * @param null $key
-     * @return HttpException
-     * @throws DebugException
-     */
-    public function firstOrError($key = null)
-    {
-        if($key == null)
-            return $this->Builder->from($this->table)->firstOrError();
-
-        return $this->Builder->from($this->table)->where($this->primary_key, $key)->firstOrError();
-    }
-
-    /**
-     * @param $value
+     * @param array $columns
      * @return mixed
      */
-    public function value($value)
+    public function first($columns = ['*'])
     {
-        return $this->Builder->from($this->table)->value($value);
+        return $this->query()->first($columns);
     }
 
     /**
+     * @param array $columns
+     * @param string $exception
+     * @param int $code
+     * @param string $message
+     * @return array|FALSE
+     * @throws Exception|HttpException
+     */
+    public function firstOrError(array $columns = ['*'], $exception = HttpException::class, $code = 404, $message = "Страница не найдена")
+    {
+        return $this->query()->firstOrError($columns , $exception, $code, $message);
+    }
+
+    /**
+     * @param $id
+     * @param array $columns
+     * @return array|FALSE
+     * @throws HttpException
+     */
+    public function findOrError($id, $columns = ['*'])
+    {
+        return $this->query()->where($this->primary_key, '=', $id)->firstOrError($columns);
+    }
+
+    /**
+     * @param $column
      * @return mixed
      */
-    public function count()
+    public function value($column)
     {
-        return $this->Builder->from($this->table)->count();
+        return $this->query()->value($column);
     }
 
     /**
-     * @param null $row
+     * @param string $column
+     * @return int
+     */
+    public function count($column = "*")
+    {
+        return $this->query()->count($column);
+    }
+
+    /**
+     * @param $column
      * @return mixed
-     * @throws DebugException
      */
-    public function max($row = null)
+    public function max($column)
     {
-        return $this->Builder->from($this->table)->max($row);
+        return $this->query()->max($column);
     }
 
     /**
-     * @param null $row
+     * @param $column
      * @return mixed
-     * @throws DebugException
      */
-    public function min($row = null)
+    public function min($column)
     {
-        return $this->Builder->from($this->table)->min($row);
+        return $this->query()->min($column);
     }
 
     /**
-     * @param null $row
+     * @param $column
      * @return mixed
-     * @throws DebugException
      */
-    public function avg($row = null)
+    public function avg($column)
     {
-        return $this->Builder->from($this->table)->avg($row);
+        return $this->query()->avg($column);
     }
 
     /**
-     * @param null $row
+     * @param $column
      * @return mixed
-     * @throws DebugException
      */
-    public function sum($row = null)
+    public function sum($column)
     {
-        return $this->Builder->from($this->table)->sum($row);
+        return $this->query()->sum($column);
     }
 
     /**
-     * @param $row
-     * @return $this
+     * @param array $groups
+     * @return Query
      */
-    public function groupBy($row)
+    public function groupBy(...$groups)
     {
-        $this->Builder->groupBy($row);
-
-        return $this;
+        return $this->query()->groupBy(...$groups);
     }
 
     /**
@@ -335,9 +358,9 @@ class Model
      */
     public function join()
     {
-        $this->Builder->join(func_get_args());
-
-        return $this;
+//        $this->Builder->join(func_get_args());
+//
+//        return $this;
     }
 
     /**
@@ -346,9 +369,9 @@ class Model
      */
     public function leftJoin()
     {
-        $this->Builder->leftJoin(func_get_args());
-
-        return $this;
+//        $this->Builder->leftJoin(func_get_args());
+//
+//        return $this;
     }
 
     /**
@@ -357,9 +380,9 @@ class Model
      */
     public function rightJoin()
     {
-        $this->Builder->rightJoin(func_get_args());
-
-        return $this;
+//        $this->Builder->rightJoin(func_get_args());
+//
+//        return $this;
     }
 
     /**
@@ -368,34 +391,42 @@ class Model
      */
     public function crossJoin()
     {
-        $this->Builder->crossJoin(func_get_args());
-
-        return $this;
+//        $this->Builder->crossJoin(func_get_args());
+//
+//        return $this;
     }
 
     /**
-     * @return $this
+     * @param array $values
+     * @return Query
      */
-    public function set()
+    public function set(array $values)
     {
-        $this->Builder->set(func_get_args()[0]);
-
-        return $this;
+        return $this->query()->set($values);
     }
 
     /**
+     * @param array $values
      * @return mixed
      */
-    public function update()
+    public function update(array $values = [])
     {
-        return $this->Builder->from($this->table)->update();
+        return $this->query()->update($values);
     }
 
     /**
-     * @return mixed
+     * @return FALSE|resource
      */
     public function delete()
     {
-        return $this->Builder->from($this->table)->delete();
+        return $this->query()->delete();
+    }
+
+    /**
+     * @return Query
+     */
+    public function query()
+    {
+        return Builder::query($this->table);
     }
 }

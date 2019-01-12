@@ -33,6 +33,8 @@ class Builder
         if($name == 'lastQuery')
             return $this->lastQuery($arguments);
 
+        dd($name);
+
         return $this;
     }
 

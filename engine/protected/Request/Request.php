@@ -199,7 +199,7 @@ class Request implements Arrayable
      */
 	public static function post($name, $default = null)
     {
-        return request()->post->get($name, $default = null);
+        return request()->post->get($name, $default);
 	}
 
     /**
@@ -220,7 +220,7 @@ class Request implements Arrayable
      */
 	public static function server($name, $default = null)
     {
-        return request()->server->get($name, $default = null);
+        return request()->server->get($name, $default);
 	}
 
     /**
@@ -276,7 +276,6 @@ class Request implements Arrayable
         $items = array_merge($items, request()->server->toArray());
         $items = array_merge($items, request()->headers->toArray());
         $items = array_merge($items, request()->cookie->toArray());
-        $items = array_merge($items, request()->files->toArray());
 
         return new Collection($items);
     }
@@ -341,6 +340,10 @@ class Request implements Arrayable
         foreach ($names as $value) {
             if (! $files->has($value)) {
                 return false;
+            } else {
+                if(! $files->get($value)->isUploaded()) {
+                    return false;
+                }
             }
         }
 

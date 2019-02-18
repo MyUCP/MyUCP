@@ -11,7 +11,6 @@ class UploadException extends Exception
      */
     public function __construct($code)
     {
-
         $message = $this->codeToMessage($code);
 
         parent::__construct($message, $code);

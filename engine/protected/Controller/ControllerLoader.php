@@ -82,7 +82,9 @@ class ControllerLoader
         if(strpos($controllerName, ".")){
             $path = explode(".", $controllerName);
 
-            $controller = array_shift(array_reverse($path));
+            $path_reverse = array_reverse($path);
+
+            $controller = array_shift($path_reverse);
 
             array_pop($path);
 

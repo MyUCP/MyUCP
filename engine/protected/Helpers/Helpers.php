@@ -187,12 +187,13 @@ if(!function_exists('config')) {
 
     /**
      * @param null $config
+     * @param null $default
      * @return bool|mixed
      */
-    function config($config = null)
+    function config($config = null, $default = null)
     {
 		if(!empty($config))
-			return app()->config->$config;
+			return app()->config->$config ?? $default;
 
 		return app()->config;
 	}
@@ -203,10 +204,11 @@ if(!function_exists('config')) {
 if(!function_exists('abort')) {
 
     /**
-     * @param $code
+     * @param int $code
+     * @param int $message
      * @throws HttpException
      */
-    function abort($code = 404, $message = "Страница не найдена")
+    function abort($code = 404, $message = null)
     {
 		throw new HttpException($code, $message);
 	}

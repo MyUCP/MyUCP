@@ -10,16 +10,20 @@ class HttpException extends Exception
     /**
      * @var int
      */
-    protected $code = 404;
+    protected $code = Response::HTTP_NOT_FOUND;
 
     /**
      * HttpException constructor.
      *
      * @param int $code
-     * @param string $message
+     * @param int $message
      */
-    public function __construct($code = 404, $message = "Страница не найдена")
+    public function __construct($code = null, $message = null)
     {
+        $code = $code ?? $this->code;
+
+        $message = $message ?? Response::$statusTexts[$code];
+
         parent::__construct($message, $code);
 
         $this->code = $code;

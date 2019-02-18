@@ -1231,7 +1231,7 @@ class Query
             return $this->getValue($value);
         }
 
-        if(false === mb_stripos($value, ".")) {
+        if(false !== mb_stripos($value, ".")) {
             [$table, $column] = explode(".", $value);
 
             return $table . "." . $this->getColumn($column);

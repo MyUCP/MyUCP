@@ -14,9 +14,13 @@ class CsrfToken
 
     /**
      * CsrfToken constructor.
+     * @param Request $request
+     * @throws Exception
      */
     public function __construct(Request $request)
     {
+        $this->request = $request;
+
         if(!app("session")->has("_csrf_token")) {
             $this->generate();
         } else {

@@ -3,7 +3,7 @@
 namespace MyUCP\Routing;
 
 use LogicException;
-use MyUCP\Application;
+use MyUCP\Foundation\Application;
 use MyUCP\Controller\Controller;
 use MyUCP\Debug\DebugException;
 use MyUCP\Request\Request;

@@ -30,21 +30,21 @@ class Load
 		$loaded = [];
 
 		foreach($names[0] as $name) {
-			if(!file_exists($this->app->appPath('models' . DIRECTORY_SEPARATOR . $name . 'Model.php'))) {
-			    if(!file_exists($this->app->appPath('models' . DIRECTORY_SEPARATOR . $name . '.php')))
+			if(!file_exists($this->app->appPath('Models' . DIRECTORY_SEPARATOR . $name . 'Model.php'))) {
+			    if(!file_exists($this->app->appPath('Models' . DIRECTORY_SEPARATOR . $name . '.php')))
                     throw new DebugException("Не удалось загрузить модель [{$name}]");
 
-                require_once($this->app->appPath('models' . DIRECTORY_SEPARATOR . $name . '.php'));
+                require_once($this->app->appPath('Models' . DIRECTORY_SEPARATOR . $name . '.php'));
 
                 if(class_exists($name)){
                     $this->app->$name = new $name($this->app);
                     $loaded[] = $this->app->$name;
                 }
             } else {
-                if(!file_exists($this->app->appPath('models' . DIRECTORY_SEPARATOR . $name . 'Model.php')))
+                if(!file_exists($this->app->appPath('Models' . DIRECTORY_SEPARATOR . $name . 'Model.php')))
                     throw new DebugException("Не удалось загрузить модель [{$name}Model]");
 
-                require_once($this->app->appPath('models' . DIRECTORY_SEPARATOR . $name . 'Model.php'));
+                require_once($this->app->appPath('Models' . DIRECTORY_SEPARATOR . $name . 'Model.php'));
 
                 $modelClass = $name . "Model";
 

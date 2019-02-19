@@ -5,19 +5,16 @@
 
 mb_internal_encoding("UTF-8");
 
-define('APPLICATION_DIR', dirname(__FILE__));
-define('ENGINE_DIR', APPLICATION_DIR . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR);
-define('APP_DIR', APPLICATION_DIR . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR);
-define('CONFIG_DIR', APPLICATION_DIR . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR);
-define('ASSETS_DIR', APPLICATION_DIR . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR);
-define('RESOURCES_DIR', APPLICATION_DIR . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR);
-define('EXTENSIONS_DIR', APPLICATION_DIR . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR);
-define('VIEWS_DIR', RESOURCES_DIR . 'views' . DIRECTORY_SEPARATOR);
-define('THEME_DIR', RESOURCES_DIR . 'views' . DIRECTORY_SEPARATOR); /* Will be deprecated in future versions */
-
-define('ENV', APPLICATION_DIR);
+define('ENV', __DIR__);
 
 /**
- * Bootstrap application
+ * Loading autoloader
  */
-require_once(ENGINE_DIR . 'app.php');
+require_once(__DIR__ . '/vendor/autoload.php');
+
+/**
+ * Boot the application
+ */
+$app = \MyUCP\Foundation\Application::bootstrap(__DIR__);
+
+$app->init()->run();

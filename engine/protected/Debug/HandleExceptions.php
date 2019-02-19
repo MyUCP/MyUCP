@@ -4,7 +4,7 @@ namespace MyUCP\Debug;
 
 use Error;
 use Exception;
-use MyUCP\Application;
+use MyUCP\Foundation\Application;
 
 class HandleExceptions
 {

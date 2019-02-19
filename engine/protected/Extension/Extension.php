@@ -2,7 +2,7 @@
 
 namespace MyUCP\Extension;
 
-use MyUCP\Application;
+use MyUCP\Foundation\Application;
 use MyUCP\Debug\DebugException;
 
 class Extension

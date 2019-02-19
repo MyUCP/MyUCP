@@ -1,6 +1,6 @@
 <?php
 
-namespace MyUCP;
+namespace MyUCP\Foundation;
 
 class Registry
 {

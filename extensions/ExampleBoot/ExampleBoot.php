@@ -5,7 +5,7 @@
 
 namespace Extensions\ExampleBoot;
 
-use MyUCP\Application;
+use MyUCP\Foundation\Application;
 use MyUCP\Extension\BootExtension;
 
 class ExampleBoot extends BootExtension

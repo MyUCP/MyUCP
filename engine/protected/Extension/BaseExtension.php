@@ -2,7 +2,7 @@
 
 namespace MyUCP\Extension;
 
-use MyUCP\Application;
+use MyUCP\Foundation\Application;
 
 abstract class BaseExtension extends ExtensionHelpers
 {

@@ -18,8 +18,8 @@ class CsrfToken
 
     /**
      * CsrfToken constructor.
-     * @param Request $request
-     * @throws \Exception
+     * @param Request $request=
+     * @throws \Exception=
      */
     public function __construct(Request $request)
     {

@@ -21,7 +21,7 @@ class CsrfToken
     {
         $this->request = $request;
 
-        if(!app("session")->has("_csrf_token")) {
+        if(! session()->has("_csrf_token")) {
             $this->generate();
         } else {
             $this->token = session("_csrf_token");
@@ -36,9 +36,9 @@ class CsrfToken
      */
     public function generate()
     {
-        $this->token = md5(Request::ip() . config()->app_key . random_bytes(32));
+        $this->token = md5($this->request->ip() . config()->app_key . random_bytes(32));
 
-        app('session')->put("_csrf_token", $this->token);
+        session()->put("_csrf_token", $this->token);
     }
 
     /**
@@ -60,7 +60,7 @@ class CsrfToken
      */
     public function getTokenFromRequest($request)
     {
-        return Request::input("_token") ?: $request->headers["X-CSRF-TOKEN"];
+        return $request->input("_token") ?: $request->headers["X-CSRF-TOKEN"];
     }
 
     /**

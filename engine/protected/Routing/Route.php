@@ -361,7 +361,7 @@ class Route
      */
     public function csrfVerify(bool $status = true)
     {
-        $this->csrf_verify = true;
+        $this->csrf_verify = $status;
 
         return $this;
     }

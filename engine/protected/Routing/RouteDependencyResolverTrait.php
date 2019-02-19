@@ -1,5 +1,13 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use MyUCP\Support\Arr;
+use ReflectionException;
+use ReflectionFunctionAbstract;
+use ReflectionMethod;
+use ReflectionParameter;
+
 trait RouteDependencyResolverTrait
 {
     /**
@@ -24,9 +32,10 @@ trait RouteDependencyResolverTrait
     /**
      * Resolve the given method's type-hinted dependencies.
      *
-     * @param  array  $parameters
-     * @param  \ReflectionFunctionAbstract  $reflector
+     * @param  array $parameters
+     * @param  \ReflectionFunctionAbstract $reflector
      * @return array
+     * @throws ReflectionException
      */
     public function resolveMethodDependencies(array $parameters, ReflectionFunctionAbstract $reflector)
     {

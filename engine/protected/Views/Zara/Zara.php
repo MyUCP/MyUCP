@@ -1,7 +1,9 @@
-<?php 
-/*
-  * MyUCP
-  */
+<?php
+
+namespace MyUCP\Views\Zara;
+
+use MyUCP\Debug\DebugException;
+use MyUCP\Support\Str;
 
 class Zara
 {
@@ -83,6 +85,7 @@ class Zara
 			
 	  		return $contents;
 	  	}
+
 	  	return false;
 	}
 
@@ -104,7 +107,7 @@ class Zara
             return true;
         } elseif(key_exists($this->filename, $this->preLoadPaths)) {
             if(file_exists($this->preLoadPaths[$this->filename])) {
-                if(mb_stripos($this->preLoadPaths[$this->filename], ".zara.php") === false) {
+                if(Str::contains($this->preLoadPaths[$this->filename], ".zara.php") === false) {
                     $this->path = $this->preLoadPaths[$this->filename];
 
                     return true;

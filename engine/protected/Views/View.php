@@ -1,7 +1,10 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\Views;
+
+use MyUCP\Debug\DebugException;
+use MyUCP\Views\Zara\Zara;
+use MyUCP\Views\Zara\ZaraFactory;
 
 class View
 {
@@ -16,7 +19,7 @@ class View
 	protected $share = [];
 
     /**
-     * @var \App\services\ViewService
+     * @var \App\Services\ViewService
      */
 	protected $service = null;
 
@@ -39,14 +42,14 @@ class View
     /**
      * @param string $name
      * @param array $vars
-     * @param $exception
+     * @param bool $exception
      * @return bool|string
      * @throws DebugException
      */
 	public function load($name, $vars = [], $exception = true)
     {
         if(is_null($this->service))
-            $this->service = new \App\services\ViewService();
+            $this->service = new \App\Services\ViewService();
 
         $this->service->render($name, $vars);
 

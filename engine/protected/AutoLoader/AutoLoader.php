@@ -1,7 +1,8 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\AutoLoader;
+
+use MyUCP\Debug\DebugException;
 
 class AutoLoader
 {

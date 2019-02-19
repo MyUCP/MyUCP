@@ -1,7 +1,10 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\Database;
+
+use MyUCP\Database\Drivers\Driver;
+use MyUCP\Database\Drivers\MySQLDriver;
+use MyUCP\Debug\DebugException;
 
 class DB
 {
@@ -45,6 +48,7 @@ class DB
     /**
      * DB constructor.
      * @param array $options
+     * @throws DebugException
      */
 	public function __construct($options)
     {
@@ -61,7 +65,7 @@ class DB
 
 	/**
 	 * Выполнение составленного запроса
-	 * 
+	 *
 	 * Пример:
 	 * $this->db->query("DELETE FROM table WHERE id=?i", $id);
 	 *
@@ -373,6 +377,11 @@ class DB
 		return $res;
 	}
 
+    /**
+     * @param $args
+     * @return string
+     * @throws DebugException
+     */
 	private function prepareQuery($args) {
 		$query = '';
 		$raw   = array_shift($args);
@@ -413,6 +422,11 @@ class DB
 		return $query;
 	}
 
+    /**
+     * @param $value
+     * @return bool|string
+     * @throws DebugException
+     */
 	private function escapeInt($value) {
 		if ($value === NULL) {
 			return 'NULL';
@@ -427,6 +441,10 @@ class DB
 		return $value;
 	}
 
+    /**
+     * @param $value
+     * @return string
+     */
 	private function escapeString($value) {
 		if ($value === NULL) {
 			return 'NULL';
@@ -434,14 +452,24 @@ class DB
 		return	"'".$this->driver->escape($value)."'";
 	}
 
+    /**
+     * @param $value
+     * @return string
+     * @throws DebugException
+     */
 	private function escapeIdent($value) {
 		if ($value) {
 			return "`".str_replace("`", "``", $value)."`";
 		} else {
-			$this->error("Empty value for identifier (?n) placeholder");
+			return $this->error("Empty value for identifier (?n) placeholder");
 		}
 	}
 
+    /**
+     * @param $data
+     * @return string|void
+     * @throws DebugException
+     */
 	private function createIN($data) {
 		if (!is_array($data)) {
 			$this->error("Value for IN (?a) placeholder should be array");
@@ -457,7 +485,12 @@ class DB
 		}
 		return $query;
 	}
-	
+
+    /**
+     * @param $data
+     * @return string|void
+     * @throws DebugException
+     */
 	private function createSET($data) {
 		if (!is_array($data)) {
 			$this->error("SET (?u) placeholder expects array, ".gettype($data)." given");
@@ -472,13 +505,21 @@ class DB
 			$query .= $comma.$this->escapeIdent($key).'='.$this->escapeString($value);
 			$comma  = ",";
 		}
+
 		return $query;
 	}
-	
+
+    /**
+     * @param $err
+     * @throws DebugException
+     */
 	private function error($err) {
 		throw new DebugException("Ошибка: ".$err, "1");
 	}
 
+    /**
+     *
+     */
 	private function cutStats() {
 		if ( count($this->stats) > 100 ) {
 			reset($this->stats);
@@ -487,6 +528,9 @@ class DB
 		}
 	}
 
+    /**
+     *
+     */
 	public function closeConnect() {
 		$this->driver->close();
 	}
@@ -500,6 +544,10 @@ class DB
 		return new RawQuery($query);
 	}
 
+    /**
+     * @param $value
+     * @return mixed
+     */
 	public function escape($value)
 	{
         if(!is_array($value))
@@ -508,6 +556,11 @@ class DB
         return $value;
 	}
 
+    /**
+     * @param array $values
+     * @return string
+     * @throws DebugException
+     */
 	public static function concat($values = []) {
 
 		if(empty($values) && !is_array($values))

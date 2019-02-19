@@ -1,5 +1,9 @@
 <?php
 
+namespace MyUCP\Request;
+
+use MyUCP\Collection\Collection;
+
 class Header
 {
     /**

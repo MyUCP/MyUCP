@@ -1,7 +1,5 @@
 <?php
-/**
- * MyUCP
- */
+
 namespace MyUCP\Dotenv\Exception;
 
 /**

@@ -2,10 +2,12 @@
 
 namespace Extensions\Auth;
 
-use Router;
-use Application;
+use MyUCP\Application;
 use MyUCP\Extension\BootExtension;
 use Extensions\Auth\controllers\UserController;
+use MyUCP\Response\Redirect;
+use MyUCP\Routing\Router;
+use MyUCP\Session\Session;
 
 class Auth extends BootExtension
 {
@@ -51,7 +53,7 @@ class Auth extends BootExtension
      *
      * @param $email
      * @param $password
-     * @return \Redirect
+     * @return Redirect
      */
     public function login($email, $password)
     {
@@ -111,7 +113,7 @@ class Auth extends BootExtension
     /**
      * Деавторизировать пользователя
      *
-     * @return \Session
+     * @return Session
      */
     public function logout()
     {

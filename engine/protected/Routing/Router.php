@@ -1,5 +1,11 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use Closure;
+use MyUCP\Debug\DebugException;
+use MyUCP\Request\Request;
+
 class Router
 {
     /**
@@ -38,14 +44,14 @@ class Router
     protected $groupStack = [];
 
     /**
-     * @var \App\services\RouteService
+     * @var \App\Services\RouteService
      */
     protected $service;
 
     /**
      * Create a new Router instance.
      *
-     * @return void
+     * @param Request|null $request
      */
     public function __construct(Request $request = null)
     {
@@ -335,7 +341,7 @@ class Router
     /**
      * Load the provided routes.
      *
-     * @param  \Closure|string  $routes
+     * @param  Closure|string  $routes
      * @return void
      */
     public function loadRoutes($routes)
@@ -354,11 +360,11 @@ class Router
      */
     public function loadRouteService()
     {
-        $this->service = new \App\services\RouteService($this);
+        $this->service = new \App\Services\RouteService($this);
     }
 
     /**
-     * @return \App\services\RouteService
+     * @return \App\Services\RouteService
      */
     public function getRouteService()
     {
@@ -454,8 +460,9 @@ class Router
      * Make the request to the application.
      *
      * @return mixed
-     * @throws HttpException
      * @throws DebugException
+     * @throws HttpException
+     * @throws \ReflectionException
      */
     public function make()
     {

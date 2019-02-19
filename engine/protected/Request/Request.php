@@ -1,9 +1,17 @@
 <?php
-/*
-|--------------------------------------------------------------------------
-| Запросы
-|--------------------------------------------------------------------------
-*/
+
+namespace MyUCP\Request;
+
+use Exception;
+use LogicException;
+use MyUCP\Collection\Arrayable;
+use MyUCP\Collection\Collection;
+use MyUCP\Request\File\File;
+use MyUCP\Request\File\UploadException;
+use MyUCP\Routing\Route;
+use MyUCP\Support\Arr;
+use MyUCP\Support\Str;
+
 class Request implements Arrayable
 {
     const METHOD_HEAD = 'HEAD';
@@ -46,6 +54,11 @@ class Request implements Arrayable
      * @var Collection
      */
 	public $server;
+
+    /**
+     * @var Collection
+     */
+    public $request;
 
     /**
      * @var Collection
@@ -119,6 +132,7 @@ class Request implements Arrayable
             && Arr::in(['PUT', 'DELETE', 'PATCH'], Str::upper($this->server->get('REQUEST_METHOD', 'GET')))
         ) {
             parse_str($this->getContent(), $data);
+
             $this->request = new Collection($data);
         }
 	}
@@ -165,7 +179,7 @@ class Request implements Arrayable
     }
 
     /**
-     * @param string $data
+     * @param string|array $data
      * @return array
      */
   	private static function clean($data)
@@ -540,6 +554,7 @@ class Request implements Arrayable
      *
      * @return string A normalized URI (URL) for the Request
      *
+     * @throws Exception
      * @see getQueryString()
      */
     public function getUri()
@@ -608,7 +623,7 @@ class Request implements Arrayable
             $schemeAndHttpHost = $this->getSchemeAndHttpHost();
 
             if (strpos($requestUri, $schemeAndHttpHost) === 0) {
-                $requestUri = substr($requestUri, mb_strlen($schemeAndHttpHost));
+                $requestUri = substr($requestUri, Str::length($schemeAndHttpHost));
             }
         } elseif ($this->server->has('ORIG_PATH_INFO')) {
             // IIS 5.0, PHP as CGI
@@ -634,6 +649,7 @@ class Request implements Arrayable
      * and the password are not added to the generated string.
      *
      * @return string The scheme and HTTP host
+     * @throws Exception
      */
     public function getSchemeAndHttpHost()
     {
@@ -655,6 +671,7 @@ class Request implements Arrayable
      * The port name will be appended to the host if it's non-standard.
      *
      * @return string
+     * @throws Exception
      */
     public function getHttpHost()
     {
@@ -682,7 +699,7 @@ class Request implements Arrayable
     {
         $https = $this->server->get('HTTPS');
 
-        return !empty($https) && 'off' !== mb_strtolower($https);
+        return !empty($https) && 'off' !== Str::lower($https);
     }
 
     /**
@@ -722,7 +739,7 @@ class Request implements Arrayable
 
         // trim and remove port number from host
         // host is lowercase as per RFC 952/2181
-        $host = mb_strtolower(preg_replace('/:\d+$/', '', trim($host)));
+        $host = Str::lower(preg_replace('/:\d+$/', '', trim($host)));
 
         // as the host can come from the user (HTTP_HOST and depending on the configuration, SERVER_NAME too can come from the user)
         // check that it does not contain forbidden characters (see RFC 952 and RFC 2181)
@@ -745,6 +762,7 @@ class Request implements Arrayable
      * Get the current domain of application
      *
      * @return string
+     * @throws Exception
      */
     public function getDomain()
     {
@@ -755,6 +773,7 @@ class Request implements Arrayable
      * Get the current domain of application
      *
      * @return string
+     * @throws Exception
      */
     public function domain()
     {

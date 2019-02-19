@@ -1,5 +1,7 @@
 <?php
 
+namespace MyUCP\Support;
+
 class Str
 {
     /**
@@ -165,8 +167,9 @@ class Str
     /**
      * Generate a random alpha-numeric string.
      *
-     * @param  int  $length
+     * @param  int $length
      * @return string
+     * @throws \Exception
      */
     public static function random($length = 16)
     {

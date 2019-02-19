@@ -1,5 +1,11 @@
 <?php
 
+namespace MyUCP\Response;
+
+use MyUCP\Collection\Collection;
+use MyUCP\Routing\HttpException;
+use MyUCP\Routing\Route;
+
 class Redirect
 {
     /**

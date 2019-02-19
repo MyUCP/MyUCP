@@ -1,7 +1,5 @@
 <?php
-/**
- * MyUCP
- */
+
 namespace MyUCP\Dotenv;
 
 use MyUCP\Dotenv\Exception\InvalidFileException;

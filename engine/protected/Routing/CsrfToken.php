@@ -1,5 +1,9 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use MyUCP\Request\Request;
+
 class CsrfToken
 {
     /**
@@ -14,8 +18,8 @@ class CsrfToken
 
     /**
      * CsrfToken constructor.
-     * @param Request $request
-     * @throws Exception
+     * @param Request $request=
+     * @throws \Exception=
      */
     public function __construct(Request $request)
     {
@@ -32,7 +36,7 @@ class CsrfToken
      * CSRF Token generating
      *
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function generate()
     {
@@ -60,7 +64,7 @@ class CsrfToken
      */
     public function getTokenFromRequest($request)
     {
-        return $request->input("_token") ?: $request->headers["X-CSRF-TOKEN"];
+        return $this->request->input("_token") ?: $request->headers["X-CSRF-TOKEN"];
     }
 
     /**

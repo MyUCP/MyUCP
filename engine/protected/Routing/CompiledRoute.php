@@ -1,5 +1,11 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use MyUCP\Application;
+use MyUCP\Response\Response;
+use Serializable;
+
 class CompiledRoute implements Serializable
 {
     /**
@@ -29,8 +35,7 @@ class CompiledRoute implements Serializable
      * @param Application $app
      * @param $compileResult
      *
-     * @throws DebugException
-     * @return CompiledRoute
+     * @throws HttpException
      */
     public function __construct(Route $route, Application $app, $compileResult)
     {

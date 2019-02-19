@@ -3,7 +3,11 @@
 * MyUCP
 */
 
-spl_autoload_register(array("AutoLoad", "getLoader"));
+use MyUCP\AutoLoad;
+use MyUCP\Registry;
+use MyUCP\Application;
+
+spl_autoload_register(array(AutoLoad::class, "getLoader"));
 
 $registry = new Registry();
 

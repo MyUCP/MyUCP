@@ -63,7 +63,7 @@ class Validate extends BaseExtension
      * Разрешенные символы: 0-9 и .
      * Длина: 1
      *
-     * @param string $money
+     * @param $value
      * @return bool
      */
     public function money($value)

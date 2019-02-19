@@ -1,8 +1,16 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use LogicException;
+use MyUCP\Application;
+use MyUCP\Controller\Controller;
+use MyUCP\Debug\DebugException;
+use MyUCP\Request\Request;
+use MyUCP\Support\Str;
+
 class Route
 {
-
     /**
      * @var string
      */
@@ -230,7 +238,7 @@ class Route
      *
      * @return array
      *
-     * @throws \LogicException
+     * @throws LogicException
      */
     public function parameters()
     {
@@ -382,8 +390,9 @@ class Route
      * @param Application $app
      *
      * @return void
-     * @throws HttpException
      * @throws DebugException
+     * @throws HttpException
+     * @throws \ReflectionException
      */
     public function compileRoute($app)
     {

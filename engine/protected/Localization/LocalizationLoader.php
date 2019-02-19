@@ -1,8 +1,9 @@
 <?php
 
-/**
- * MyUCP
- */
+namespace MyUCP\Localization;
+
+use MyUCP\Debug\DebugException;
+
 class LocalizationLoader
 {
     /**
@@ -78,6 +79,7 @@ class LocalizationLoader
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
         return $this;
     }
 
@@ -88,6 +90,7 @@ class LocalizationLoader
     public function setFallbackLocale($fallback_locale)
     {
         $this->fallback_locale = $fallback_locale;
+
         return $this;
     }
 }

@@ -1,7 +1,8 @@
 <?php
-/*
- * MyUCP
- */
+
+namespace MyUCP\Localization;
+
+use MyUCP\Debug\DebugException;
 
 class Translator
 {
@@ -39,6 +40,7 @@ class Translator
     /**
      * @param $key
      * @return bool
+     * @throws DebugException
      */
     public function has($key)
     {
@@ -47,11 +49,14 @@ class Translator
 
     /**
      * @param $key
+     * @param array $replace
      * @return mixed
+     * @throws DebugException
      */
     public function get($key, $replace = [])
     {
         list($group, $item) = $this->parseKey($key);
+
         $this->load($group);
 
         $line = $this->getLine($group, $item, $replace);
@@ -99,7 +104,9 @@ class Translator
         if ($this->isLoaded($this->locale, $group)) {
             return;
         }
+
         $items = $this->loader->load($group);
+
         $this->loaded[$this->locale][$group] = $items;
     }
 
@@ -133,8 +140,11 @@ class Translator
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
         $this->loader->setLocale($locale);
+
         cookie("__lang", $locale)->forever();
+
         return $this;
     }
 

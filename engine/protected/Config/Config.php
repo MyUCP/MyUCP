@@ -1,9 +1,10 @@
 <?php
-/*
-* MyUCP
-*/
 
-class Config 
+namespace MyUCP\Config;
+
+use MyUCP\Debug\DebugException;
+
+class Config
 {
     /**
      * @var array 

@@ -1,5 +1,10 @@
 <?php
 
+namespace MyUCP\Request;
+
+use DateTimeInterface;
+use InvalidArgumentException;
+
 class Cookie
 {
     protected $name;
@@ -168,9 +173,6 @@ class Cookie
     /**
      * Expire the given cookie.
      *
-     * @param  string  $name
-     * @param  string  $path
-     * @param  string  $domain
      * @return Cookie
      */
     public function forget()

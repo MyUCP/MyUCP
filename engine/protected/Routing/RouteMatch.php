@@ -1,5 +1,9 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use MyUCP\Request\Request;
+
 class RouteMatch
 {
     /**
@@ -110,6 +114,7 @@ class RouteMatch
      * @param Route $route
      * @param Request $request
      * @return bool
+     * @throws \Exception
      */
     public static function validateDomain(Route $route, Request $request)
     {
@@ -125,6 +130,7 @@ class RouteMatch
      * @param Route $route
      * @param Request $request
      * @return bool
+     * @throws \Exception
      */
     public static function parseDomain(Route $route, Request $request)
     {
@@ -165,13 +171,12 @@ class RouteMatch
      * Verify CSRF token to route, if verification needs
      *
      * @param Route $route
-     * @param Request $request
-     *
+     * @param CsrfToken $csrfToken
      * @return bool
      */
     public static function csrfVerify(Route $route, CsrfToken $csrfToken)
     {
-        if(!$route->csrf_verify)
+        if(false === $route->csrf_verify)
             return true;
 
         return $csrfToken->check();

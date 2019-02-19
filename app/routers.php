@@ -9,4 +9,6 @@
 |
 */
 
+use MyUCP\Routing\Router;
+
 Router::view("/", "welcome");

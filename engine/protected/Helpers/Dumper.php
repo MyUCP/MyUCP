@@ -1,7 +1,6 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\Helpers;
 
 class Dumper
 {
@@ -41,7 +40,7 @@ class Dumper
      * @param $value
      * @param $die
      */
-    private function ci($value, $die)
+    private function ci($value, $die = true)
     {
         $className = get_class($value);
         $methods = get_class_methods($className);
@@ -50,7 +49,7 @@ class Dumper
         $this->dd($className, false);
 
         echo "<br>Methods: ";
-        $this->dd($methods, true);
+        $this->dd($methods, $die);
     }
 
     /**

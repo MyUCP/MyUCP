@@ -1,5 +1,12 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use LogicException;
+use MyUCP\Support\Arr;
+use MyUCP\Support\Str;
+use UnexpectedValueException;
+
 class RouteAction
 {
     /**
@@ -37,7 +44,7 @@ class RouteAction
                     "uses" => $action
                 ];
             } else {
-                $action['uses'] = static::findCallable(array_wrap($action['uses']));
+                $action['uses'] = static::findCallable(Arr::wrap($action['uses']));
             }
         }
 

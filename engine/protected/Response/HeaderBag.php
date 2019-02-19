@@ -1,5 +1,13 @@
 <?php
 
+namespace MyUCP\Response;
+
+use ArrayIterator;
+use Countable;
+use DateTime;
+use IteratorAggregate;
+use RuntimeException;
+
 class HeaderBag implements IteratorAggregate, Countable
 {
     protected $headers = array();

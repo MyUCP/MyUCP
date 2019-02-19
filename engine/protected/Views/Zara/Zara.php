@@ -95,14 +95,16 @@ class Zara
      */
 	private function searchFile()
     {
-		if(file_exists(VIEWS_DIR . $this->filename . '.zara.php')) {
-			$this->path = ASSETS_DIR . "cache" . DIRECTORY_SEPARATOR . md5(VIEWS_DIR . $this->filename . ".zara.php");
-			$this->compiler->compile(VIEWS_DIR . $this->filename . '.zara.php', $this->factory);
+		if(file_exists(app()->viewsPath($this->filename . '.zara.php'))) {
+			$this->path = app()->assetsPath(
+			        "cache" . DIRECTORY_SEPARATOR . md5(app()->viewsPath($this->filename . ".zara.php"))
+                );
+			$this->compiler->compile(app()->viewsPath($this->filename . '.zara.php'), $this->factory);
 			$this->compiled = true;
 
 			return true;
-		} elseif(file_exists(VIEWS_DIR . $this->filename . '.php')) {
-            $this->path = VIEWS_DIR . $this->filename . '.php';
+		} elseif(file_exists(app()->viewsPath($this->filename . '.php'))) {
+            $this->path = app()->viewsPath($this->filename . '.php');
 
             return true;
         } elseif(key_exists($this->filename, $this->preLoadPaths)) {
@@ -112,7 +114,7 @@ class Zara
 
                     return true;
                 } else {
-                    $this->path = ASSETS_DIR . "cache" . DIRECTORY_SEPARATOR . md5($this->preLoadPaths[$this->filename]);
+                    $this->path = app()->assetsPath("cache" . DIRECTORY_SEPARATOR . md5($this->preLoadPaths[$this->filename]));
                     $this->compiler->compile($this->preLoadPaths[$this->filename], $this->factory);
                     $this->compiled = true;
 

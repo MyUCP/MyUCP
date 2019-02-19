@@ -3,11 +3,9 @@
 * MyUCP
 */
 
-use MyUCP\Application;
+use MyUCP\Foundation\Application;
 use MyUCP\Collection\Collection;
-use MyUCP\Helpers\Dumper;
 use MyUCP\Localization\Lang;
-use MyUCP\Registry;
 use MyUCP\Request\Cookie;
 use MyUCP\Request\Request;
 use MyUCP\Response\Redirect;
@@ -17,20 +15,6 @@ use MyUCP\Routing\HttpException;
 use MyUCP\Session\Session;
 use MyUCP\Support\Arr;
 use MyUCP\Support\Str;
-
-if(!function_exists('registry')) {
-
-    /**
-     * @return Registry
-     */
-    function registry()
-    {
-	    global $registry;
-
-	    return $registry;
-	}
-
-}
 
 if(!function_exists('app')) {
 
@@ -47,33 +31,6 @@ if(!function_exists('app')) {
 
         return $app->make($name);
     }
-
-}
-
-if(!function_exists('dd')) {
-
-    /**
-     * @param $value
-     * @param bool $die
-     * @return Dumper
-     */
-    function dd($value, $die = true)
-    {
-	    return new Dumper($value, $die);
-	}
-
-}
- 
-if(!function_exists('ci')) {
-
-    /**
-     * @param $value
-     * @return Dumper
-     */
-    function ci($value)
-    {
-	    return new Dumper($value, false, "ci");
-	}
 
 }
 

@@ -2,7 +2,7 @@
 
 namespace MyUCP\Controller;
 
-use MyUCP\Application;
+use MyUCP\Foundation\Application;
 
 abstract class Controller
 {

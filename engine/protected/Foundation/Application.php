@@ -1,27 +1,15 @@
 <?php
 
-namespace MyUCP;
+namespace MyUCP\Foundation;
 
 use ArrayAccess;
-use Exception;
-use MyUCP\Config\Config;
-use MyUCP\Database\DB;
-use MyUCP\Debug\DebugException;
-use MyUCP\Debug\HandleExceptions;
-use MyUCP\Dotenv\Dotenv;
-use MyUCP\Extension\Extension;
-use MyUCP\Localization\LocalizationLoader;
-use MyUCP\Localization\Translator;
-use MyUCP\Request\Request;
-use MyUCP\Response\Response;
-use MyUCP\Routing\CsrfToken;
-use MyUCP\Routing\Router;
-use MyUCP\Routing\UrlGenerator;
-use MyUCP\Session\Session;
-use MyUCP\Views\View;
 
 class Application implements ArrayAccess
 {
+    use Bootstrap;
+
+    //
+
     const VERSION = "5.8.1";
 
     /**
@@ -39,6 +27,11 @@ class Application implements ArrayAccess
      * @var array
      */
     protected $alias = [];
+
+    /**
+     * @var string
+     */
+    protected $basePath = __DIR__;
 
     /**
      * Application constructor.
@@ -80,13 +73,17 @@ class Application implements ArrayAccess
 
     /**
      * @param $name
-     * @param null $instance
+     * @param null|object|string|\Closure $instance
      * @return bool|mixed|null
      */
     public function make($name, $instance = null)
     {
-        if($instance == null) {
+        if(is_null($instance)) {
             if(!$this->has($name)) {
+                if($instance instanceof \Closure) {
+                    return $this->make($name, $instance());
+                }
+
                 return $this->make($name, new $name);
             }
 
@@ -155,88 +152,9 @@ class Application implements ArrayAccess
     }
 
     /**
-     * Initialization of the main classes for the project
-     *
-     * @return $this
-     * @throws Exception
+     * @param $name
+     * @return bool
      */
-    public function init()
-    {
-        if(!file_exists(ENV . DIRECTORY_SEPARATOR . ".env")) {
-            if(!copy(ENV . DIRECTORY_SEPARATOR . ".env.example", ENV . DIRECTORY_SEPARATOR . ".env")) {
-                throw new Exception("Doest not exists [.env] or [.env.example] files.");
-            }
-        }
-
-        $this->makeWith(Dotenv::class, [ENV]);
-        $this->make("dotenv")->load();
-
-        $this->make(Config::class);
-
-        $this->make(HandleExceptions::class)->make($this);
-
-        if(env("APP_DB", false)) {
-            $this->makeWith(DB::class, [$this->make("config")->db]);
-        }
-
-        $this->make(Session::class);
-        $this->make(Request::class);
-        $this->make(Response::class);
-        $this->makeWith(CsrfToken::class,[$this['request']]);
-        $this->make(Load::class);
-        $this->makeWith(Translator::class, [
-                new LocalizationLoader(config()->locale,
-                config()->fallback_locale),
-                config()->locale
-            ]);
-        $this->make(View::class);
-        $this->make(Router::class);
-        $this->makeWith(UrlGenerator::class, [$this["routes"], $this["request"]]);
-
-        $this->makeWith(Extension::class, [$this]);
-
-        $this->initialized = true;
-
-        return $this;
-    }
-
-    /**
-     * Application launch
-     */
-    public function run()
-    {
-        $this->make("extension")->boot();
-        $this->make("router")->loadRouteService();
-        $this->make("router")->loadRoutes(APP_DIR . 'routers.php');
-        $this->make("router")->make();
-        $this->make("response")->prepare($this->make("request"));
-        $this->make("response")->send();
-        $this->make("session")->unsetFlash();
-    }
-
-    /**
-     * Make default aliases
-     */
-    protected function makeAliases()
-    {
-        $this->alias = [
-            "dotenv" => Dotenv::class,
-            "config" => Config::class,
-            "handleException" => HandleExceptions::class,
-            "db" => DB::class,
-            "session" => Session::class,
-            "request" => Request::class,
-            "response" => Response::class,
-            "csrftoken" => CsrfToken::class,
-            "load" => Load::class,
-            "lang" => Translator::class,
-            "view" => View::class,
-            "router" => Router::class,
-            "url" => UrlGenerator::class,
-            "extension" => Extension::class,
-        ];
-    }
-
     public function has($name)
     {
         if(isset($this->alias[$name]))
@@ -308,6 +226,26 @@ class Application implements ArrayAccess
     }
 
     /**
+     * @param $path
+     * @return $this
+     */
+    public function setBasePath($path)
+    {
+        $this->basePath = $path;
+
+        return $this;
+    }
+
+    /**
+     * @param null $path
+     * @return string
+     */
+    public function basePath($path = null)
+    {
+        return $this->basePath . (DIRECTORY_SEPARATOR . ($path ?? ''));
+    }
+
+    /**
      * Get path to the app directory.
      *
      * @param null|string $path
@@ -316,10 +254,10 @@ class Application implements ArrayAccess
     public function appPath($path = null)
     {
         if(is_null($path)) {
-            return APP_DIR;
+            return $this->basePath('app');
         }
 
-        return APP_DIR . $path;
+        return $this->basePath('app') . DIRECTORY_SEPARATOR . $path;
     }
 
     /**
@@ -328,13 +266,13 @@ class Application implements ArrayAccess
      * @param null|string $path
      * @return string
      */
-    public function enginePath($path = null)
+    public function frameworkPath($path = null)
     {
         if(is_null($path)) {
-            return ENGINE_DIR;
+            return $this->basePath('framework');
         }
 
-        return ENGINE_DIR . $path;
+        return $this->basePath('framework') . DIRECTORY_SEPARATOR . $path;
     }
 
     /**
@@ -346,10 +284,10 @@ class Application implements ArrayAccess
     public function resourcesPath($path = null)
     {
         if(is_null($path)) {
-            return RESOURCES_DIR;
+            return $this->basePath('resources');
         }
 
-        return RESOURCES_DIR . $path;
+        return $this->basePath('resources') . DIRECTORY_SEPARATOR . $path;
     }
 
     /**
@@ -361,10 +299,10 @@ class Application implements ArrayAccess
     public function viewsPath($path = null)
     {
         if(is_null($path)) {
-            return VIEWS_DIR;
+            return $this->resourcesPath('views');
         }
 
-        return VIEWS_DIR . $path;
+        return $this->resourcesPath('views') . DIRECTORY_SEPARATOR . $path;
     }
 
     /**
@@ -376,10 +314,10 @@ class Application implements ArrayAccess
     public function assetsPath($path = null)
     {
         if(is_null($path)) {
-            return ASSETS_DIR;
+            return $this->basePath('assets');
         }
 
-        return ASSETS_DIR . $path;
+        return $this->basePath('assets') . DIRECTORY_SEPARATOR . $path;
     }
 
     /**
@@ -391,9 +329,9 @@ class Application implements ArrayAccess
     public function configPath($path = null)
     {
         if(is_null($path)) {
-            return CONFIG_DIR;
+            return $this->basePath('configs');
         }
 
-        return CONFIG_DIR . $path;
+        return $this->basePath('configs') . DIRECTORY_SEPARATOR . $path;
     }
 }

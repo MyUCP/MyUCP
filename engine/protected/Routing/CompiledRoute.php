@@ -2,7 +2,7 @@
 
 namespace MyUCP\Routing;
 
-use MyUCP\Application;
+use MyUCP\Foundation\Application;
 use MyUCP\Response\Response;
 use Serializable;
 

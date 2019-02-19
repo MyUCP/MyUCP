@@ -2,7 +2,7 @@
 
 namespace Extensions\Auth;
 
-use MyUCP\Application;
+use MyUCP\Foundation\Application;
 use MyUCP\Extension\BootExtension;
 use Extensions\Auth\controllers\UserController;
 use MyUCP\Response\Redirect;

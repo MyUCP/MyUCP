@@ -7,6 +7,7 @@
 
 use Extensions\Auth\Auth;
 use Extensions\Auth\controllers\UserController;
+use MyUCP\Routing\Router;
 
 Router::condition(!Auth::check(), function() {
     Router::view('login', 'auth.login')->name('login');

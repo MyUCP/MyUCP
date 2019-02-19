@@ -1,8 +1,28 @@
 <?php
 
+namespace MyUCP;
+
+use ArrayAccess;
+use Exception;
+use MyUCP\Config\Config;
+use MyUCP\Database\DB;
+use MyUCP\Debug\DebugException;
+use MyUCP\Debug\HandleExceptions;
+use MyUCP\Dotenv\Dotenv;
+use MyUCP\Extension\Extension;
+use MyUCP\Localization\LocalizationLoader;
+use MyUCP\Localization\Translator;
+use MyUCP\Request\Request;
+use MyUCP\Response\Response;
+use MyUCP\Routing\CsrfToken;
+use MyUCP\Routing\Router;
+use MyUCP\Routing\UrlGenerator;
+use MyUCP\Session\Session;
+use MyUCP\Views\View;
+
 class Application implements ArrayAccess
 {
-    const VERSION = "5.7.1";
+    const VERSION = "5.8.1";
 
     /**
      * Application status
@@ -138,7 +158,7 @@ class Application implements ArrayAccess
      * Initialization of the main classes for the project
      *
      * @return $this
-     * @throws DebugException|Exception
+     * @throws Exception
      */
     public function init()
     {
@@ -148,7 +168,7 @@ class Application implements ArrayAccess
             }
         }
 
-        $this->makeWith(\MyUCP\Dotenv\Dotenv::class, [ENV]);
+        $this->makeWith(Dotenv::class, [ENV]);
         $this->make("dotenv")->load();
 
         $this->make(Config::class);
@@ -164,12 +184,16 @@ class Application implements ArrayAccess
         $this->make(Response::class);
         $this->makeWith(CsrfToken::class,[$this['request']]);
         $this->make(Load::class);
-        $this->makeWith(Translator::class, [new LocalizationLoader(config()->locale, config()->fallback_locale), config()->locale]);
+        $this->makeWith(Translator::class, [
+                new LocalizationLoader(config()->locale,
+                config()->fallback_locale),
+                config()->locale
+            ]);
         $this->make(View::class);
         $this->make(Router::class);
         $this->makeWith(UrlGenerator::class, [$this["routes"], $this["request"]]);
 
-        $this->makeWith(\MyUCP\Extension\Extension::class, [$this]);
+        $this->makeWith(Extension::class, [$this]);
 
         $this->initialized = true;
 
@@ -196,7 +220,7 @@ class Application implements ArrayAccess
     protected function makeAliases()
     {
         $this->alias = [
-            "dotenv" => \MyUCP\Dotenv\Dotenv::class,
+            "dotenv" => Dotenv::class,
             "config" => Config::class,
             "handleException" => HandleExceptions::class,
             "db" => DB::class,
@@ -209,7 +233,7 @@ class Application implements ArrayAccess
             "view" => View::class,
             "router" => Router::class,
             "url" => UrlGenerator::class,
-            "extension" => \MyUCP\Extension\Extension::class,
+            "extension" => Extension::class,
         ];
     }
 
@@ -232,8 +256,8 @@ class Application implements ArrayAccess
      */
     public function escape($value)
     {
-        if(!is_null($this->db) && $this->db !== false)
-            return $this->db->escape($value);
+        if($this->has('db') && $this->make('db') !== false)
+            return $this->make('db')->escape($value);
 
         return $value;
     }

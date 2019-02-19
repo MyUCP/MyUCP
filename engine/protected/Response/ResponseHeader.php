@@ -1,5 +1,10 @@
 <?php
 
+namespace MyUCP\Response;
+
+use InvalidArgumentException;
+use MyUCP\Request\Cookie;
+
 class ResponseHeader extends HeaderBag
 {
     const COOKIES_FLAT = 'flat';
@@ -336,6 +341,9 @@ class ResponseHeader extends HeaderBag
         return $header;
     }
 
+    /**
+     *
+     */
     private function initDate()
     {
         $now = \DateTime::createFromFormat('U', time());

@@ -1,5 +1,10 @@
 <?php
 
+namespace MyUCP\Response;
+
+use Exception;
+use MyUCP\Request\Cookie;
+
 trait ResponseTrait
 {
     /**

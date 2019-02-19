@@ -1,7 +1,14 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\Model;
+
+use Exception;
+use MyUCP\Application;
+use MyUCP\Database\Builder;
+use MyUCP\Database\DBCollection;
+use MyUCP\Database\Query;
+use MyUCP\Routing\HttpException;
+use MyUCP\Support\Str;
 
 class Model
 {

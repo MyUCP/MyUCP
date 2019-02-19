@@ -1,5 +1,10 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use MyUCP\Request\Request;
+use MyUCP\Support\Arr;
+
 class RouteGroup
 {
     /**

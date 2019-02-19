@@ -1,5 +1,10 @@
 <?php
 
+namespace MyUCP\Support;
+
+use ArrayAccess;
+use MyUCP\Collection\Collection;
+
 class Arr
 {
     /**

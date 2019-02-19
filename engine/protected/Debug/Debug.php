@@ -1,7 +1,8 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\Debug;
+
+use MyUCP\Routing\HttpException;
 
 class Debug
 {
@@ -144,7 +145,6 @@ class Debug
 
     /**
      * @return string
-     * @throws DebugException
      */
     public function __toString()
     {

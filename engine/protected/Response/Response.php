@@ -1,5 +1,17 @@
 <?php
 
+namespace MyUCP\Response;
+
+use ArrayObject;
+use InvalidArgumentException;
+use JsonSerializable;
+use MyUCP\Collection\Jsonable;
+use MyUCP\Collection\Renderable;
+use MyUCP\Debug\DebugException;
+use MyUCP\Request\Request;
+use MyUCP\Routing\HttpException;
+use UnexpectedValueException;
+
 class Response
 {
     use ResponseTrait;
@@ -176,10 +188,10 @@ class Response
      * Constructor.
      *
      * @param mixed $content The response content, see setContent()
-     * @param int   $status  The response status code
+     * @param int $status The response status code
      * @param array $headers An array of response headers
      *
-     * @throws InvalidArgumentException When the HTTP status code is not valid
+     * @throws HttpException
      */
     public function __construct($content = '', $status = 200, $headers = array())
     {
@@ -193,10 +205,11 @@ class Response
      * Factory method for chainability.
      *
      * @param mixed $content The response content, see setContent()
-     * @param int   $status  The response status code
+     * @param int $status The response status code
      * @param array $headers An array of response headers
      *
      * @return static
+     * @throws HttpException
      */
     public static function create($content = '', $status = 200, $headers = array())
     {
@@ -232,6 +245,7 @@ class Response
      * @param Request $request A Request instance
      *
      * @return $this
+     * @throws HttpException
      */
     public function prepare(Request $request)
     {
@@ -298,9 +312,7 @@ class Response
      * @param mixed $content Content that can be cast to string
      *
      * @return $this
-     *
-     * @throws UnexpectedValueException
-     * @throws DebugException
+     * @throws HttpException
      */
     public function setContent($content)
     {
@@ -357,6 +369,7 @@ class Response
      *
      * @param Redirect $content
      * @return string
+     * @throws HttpException
      */
     protected function morphToRedirect($content)
     {
@@ -701,6 +714,7 @@ class Response
      * Checks if we need to remove Cache-Control for SSL encrypted downloads when using IE < 9.
      *
      * @see http://support.microsoft.com/kb/323308
+     * @param Request $request
      */
     protected function ensureIEOverSSLCompatibility(Request $request)
     {

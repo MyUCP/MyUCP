@@ -1,5 +1,9 @@
 <?php
 
+namespace MyUCP\Request\File;
+
+use SplFileInfo;
+
 class File
 {
     /**
@@ -50,7 +54,6 @@ class File
     /**
      * File constructor.
      * @param array $file
-     * @throws UploadException
      */
 	public function __construct($file)
     {

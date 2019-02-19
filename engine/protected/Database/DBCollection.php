@@ -1,7 +1,8 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\Database;
+
+use MyUCP\Collection\Collection;
 
 class DBCollection extends Collection
 {

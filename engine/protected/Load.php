@@ -1,7 +1,8 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP;
+
+use MyUCP\Debug\DebugException;
 
 class Load
 {
@@ -55,28 +56,6 @@ class Load
 		}
 
 		return $loaded;
-	}
-
-    /**
-     * @return bool
-     * @throws DebugException
-     */
-	public function library()
-    {
-		$names = func_get_args();
-
-		foreach($names[0] as $name){
-			$libClass = $name . 'Library';
-			$libPath = ENGINE_DIR . 'lib/' . $name . '.php';
-			
-			if(is_readable($libPath)){
-				require_once($libPath);
-			} else {
-				throw new DebugException('Ошибка: Не удалось загрузить библиотеку ' . $name . '!');
-			}
-		}
-
-		return true;
 	}
 
     /**

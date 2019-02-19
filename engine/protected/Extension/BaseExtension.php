@@ -1,20 +1,19 @@
 <?php
-/**
- * MyUCP
- */
 
 namespace MyUCP\Extension;
+
+use MyUCP\Application;
 
 abstract class BaseExtension extends ExtensionHelpers
 {
     protected $app;
 
-    public function __construct(\Application $app)
+    public function __construct(Application $app)
     {
         $this->setApplication($app);
     }
 
-    public function setApplication(\Application $app)
+    public function setApplication(Application $app)
     {
         $this->app = $app;
     }

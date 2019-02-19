@@ -2,6 +2,10 @@
 
 namespace MyUCP\Extension;
 
+use MyUCP\Controller\Controller;
+use MyUCP\Support\Str;
+use MyUCP\Views\View;
+
 class ExtensionHelpers
 {
     /**
@@ -15,8 +19,8 @@ class ExtensionHelpers
     {
         $currentExtensions = basename((new \ReflectionClass($this))->getFileName());
 
-        $directory = \Str::replaceLast($currentExtensions, "", (new \ReflectionClass($this))->getFileName());
-        $directory = \Str::replaceLast("\\", "", $directory);
+        $directory = Str::replaceLast($currentExtensions, "", (new \ReflectionClass($this))->getFileName());
+        $directory = Str::replaceLast("\\", "", $directory);
 
         return $directory . DIRECTORY_SEPARATOR . ltrim($path, '/');
     }
@@ -29,7 +33,7 @@ class ExtensionHelpers
      */
     public function controller($name, $path = null)
     {
-        \Controller::alias($name, $path);
+        Controller::alias($name, $path);
     }
 
     /**
@@ -37,6 +41,6 @@ class ExtensionHelpers
      */
     public function view($name, $path = null)
     {
-        \View::preLoad($name, $path);
+        View::preLoad($name, $path);
     }
 }

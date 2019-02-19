@@ -1,5 +1,13 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
+use MyUCP\Request\Request;
+use MyUCP\Support\Arr;
+
 class RouteCollection implements Countable, IteratorAggregate
 {
     /**
@@ -39,7 +47,9 @@ class RouteCollection implements Countable, IteratorAggregate
     public function add(Route $route)
     {
         $this->addToCollections($route);
+
         $this->addLookups($route);
+
         return $route;
     }
 
@@ -63,7 +73,7 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Add the route to any look-up tables if necessary.
      *
-     * @param  \Route  $route
+     * @param  Route  $route
      * @return void
      */
     protected function addLookups($route)
@@ -198,7 +208,7 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Get an iterator for the items.
      *
-     * @return \ArrayIterator
+     * @return ArrayIterator
      */
     public function getIterator()
     {

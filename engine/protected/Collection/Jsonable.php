@@ -1,5 +1,7 @@
 <?php
 
+namespace MyUCP\Collection;
+
 interface Jsonable
 {
     /**

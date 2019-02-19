@@ -1,7 +1,6 @@
-<?php 
-/*
-  * MyUCP
-  */
+<?php
+
+namespace MyUCP\Views\Zara;
 
 class ZaraFactory
 {
@@ -99,12 +98,4 @@ class ZaraFactory
             $this->extendSection($section, $content);
         }
     }
-}
-
-/**
- * @param mixed $val
- * @return mixed
- */
-function e($val){
-	return $val;
 }

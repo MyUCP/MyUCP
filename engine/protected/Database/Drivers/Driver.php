@@ -1,8 +1,7 @@
 <?php
 
-/**
- * MyUCP
- */
+namespace MyUCP\Database\Drivers;
+
 interface Driver
 {
     public function __construct($options);

@@ -1,5 +1,18 @@
 <?php
 
+namespace MyUCP\Collection;
+
+use ArrayAccess;
+use ArrayIterator;
+use CachingIterator;
+use Countable;
+use Exception;
+use InvalidArgumentException;
+use IteratorAggregate;
+use JsonSerializable;
+use MyUCP\Support\Arr;
+use Traversable;
+
 class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate, Jsonable, JsonSerializable
 {
     /**
@@ -78,8 +91,10 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
             if ($this->useAsCallable($key)) {
                 return ! is_null($this->first($key));
             }
+
             return in_array($key, $this->items);
         }
+
         if (func_num_args() == 2) {
             $value = $operator;
             $operator = '=';
@@ -123,6 +138,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
                 break;
             }
         }
+
         return $this;
     }
 
@@ -143,12 +159,15 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
                     return false;
                 }
             }
+
             return true;
         }
+
         if (func_num_args() == 2) {
             $value = $operator;
             $operator = '=';
         }
+
         return $this->every($this->operatorForWhere($key, $operator, $value));
     }
 
@@ -161,6 +180,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     public function except($keys)
     {
         $keys = is_array($keys) ? $keys : func_get_args();
+
         return new static(Arr::except($this->items, $keys));
     }
 
@@ -175,6 +195,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
         if ($callback) {
             return new static(Arr::where($this->items, $callback));
         }
+
         return new static(array_filter($this->items));
     }
 
@@ -192,6 +213,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
             $value = $operator;
             $operator = '=';
         }
+
         return $this->filter($this->operatorForWhere($key, $operator, $value));
     }
 
@@ -257,6 +279,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
         foreach ((array) $keys as $key) {
             $this->offsetUnset($key);
         }
+
         return $this;
     }
 
@@ -409,6 +432,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
             return ! is_null($value);
         })->reduce(function ($result, $item) use ($callback) {
             $value = $callback($item);
+
             return is_null($result) || $value > $result ? $value : $result;
         });
     }
@@ -427,6 +451,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
             return ! is_null($value);
         })->reduce(function ($result, $item) use ($callback) {
             $value = $callback($item);
+
             return is_null($result) || $value < $result ? $value : $result;
         });
     }
@@ -870,7 +895,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Get an iterator for the items.
      *
-     * @return \ArrayIterator
+     * @return ArrayIterator
      */
     public function getIterator()
     {
@@ -881,7 +906,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
      * Get a CachingIterator instance.
      *
      * @param  int  $flags
-     * @return \CachingIterator
+     * @return CachingIterator
      */
     public function getCachingIterator($flags = CachingIterator::CALL_TOSTRING)
     {

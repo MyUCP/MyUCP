@@ -3,6 +3,21 @@
 * MyUCP
 */
 
+use MyUCP\Application;
+use MyUCP\Collection\Collection;
+use MyUCP\Helpers\Dumper;
+use MyUCP\Localization\Lang;
+use MyUCP\Registry;
+use MyUCP\Request\Cookie;
+use MyUCP\Request\Request;
+use MyUCP\Response\Redirect;
+use MyUCP\Response\Response;
+use MyUCP\Routing\Route;
+use MyUCP\Routing\HttpException;
+use MyUCP\Session\Session;
+use MyUCP\Support\Arr;
+use MyUCP\Support\Str;
+
 if(!function_exists('registry')) {
 
     /**
@@ -65,6 +80,9 @@ if(!function_exists('ci')) {
 if(!function_exists('view')) {
 
     /**
+     * @param $name
+     * @param array $vars
+     * @param bool $exception
      * @return mixed
      */
     function view($name, $vars = [], $exception = true)
@@ -132,7 +150,7 @@ if(!function_exists('route')) {
 if(!function_exists('redirect')) {
 
     /**
-     * @param Route|string $value
+     * @param Route|string|null $value
      * @param array $parameters if $path is a route
      * @param int $status
      * @return Redirect
@@ -456,7 +474,9 @@ if (! function_exists('extension')) {
     /**
      * Run extension
      *
-     * @return \MyUCP\Extension\Extensionable
+     * @param $extension
+     * @param array $args
+     * @return \MyUCP\Extension\BaseExtension
      */
     function extension($extension, ...$args)
     {
@@ -468,7 +488,9 @@ if (! function_exists('ext')) {
     /**
      * Run extension
      *
-     * @return \MyUCP\Extension\Extensionable
+     * @param $extension
+     * @param array $args
+     * @return \MyUCP\Extension\BaseExtension
      */
     function ext($extension, ...$args)
     {
@@ -551,7 +573,8 @@ if (! function_exists('plural_phrase')) {
      * @param string $phrase
      * @return string
      */
-    function plural_phrase($phrase){
+    function plural_phrase($phrase)
+    {
         $plural = "";
 
         for($i=0; $i < strlen($phrase); $i++) {
@@ -566,5 +589,16 @@ if (! function_exists('plural_phrase')) {
         }
 
         return $plural;
+    }
+}
+
+if (! function_exists('e')) {
+    /**
+     * @param mixed $val
+     * @return mixed
+     */
+    function e($val)
+    {
+        return $val;
     }
 }

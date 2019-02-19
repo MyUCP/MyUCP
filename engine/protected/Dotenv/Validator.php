@@ -1,9 +1,6 @@
 <?php
-/**
- * MyUCP
- */
-namespace MyUCP\Dotenv;
 
+namespace MyUCP\Dotenv;
 
 use MyUCP\Dotenv\Exception\InvalidCallbackException;
 use MyUCP\Dotenv\Exception\ValidationException;

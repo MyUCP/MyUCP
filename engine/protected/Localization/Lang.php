@@ -1,7 +1,8 @@
 <?php
 
+namespace MyUCP\Localization;
+
 /**
- * MyUCP
  * Alias Translator
  */
 class Lang

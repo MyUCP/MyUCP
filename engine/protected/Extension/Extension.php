@@ -1,12 +1,9 @@
 <?php
-/**
- * MyUCP
- */
 
 namespace MyUCP\Extension;
 
-use Application;
-use DebugException;
+use MyUCP\Application;
+use MyUCP\Debug\DebugException;
 
 class Extension
 {

@@ -1,7 +1,8 @@
 <?php
-/**
- * MyUCP
- */
+
+namespace MyUCP\Controller;
+
+use MyUCP\Debug\DebugException;
 
 class ControllerLoader
 {

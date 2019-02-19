@@ -5,7 +5,7 @@
 
 namespace Extensions\Auth\controllers;
 
-use Request;
+use MyUCP\Request\Request;
 
 class UserController
 {

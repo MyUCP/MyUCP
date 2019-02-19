@@ -1,7 +1,8 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\Debug;
+
+use Exception;
 
 class DebugException extends Exception
 {

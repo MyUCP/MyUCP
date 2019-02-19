@@ -1,7 +1,10 @@
 <?php
-/*
- * MyUCP
- */
+
+namespace MyUCP\Debug;
+
+use Error;
+use Exception;
+use MyUCP\Application;
 
 class HandleExceptions
 {

@@ -1,7 +1,6 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\Database;
 
 class RawQuery
 {

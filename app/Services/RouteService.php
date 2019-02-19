@@ -1,11 +1,8 @@
 <?php
-/**
- * MyUCP
- */
 
-namespace App\services;
+namespace App\Services;
 
-use Router;
+use MyUCP\Routing\Router;
 
 class RouteService
 {

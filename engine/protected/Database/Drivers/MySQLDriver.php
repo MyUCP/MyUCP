@@ -1,7 +1,8 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\Database\Drivers;
+
+use MyUCP\Debug\DebugException;
 
 final class MySQLDriver implements Driver
 {
@@ -13,7 +14,7 @@ final class MySQLDriver implements Driver
     /**
      * mysqlDriver constructor.
      * @param $options
-     * @throws Debug
+     * @throws DebugException
      */
 	public function __construct($options)
 	{

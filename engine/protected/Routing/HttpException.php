@@ -1,5 +1,10 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use Exception;
+use MyUCP\Response\Response;
+
 class HttpException extends Exception
 {
     /**

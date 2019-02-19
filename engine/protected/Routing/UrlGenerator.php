@@ -1,5 +1,10 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use InvalidArgumentException;
+use MyUCP\Request\Request;
+
 class UrlGenerator
 {
     /**

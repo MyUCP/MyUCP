@@ -1,7 +1,8 @@
-<?php 
-/*
-  * MyUCP
-  */
+<?php
+
+namespace MyUCP\Views\Zara;
+
+use MyUCP\Support\Str;
 
 class ZaraCompiler
 {
@@ -56,7 +57,7 @@ class ZaraCompiler
     protected $factory;
 
     /**
-     * @var \App\services\ZaraService
+     * @var \App\Services\ZaraService
      */
     protected $service;
 
@@ -71,13 +72,13 @@ class ZaraCompiler
     protected $conditions = [];
 
     /**
-     * @param null|string $path
+     * @param string $path
      * @param ZaraFactory $factory
      */
-    public function compile($path = null, ZaraFactory $factory)
+    public function compile($path, ZaraFactory $factory)
     {
         $this->factory = $factory;
-        $this->service = new \App\services\ZaraService(
+        $this->service = new \App\Services\ZaraService(
             str_replace(".zara.php", "", pathinfo($path)['basename'])
         );
 

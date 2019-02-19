@@ -1,5 +1,12 @@
 <?php
 
+namespace MyUCP\Routing;
+
+use MyUCP\Application;
+use MyUCP\Debug\DebugException;
+use ReflectionException;
+use ReflectionFunction;
+
 class RouteCompiler
 {
     use RouteDependencyResolverTrait;
@@ -36,8 +43,9 @@ class RouteCompiler
      *
      * @return CompiledRoute
      *
-     * @throws HttpException
      * @throws DebugException
+     * @throws HttpException
+     * @throws ReflectionException
      */
     public function compile()
     {
@@ -91,6 +99,8 @@ class RouteCompiler
      * Run the route action and return the response.
      *
      * @return CompiledRoute
+     * @throws HttpException
+     * @throws ReflectionException
      */
     protected function runCallable()
     {
@@ -110,6 +120,7 @@ class RouteCompiler
      * @return CompiledRoute
      *
      * @throws ReflectionException
+     * @throws HttpException
      */
     protected function runController($controller, $method)
     {
@@ -129,6 +140,7 @@ class RouteCompiler
      *
      * @param $content
      * @return CompiledRoute
+     * @throws HttpException
      */
     public function getCompiledResponse($content)
     {

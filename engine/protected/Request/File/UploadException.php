@@ -1,7 +1,8 @@
 <?php
-/**
- * MyUCP
- */
+
+namespace MyUCP\Request\File;
+
+use Exception;
 
 class UploadException extends Exception
 {

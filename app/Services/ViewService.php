@@ -1,9 +1,6 @@
 <?php
-/**
- * MyUCP
- */
 
-namespace App\services;
+namespace App\Services;
 
 class ViewService
 {

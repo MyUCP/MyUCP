@@ -1,7 +1,13 @@
 <?php
-/*
-* MyUCP
-*/
+
+namespace MyUCP\Database;
+
+use DateTimeInterface;
+use Exception;
+use InvalidArgumentException;
+use MyUCP\Collection\Arrayable;
+use MyUCP\Routing\HttpException;
+use MyUCP\Support\Str;
 
 class Query
 {
@@ -132,6 +138,11 @@ class Query
         return $this;
     }
 
+    /**
+     * @param $table
+     * @param $as
+     * @return Query
+     */
     public function fromAs($table, $as)
     {
         $query = $this->raw('('. $table .') as ' . $as);

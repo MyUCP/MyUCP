@@ -29,13 +29,14 @@ class CompiledRoute implements Serializable
      * @param Application $app
      * @param $compileResult
      *
+     * @throws DebugException
      * @return CompiledRoute
      */
     public function __construct(Route $route, Application $app, $compileResult)
     {
         $this->uri = $route->uri();
         $this->parameters = $route->parameters();
-        $this->container = $app;
+        $this->app = $app;
         $this->response = $app['response'];
 
         $this->response->setContent($compileResult);

@@ -18,11 +18,11 @@
 	"autoload": {
 		"psr-4": {
 			"App\\": "app/",
-			"MyUCP\\": "engine/protected/",
+			"MyUCP\\": "framework/",
 			"Extensions\\": "extensions/"
 		},
 		"files": [
-			"engine/protected/Support/helpers.php"
+			"framework/Support/helpers.php"
 		]
 	},
 	"minimum-stability": "stable",

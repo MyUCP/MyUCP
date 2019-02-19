@@ -155,6 +155,6 @@ class Debug
         $traces = $this->traceToReadable();
         $lines = $this->visualizeCode();
 
-        return (string) require_once("DebugViewTemplate.php");
+        return (string)require_once("DebugViewTemplate.php");
     }
 }

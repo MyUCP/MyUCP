@@ -36,7 +36,7 @@
 <body>
 <div class="container">
     <div class="content">
-        <div class="title"><?=$code?></div>
+        <div class="title"><?php echo $code ?? '500' ?></div>
         <div class="description">Whoops, something went wrong on our servers.</div>
     </div>
 </div>

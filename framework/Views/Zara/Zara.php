@@ -92,16 +92,18 @@ class Zara
      */
 	private function searchFile()
     {
-		if(file_exists(app()->viewsPath($this->filename . '.zara.php'))) {
+        $path = app()->viewsPath(implode('/', explode('.', $this->filename)));
+
+		if(file_exists($path . '.zara.php')) {
 			$this->path = app()->assetsPath(
-			        "cache" . DIRECTORY_SEPARATOR . md5(app()->viewsPath($this->filename . ".zara.php"))
+			        "cache" . DIRECTORY_SEPARATOR . md5($path . ".zara.php")
                 );
 			$this->compiler->compile($this->filename, $this->factory);
 			$this->compiled = true;
 
 			return true;
-		} elseif(file_exists(app()->viewsPath($this->filename . '.php'))) {
-            $this->path = app()->viewsPath($this->filename . '.php');
+		} elseif(file_exists($path . '.php')) {
+            $this->path = $path . '.php';
 
             return true;
         } elseif(key_exists($this->filename, $this->preLoadPaths)) {

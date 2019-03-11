@@ -203,7 +203,7 @@ class Request implements Arrayable
      */
 	public static function get($name, $default = null)
     {
-	    return request()->get->get($name, $default);
+	    return data_get(request()->get, $name, $default);
 	}
 
     /**
@@ -213,7 +213,7 @@ class Request implements Arrayable
      */
 	public static function post($name, $default = null)
     {
-        return request()->post->get($name, $default);
+        return data_get(request()->post, $name, $default);
 	}
 
     /**
@@ -234,7 +234,7 @@ class Request implements Arrayable
      */
 	public static function server($name, $default = null)
     {
-        return request()->server->get($name, $default);
+        return data_get(request()->server, $name, $default);
 	}
 
     /**
@@ -251,7 +251,7 @@ class Request implements Arrayable
      */
 	public static function file($name)
     {
-		return request()->files->get($name);
+        return data_get(request()->files, $name);
 	}
 
     /**
@@ -527,7 +527,7 @@ class Request implements Arrayable
             $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
         }
 
-        return rtrim($baseUrl, '/'.DIRECTORY_SEPARATOR);
+        return rtrim($baseUrl, '/' . DIRECTORY_SEPARATOR);
     }
 
     /**

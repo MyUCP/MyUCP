@@ -625,6 +625,17 @@ class ZaraCompiler
     }
 
     /**
+     * @include()
+     *
+     * @param $expression
+     * @return string
+     */
+    protected function compileInclude($expression)
+    {
+        return "<?php echo view$expression; ?>";
+    }
+
+    /**
      * Register a handler for custom directives.
      *
      * @param  string  $name

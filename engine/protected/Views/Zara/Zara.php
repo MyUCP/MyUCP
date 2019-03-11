@@ -69,21 +69,19 @@ class Zara
 	}
 
     /**
+     * Get compiled view
+     *
      * @return bool|string
      */
 	public function getCompiled()
     {
-		if($this->exception) {
-			extract($this->vars);
+        ob_start();
 
-			ob_start();
-			include($this->path);
-	  		$contents = ob_get_contents();
-	  		ob_end_clean();
-			
-	  		return $contents;
-	  	}
-	  	return false;
+        extract($this->vars, EXTR_SKIP);
+
+        include $this->path;
+
+        return ltrim(ob_get_clean());
 	}
 
     /**

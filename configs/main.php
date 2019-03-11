@@ -60,6 +60,7 @@ return [
     ],
 
     'services'  =>  [
+        \MyUCP\Routing\Interfaces\RouteService::class => \App\Services\RouteService::class,
         \MyUCP\Views\Interfaces\ViewService::class => \App\Services\ViewService::class,
         \MyUCP\Views\Zara\Interfaces\ZaraService::class => \App\Services\ZaraService::class,
     ],

@@ -5,6 +5,7 @@ namespace MyUCP\Routing;
 use Closure;
 use MyUCP\Debug\DebugException;
 use MyUCP\Request\Request;
+use MyUCP\Routing\Interfaces\RouteService;
 
 class Router
 {
@@ -44,7 +45,7 @@ class Router
     protected $groupStack = [];
 
     /**
-     * @var \App\Services\RouteService
+     * @var RouteService
      */
     protected $service;
 
@@ -360,11 +361,11 @@ class Router
      */
     public function loadRouteService()
     {
-        $this->service = new \App\Services\RouteService($this);
+        $this->service = app()->makeWith(config('services.' . RouteService::class), [$this]);
     }
 
     /**
-     * @return \App\Services\RouteService
+     * @return RouteService
      */
     public function getRouteService()
     {

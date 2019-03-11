@@ -20,7 +20,7 @@ class Zara
     /**
      * @var array
      */
-	protected $vars;
+	protected $vars = [];
 
     /**
      * @var ZaraCompiler
@@ -57,7 +57,7 @@ class Zara
      */
 	public function compile($filename, $vars = [], ZaraFactory $factory = null, $exception = true)
     {
-		$this->vars = $vars;
+		$this->vars = array_merge($this->vars, $vars);
 		$this->vars["zara"] = $this;
 		$this->filename = $filename;
 		$this->compiler = new ZaraCompiler;
@@ -71,22 +71,19 @@ class Zara
 	}
 
     /**
-     * @return bool|string
+     * Get compiled view
+     *
+     * @return string
      */
 	public function getCompiled()
     {
-		if($this->exception) {
-			extract($this->vars);
+        ob_start();
 
-			ob_start();
-			include($this->path);
-	  		$contents = ob_get_contents();
-	  		ob_end_clean();
-			
-	  		return $contents;
-	  	}
+        extract($this->vars, EXTR_SKIP);
 
-	  	return false;
+        include $this->path;
+
+        return ltrim(ob_get_clean());
 	}
 
     /**
@@ -191,5 +188,15 @@ class Zara
     public static function preLoad(string $name, string $path)
     {
         return app("view")->getZara()->addPreLoadPath($name, $path);
+    }
+
+    /**
+     * @param $view
+     * @param array $data
+     * @return mixed
+     */
+    public static function include($view, $data = [])
+    {
+        return view($view, $data);
     }
 }

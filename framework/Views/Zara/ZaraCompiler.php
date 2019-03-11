@@ -157,6 +157,10 @@ class ZaraCompiler
             }, $value);
     }
 
+    /**
+     * @param $match
+     * @return string
+     */
     protected function compileStatement($match)
     {
         if (method_exists($this, $method = 'compile'.ucfirst($match[1]))) {
@@ -623,6 +627,17 @@ class ZaraCompiler
     protected function compileAsset($expression)
     {
         return "<?php echo asset$expression; ?>";
+    }
+
+    /**
+     * @include()
+     *
+     * @param $expression
+     * @return string
+     */
+    protected function compileInclude($expression)
+    {
+        return "<?php echo view$expression; ?>";
     }
 
     /**

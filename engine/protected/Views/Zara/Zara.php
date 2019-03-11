@@ -18,7 +18,7 @@ class Zara
     /**
      * @var array
      */
-	protected $vars;
+	protected $vars = [];
 
     /**
      * @var ZaraCompiler
@@ -55,7 +55,7 @@ class Zara
      */
 	public function compile($filename, $vars = [], ZaraFactory $factory = null, $exception = true)
     {
-		$this->vars = $vars;
+		$this->vars = array_merge($this->vars, $vars);
 		$this->vars["zara"] = $this;
 		$this->filename = $filename;
 		$this->compiler = new ZaraCompiler;

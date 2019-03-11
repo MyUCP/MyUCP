@@ -156,6 +156,10 @@ class ZaraCompiler
             }, $value);
     }
 
+    /**
+     * @param $match
+     * @return string
+     */
     protected function compileStatement($match)
     {
         if (method_exists($this, $method = 'compile'.ucfirst($match[1]))) {

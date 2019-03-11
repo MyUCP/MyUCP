@@ -167,7 +167,7 @@ if(!function_exists('config')) {
      */
     function config($config = null, $default = null)
     {
-		if(!empty($config))
+		if(! is_null($config))
 			return app()->config->$config ?? $default;
 
 		return app()->config;
@@ -320,6 +320,8 @@ if (! function_exists('data_get')) {
                 $target = $target[$segment];
             } elseif (is_object($target) && isset($target->{$segment})) {
                 $target = $target->{$segment};
+            } elseif ($target instanceof \MyUCP\Collection\Arrayable) {
+                $target = $target->toArray()[$segment];
             } else {
                 return value($default);
             }

@@ -17,4 +17,7 @@ require_once(__DIR__ . '/vendor/autoload.php');
  */
 $app = \MyUCP\Foundation\Application::bootstrap(__DIR__);
 
+/**
+ * Run application
+ */
 $app->init()->run();

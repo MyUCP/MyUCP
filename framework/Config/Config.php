@@ -2,14 +2,17 @@
 
 namespace MyUCP\Config;
 
+use MyUCP\Collection\Arrayable;
+use MyUCP\Collection\Collection;
+use MyUCP\Collection\Jsonable;
 use MyUCP\Debug\DebugException;
 
-class Config
+class Config implements Arrayable, Jsonable
 {
     /**
-     * @var array 
+     * @var Collection
      */
-	private $data = [];
+	protected $data;
 
     /**
      * Config constructor.
@@ -20,7 +23,7 @@ class Config
 		if(is_readable(app()->configPath('main.php'))) {
 			$config = require_once(app()->configPath('main.php'));
 
-			$this->data = array_merge($this->data, $config);
+			$this->data = new Collection($config);
 
 			$this->loadConfigs();
             $this->loadCustomFiles();
@@ -37,7 +40,7 @@ class Config
      */
 	public function __set($key, $val)
     {
-		$this->data[$key] = $val;
+		$this->data->put($key, $val);
 	}
 
     /**
@@ -46,11 +49,7 @@ class Config
      */
 	public function __get($key)
     {
-		if(isset($this->data[$key])) {
-			return $this->data[$key];
-		}
-
-		return null;
+        return $this->data->get($key);
 	}
 
     /**
@@ -70,7 +69,7 @@ class Config
 
 					$configName = substr($item, 0, -4);
 
-					$this->data[$configName] = (object) $config;
+					$this->data->put($configName, $config);
 				} else {
                     throw new DebugException("Cannot load [{$item}] configuration file");
                 }
@@ -85,10 +84,37 @@ class Config
      */
 	private function loadCustomFiles()
     {
-        foreach($this->data['load_files'] as $path) {
+        foreach($this->data->get('load_files', []) as $path) {
             if (file_exists($path) && is_readable($path)) {
                 require_once($path);
             }
         }
+    }
+
+    /**
+     * @return array|Collection
+     */
+    public function toArray()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param int $options
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        return $this->data->toJson($options);
+    }
+
+    /**
+     * Convert the config data to its string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->data->__toString();
     }
 }

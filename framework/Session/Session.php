@@ -27,7 +27,7 @@ class Session
      */
     public function __get($name)
     {
-        return (isset($this->data[$name])) ? $this->data[$name] : null;
+        return data_get($this->data, $name);
     }
 
     /**
@@ -60,10 +60,7 @@ class Session
      */
 	public function get($key, $default = null)
     {
-        if($this->has($key))
-            return $this->data[$key];
-
-        return $default;
+        return data_get($this->data, $key, $default);
     }
 
     /**

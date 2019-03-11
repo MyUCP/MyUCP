@@ -185,4 +185,14 @@ class Zara
     {
         return app("view")->getZara()->addPreLoadPath($name, $path);
     }
+
+    /**
+     * @param $view
+     * @param array $data
+     * @return mixed
+     */
+    public static function include($view, $data = [])
+    {
+        return view($view, $data);
+    }
 }

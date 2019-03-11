@@ -3,6 +3,7 @@
 namespace MyUCP\Views;
 
 use MyUCP\Debug\DebugException;
+use MyUCP\Views\Interfaces\ViewService;
 use MyUCP\Views\Zara\Zara;
 use MyUCP\Views\Zara\ZaraFactory;
 
@@ -19,7 +20,7 @@ class View
 	protected $share = [];
 
     /**
-     * @var \App\Services\ViewService
+     * @var ViewService
      */
 	protected $service = null;
 
@@ -43,13 +44,15 @@ class View
      * @param string $name
      * @param array $vars
      * @param bool $exception
+     *
      * @return bool|string
+     *
      * @throws DebugException
      */
 	public function load($name, $vars = [], $exception = true)
     {
         if(is_null($this->service))
-            $this->service = new \App\Services\ViewService();
+            $this->service = app()->make(config('services.' . ViewService::class));
 
         $this->service->render($name, $vars);
 
@@ -61,6 +64,7 @@ class View
     /**
      * @param string $name
      * @param string $path
+     *
      * @return mixed
      */
     public static function preLoad(string $name, string $path)

@@ -96,7 +96,7 @@ class Zara
 			$this->path = app()->assetsPath(
 			        "cache" . DIRECTORY_SEPARATOR . md5(app()->viewsPath($this->filename . ".zara.php"))
                 );
-			$this->compiler->compile(app()->viewsPath($this->filename . '.zara.php'), $this->factory);
+			$this->compiler->compile($this->filename, $this->factory);
 			$this->compiled = true;
 
 			return true;
@@ -112,7 +112,7 @@ class Zara
                     return true;
                 } else {
                     $this->path = app()->assetsPath("cache" . DIRECTORY_SEPARATOR . md5($this->preLoadPaths[$this->filename]));
-                    $this->compiler->compile($this->preLoadPaths[$this->filename], $this->factory);
+                    $this->compiler->compile($this->filename, $this->factory, $this->preLoadPaths[$this->filename]);
                     $this->compiled = true;
 
                     return true;

@@ -59,6 +59,11 @@ return [
         //
     ],
 
+    'services'  =>  [
+        \MyUCP\Views\Interfaces\ViewService::class => \App\Services\ViewService::class,
+        \MyUCP\Views\Zara\Interfaces\ZaraService::class => \App\Services\ZaraService::class,
+    ],
+
     // Список расширений
     'extensions'   =>  [
         "Example" => \Extensions\Example\Example::class,

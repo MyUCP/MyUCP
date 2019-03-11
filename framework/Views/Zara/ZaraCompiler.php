@@ -3,6 +3,7 @@
 namespace MyUCP\Views\Zara;
 
 use MyUCP\Support\Str;
+use MyUCP\Views\Zara\Interfaces\ZaraService;
 
 class ZaraCompiler
 {
@@ -57,7 +58,7 @@ class ZaraCompiler
     protected $factory;
 
     /**
-     * @var \App\Services\ZaraService
+     * @var ZaraService
      */
     protected $service;
 
@@ -72,15 +73,17 @@ class ZaraCompiler
     protected $conditions = [];
 
     /**
-     * @param string $path
+     * @param string $filename
      * @param ZaraFactory $factory
+     * @param null|string $path
      */
-    public function compile($path, ZaraFactory $factory)
+    public function compile($filename, ZaraFactory $factory, $path = null)
     {
         $this->factory = $factory;
-        $this->service = new \App\Services\ZaraService(
-            str_replace(".zara.php", "", pathinfo($path)['basename'])
-        );
+
+        $this->service = app()->makeWith(config('services.' . ZaraService::class), [$filename]);
+
+        $path = $path ?? app()->viewsPath($filename . '.zara.php');
 
         $contents = $this->compileString(file_get_contents($path));
 

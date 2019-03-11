@@ -161,16 +161,13 @@ if(!function_exists('cookie')) {
 if(!function_exists('config')) {
 
     /**
-     * @param null $config
+     * @param null $key
      * @param null $default
      * @return bool|mixed
      */
-    function config($config = null, $default = null)
+    function config($key = null, $default = null)
     {
-		if(! is_null($config))
-			return app()->config->$config ?? $default;
-
-		return app()->config;
+		return data_get(app()->make('config'), $key, $default);
 	}
 
 }

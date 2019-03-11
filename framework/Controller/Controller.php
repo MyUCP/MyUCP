@@ -62,7 +62,7 @@ abstract class Controller
      *
      * @param $name
      * @return mixed
-     * @throws DebugException
+     * @throws \MyUCP\Debug\DebugException
      */
     public static function load($name)
     {

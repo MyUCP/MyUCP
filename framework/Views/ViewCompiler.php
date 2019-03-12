@@ -2,7 +2,10 @@
 
 namespace MyUCP\Views;
 
+use MyUCP\Support\App;
 use MyUCP\Support\Str;
+use MyUCP\Views\Zara\Zara;
+use MyUCP\Views\Zara\ZaraFactory;
 
 class ViewCompiler
 {
@@ -17,31 +20,80 @@ class ViewCompiler
     protected $data = [];
 
     /**
+     * @var Zara
+     */
+    protected $zara;
+
+    /**
      * ViewCompiler constructor.
      */
     public function __construct()
     {
-        //
+        $this->zara = App::make(Zara::class);
     }
 
     /**
+     * @param View $view
      * @return string
      */
-    public function getFilePath()
+    public function compile(View $view)
     {
-        return app()->viewsPath($this->normalize($this->filename));
+        $path = $view->getPath();
+        $compiledPath = $this->getCompiledPath($path);
+
+        if($this->isCached($compiledPath)) {
+            $view->setPath($compiledPath);
+
+            return $view->getContents();
+        }
+
+        if($this->isZara($path)) {
+            $this->zara->compile($view, $compiledPath);
+        } else {
+            $this->cacheView($path, $compiledPath);
+        }
+
+        $view->setPath($compiledPath);
+
+        return $view->getContents();
     }
 
     /**
-     * @param $name
-     * @return mixed
+     * @param $path
+     * @return bool
      */
-    public function normalize($name)
+    protected function isZara($path)
     {
-        if(! Str::contains($this->filename, '/')) {
-            $name = str_replace('/', '.', $name);
+        return Str::contains($path, '.zara.php');
+    }
+
+    /**
+     * @param $compiled
+     *
+     * @return bool
+     */
+    protected function isCached($compiled)
+    {
+        if(! file_exists($compiled)) {
+            return false;
         }
 
-        return $name;
+        return true;
+    }
+
+    protected function getCompiledPath($path)
+    {
+        return App::assetsPath('cache/views/' . md5_file($path));
+    }
+
+    /**
+     * @param $path
+     * @param $compiledPath
+     *
+     * @return bool|int
+     */
+    protected function cacheView($path, $compiledPath)
+    {
+        return file_put_contents($compiledPath, file_get_contents($path));
     }
 }

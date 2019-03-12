@@ -21,7 +21,10 @@ use MyUCP\Routing\UrlGenerator;
 use MyUCP\Session\Session;
 use MyUCP\Views\View;
 use MyUCP\Views\ViewCompiler;
+use MyUCP\Views\ViewFactory;
 use MyUCP\Views\ViewFileFinder;
+use MyUCP\Views\Zara\Zara;
+use MyUCP\Views\Zara\ZaraFactory;
 
 trait Bootstrap
 {
@@ -76,7 +79,11 @@ trait Bootstrap
             config()->locale
         ]);
 
-        $this->makeWith(View::class, [
+        $this->makeWith(Zara::class, [
+            $this->make(ZaraFactory::class)
+        ]);
+
+        $this->makeWith(ViewFactory::class, [
             $this->make(ViewFileFinder::class),
             $this->make(ViewCompiler::class)
         ]);
@@ -137,7 +144,7 @@ trait Bootstrap
             "csrftoken" => CsrfToken::class,
             "load" => Load::class,
             "lang" => Translator::class,
-            "view" => View::class,
+            "view" => ViewFactory::class,
             "router" => Router::class,
             "url" => UrlGenerator::class,
             "extension" => Extension::class,

@@ -7,7 +7,9 @@ interface Renderable
     /**
      * Render
      *
-     * @return array
+     * @param callable|null $callback
+     *
+     * @return string
      */
-    public function render();
+    public function render(callable $callback = null);
 }

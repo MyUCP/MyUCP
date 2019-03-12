@@ -5,9 +5,7 @@ namespace MyUCP\Views\Zara\Interfaces;
 interface ZaraService
 {
     /**
-     * ZaraService constructor.
-     *
      * @param string $viewName
      */
-    public function __construct(string $viewName);
+    public function compile(string $viewName);
 }

@@ -37,7 +37,7 @@
         <div class="container">
             <div class="content">
                 <div class="title">MyUCP</div>
-                <div class="description">Mini PHP framework</div>
+                <div class="description">Mini PHP framework @include('test')</div>
             </div>
         </div>
     </body>

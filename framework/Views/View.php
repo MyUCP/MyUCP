@@ -2,109 +2,128 @@
 
 namespace MyUCP\Views;
 
+use MyUCP\Collection\Arrayable;
+use MyUCP\Collection\Renderable;
 use MyUCP\Debug\DebugException;
-use MyUCP\Support\App;
-use MyUCP\Views\Interfaces\ViewService;
-use MyUCP\Views\Zara\Zara;
 use MyUCP\Views\Zara\ZaraFactory;
+use MyUCP\Views\Interfaces\ViewService;
 
-class View
+class View implements Renderable
 {
     /**
-     * @var ViewCompiler
+     * @var ViewFactory
      */
-	protected $compiler;
+    protected $factory;
 
     /**
-     * @var ViewFileFinder
+     * View name
+     *
+     * @var string
      */
-	protected $fileFinder;
+    protected $view;
+
+    /**
+     * View file path
+     *
+     * @var string
+     */
+    protected $path;
 
     /**
      * @var array
      */
-	protected $share = [];
-
-    /**
-     * @var ViewService
-     */
-	protected $service = null;
+    protected $data;
 
     /**
      * View constructor.
      *
-     * @param ViewFileFinder $fileFinder
-     * @param ViewCompiler $compiler
+     * @param ViewFactory $factory
+     * @param $view
+     * @param $path
+     * @param array $data
      */
-	public function __construct(ViewFileFinder $fileFinder, ViewCompiler $compiler)
+    public function __construct(ViewFactory $factory, $view, $path, $data = [])
     {
-		$this->fileFinder = $fileFinder;
-		$this->compiler = $compiler;
-		$this->service = App::make(config('services.' . ViewService::class));
+        $this->factory = $factory;
+        $this->view = $view;
+        $this->path = $path;
 
-		$this->shareData(['__view' => $this]);
-	}
+        $this->data = $data instanceof Arrayable ? $data->toArray() : (array) $data;
+    }
 
-    /**
-     * @param string $name
-     * @param array $vars
-     * @param bool $exception
-     *
-     * @return bool|string
-     *
-     * @throws DebugException
-     */
-	public function load($name, $vars = [], $exception = true)
+    public function render(callable $callback = null)
     {
-        if(is_null($this->service))
-            $this->service = app()->make(config('services.' . ViewService::class));
+        $this->factory->getService()->render($this->view, $this->data);
 
-        $this->service->render($name, $vars);
-
-        $vars = array_merge($vars, $this->share);
-
-		return $this->Zara->compile($name, $vars, new ZaraFactory, $exception)->getCompiled();
-	}
-
-	public function make($name, $data = [])
-    {
-//        dd($name);
+        return $this->factory->getCompiler()->compile($this);
     }
 
     /**
-     * @return ViewFileFinder
+     * @return string
      */
-    public function getFileFinder()
+    public function getContents()
     {
-        return $this->fileFinder;
+        ob_start();
+
+        extract($this->data, EXTR_SKIP);
+
+        include $this->path;
+
+        return ltrim(ob_get_clean());
     }
 
     /**
-     * @param string $name
-     * @param string $path
-     *
-     * @return mixed
+     * @return string
      */
-    public static function preLoad(string $name, string $path)
+    public function __toString()
     {
-        return Zara::preLoad($name, $path);
+        return $this->render();
+    }
+
+    public static function preLoad($name, $path = null)
+    {
+        // TODO
     }
 
     /**
-     * @param array $vars
+     * @return string
      */
-    public function shareData($vars = [])
+    public function getName()
     {
-        $this->share = $vars;
+        return $this->view;
     }
 
     /**
-     * Static alias: shareData()
-     *
-     * @param array $vars
+     * @return string
      */
-    public static function share($vars = [])
+    public function getPath()
     {
-        app('view')->shareData($vars);
+        return $this->path;
+    }
+
+    /**
+     * @param $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function mergeData($data = [])
+    {
+        $data = $data instanceof Arrayable ? $data->toArray() : (array) $data;
+
+        $this->data = array_merge($this->data, $data);
     }
 }

@@ -38,14 +38,13 @@ if(!function_exists('view')) {
 
     /**
      * @param $name
-     * @param array $vars
-     * @param bool $exception
-     * @return mixed
+     * @param array $data
+     *
+     * @return \MyUCP\Views\View
      */
-    function view($name, $vars = [], $exception = true)
+    function view($name, $data = [])
     {
-//        return app('view')->load($name, $vars, $exception);
-        return app('view')->make($name, $vars);
+        return app('view')->make($name, $data);
     }
 
 }

@@ -73,21 +73,24 @@ class ZaraCompiler
     protected $conditions = [];
 
     /**
-     * @param string $filename
+     * ZaraCompiler constructor.
+     *
      * @param ZaraFactory $factory
-     * @param null|string $path
      */
-    public function compile($filename, ZaraFactory $factory, $path = null)
+    public function __construct(ZaraFactory $factory)
     {
         $this->factory = $factory;
+    }
 
-        $this->service = app()->makeWith(config('services.' . ZaraService::class), [$filename]);
+    /**
+     * @param string $contents
+     * @param string $compiledPath
+     */
+    public function compile($contents, $compiledPath)
+    {
+        $contents = $this->compileString($contents);
 
-        $path = $path ?? app()->viewsPath($filename . '.zara.php');
-
-        $contents = $this->compileString(file_get_contents($path));
-
-		file_put_contents("./assets/cache/".md5($path)."", $contents);
+		file_put_contents($compiledPath, $contents);
     }
 
     /**
@@ -640,7 +643,7 @@ class ZaraCompiler
      */
     protected function compileInclude($expression)
     {
-        return "<?php echo view$expression; ?>";
+        return "<?php echo \$__view->make$expression; ?>";
     }
 
     /**

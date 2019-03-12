@@ -90,6 +90,23 @@ class View implements Renderable
     }
 
     /**
+     * @param $key
+     * @param $value
+     *
+     * @return $this
+     */
+    public function with($key, $value)
+    {
+        if(is_array($key)) {
+            $this->mergeData($key);
+        } else {
+            $this->data[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
      * @param $name
      * @param null $path
      *

@@ -45,14 +45,17 @@ class ViewFactory
     /**
      * @param $view
      * @param array|mixed $data
+     * @param array $mergeData
      *
      * @return View
      */
-    public function make($view, $data = [])
+    public function make($view, $data = [], $mergeData = [])
     {
         $path = $this->fileFinder->find(
             $this->normalize($view)
         );
+
+        $data = array_merge($data, $mergeData);
 
         return $this->createView($view, $path, array_merge($data, $this->share));
     }
@@ -61,15 +64,17 @@ class ViewFactory
      * @param View $view
      *
      * @param array|mixed $data
+     * @param array $mergeData
+     *
      * @return string
      */
-    public function render($view, $data = [])
+    public function render($view, $data = [], $mergeData = [])
     {
         if($view instanceof View) {
             return $view->render();
         }
 
-        return $this->make($view, $data)->render();
+        return $this->make($view, $data, $mergeData)->render();
     }
 
     /**

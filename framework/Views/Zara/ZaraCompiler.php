@@ -643,7 +643,9 @@ class ZaraCompiler
      */
     protected function compileInclude($expression)
     {
-        return "<?php echo \$__view->make$expression; ?>";
+        $expression = $this->stripParentheses($expression);
+
+        return "<?php echo \$__view->make($expression, get_defined_vars()); ?>";
     }
 
     /**
@@ -696,5 +698,20 @@ class ZaraCompiler
     public function check($name, ...$parameters)
     {
         return call_user_func($this->conditions[$name], ...$parameters);
+    }
+
+    /**
+     * Strip the parentheses from the given expression.
+     *
+     * @param  string  $expression
+     * @return string
+     */
+    public function stripParentheses($expression)
+    {
+        if (Str::startsWith($expression, '(')) {
+            $expression = substr($expression, 1, -1);
+        }
+
+        return $expression;
     }
 }

@@ -20,6 +20,8 @@ use MyUCP\Routing\Router;
 use MyUCP\Routing\UrlGenerator;
 use MyUCP\Session\Session;
 use MyUCP\Views\View;
+use MyUCP\Views\ViewCompiler;
+use MyUCP\Views\ViewFileFinder;
 
 trait Bootstrap
 {
@@ -73,7 +75,12 @@ trait Bootstrap
                 config()->fallback_locale),
             config()->locale
         ]);
-        $this->make(View::class);
+
+        $this->makeWith(View::class, [
+            $this->make(ViewFileFinder::class),
+            $this->make(ViewCompiler::class)
+        ]);
+
         $this->make(Router::class);
         $this->makeWith(UrlGenerator::class, [$this["routes"], $this["request"]]);
 

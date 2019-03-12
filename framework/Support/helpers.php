@@ -44,7 +44,8 @@ if(!function_exists('view')) {
      */
     function view($name, $vars = [], $exception = true)
     {
-        return app('view')->load($name, $vars, $exception);
+//        return app('view')->load($name, $vars, $exception);
+        return app('view')->make($name, $vars);
     }
 
 }

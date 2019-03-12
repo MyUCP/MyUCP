@@ -3,6 +3,7 @@
 namespace MyUCP\Views;
 
 use MyUCP\Debug\DebugException;
+use MyUCP\Support\App;
 use MyUCP\Views\Interfaces\ViewService;
 use MyUCP\Views\Zara\Zara;
 use MyUCP\Views\Zara\ZaraFactory;
@@ -10,9 +11,14 @@ use MyUCP\Views\Zara\ZaraFactory;
 class View
 {
     /**
-     * @var Zara
+     * @var ViewCompiler
      */
-	protected $Zara;
+	protected $compiler;
+
+    /**
+     * @var ViewFileFinder
+     */
+	protected $fileFinder;
 
     /**
      * @var array
@@ -26,19 +32,18 @@ class View
 
     /**
      * View constructor.
+     *
+     * @param ViewFileFinder $fileFinder
+     * @param ViewCompiler $compiler
      */
-	public function __construct()
+	public function __construct(ViewFileFinder $fileFinder, ViewCompiler $compiler)
     {
-		$this->Zara = new Zara;
-	}
+		$this->fileFinder = $fileFinder;
+		$this->compiler = $compiler;
+		$this->service = App::make(config('services.' . ViewService::class));
 
-    /**
-     * @return Zara
-     */
-	public function getZara()
-    {
-        return $this->Zara;
-    }
+		$this->shareData(['__view' => $this]);
+	}
 
     /**
      * @param string $name
@@ -60,6 +65,19 @@ class View
 
 		return $this->Zara->compile($name, $vars, new ZaraFactory, $exception)->getCompiled();
 	}
+
+	public function make($name, $data = [])
+    {
+//        dd($name);
+    }
+
+    /**
+     * @return ViewFileFinder
+     */
+    public function getFileFinder()
+    {
+        return $this->fileFinder;
+    }
 
     /**
      * @param string $name

@@ -4,6 +4,7 @@ namespace MyUCP\Views\Zara;
 
 use MyUCP\Support\App;
 use MyUCP\Views\View;
+use MyUCP\Views\ViewFactory;
 use MyUCP\Views\Zara\Interfaces\ZaraService;
 
 class Zara
@@ -50,13 +51,20 @@ class Zara
 		return $this;
 	}
 
-
     /**
      * @return ZaraCompiler
      */
 	public function getCompiler()
     {
         return $this->compiler;
+    }
+
+    /**
+     * @return ZaraFactory
+     */
+    public function getFactory()
+    {
+        return $this->factory;
     }
 
     /**

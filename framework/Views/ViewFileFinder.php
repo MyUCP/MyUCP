@@ -52,14 +52,18 @@ class ViewFileFinder
     }
 
     /**
-     * @param $viewName
-     * @param $path
+     * @param array|string $viewName
+     * @param string|null $path
      *
      * @return ViewFileFinder
      */
-    public function addPreload($viewName, $path)
+    public function addPreload($viewName, $path = null)
     {
-        $this->preloaded[$viewName] = $path;
+        if(is_array($viewName) && is_null($path)) {
+            $this->preloaded = array_merge($this->preloaded, $viewName);
+        } else {
+            $this->preloaded[$viewName] = $path;
+        }
 
         return $this;
     }

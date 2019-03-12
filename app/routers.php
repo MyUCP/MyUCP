@@ -11,4 +11,7 @@
 
 use MyUCP\Routing\Router;
 
-Router::view("/", "welcome");
+//Router::view("/", "welcome");
+Router::any("/", function () {
+    return (view('test'));
+});

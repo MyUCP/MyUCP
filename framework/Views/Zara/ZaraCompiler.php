@@ -358,7 +358,7 @@ class ZaraCompiler
      */
     protected function compileYield($expression)
     {
-        return "<?php echo \$zara->factory->yieldContent{$expression}; ?>";
+        return "<?php echo \$_zara->getFactory()->yieldContent{$expression}; ?>";
     }
 
     /**
@@ -367,7 +367,7 @@ class ZaraCompiler
      */
     protected function compileShow($expression)
     {
-        return '<?php echo $zara->factory->yieldSection(); ?>';
+        return '<?php echo $_zara->getFactory()->yieldSection(); ?>';
     }
 
     /**
@@ -376,7 +376,7 @@ class ZaraCompiler
      */
     protected function compileSection($expression)
     {
-        return "<?php \$zara->factory->startSection{$expression}; ?>";
+        return "<?php \$_zara->getFactory()->startSection{$expression}; ?>";
     }
 
     /**
@@ -385,7 +385,7 @@ class ZaraCompiler
      */
     protected function compileAppend($expression)
     {
-        return '<?php $zara->factory->appendSection(); ?>';
+        return '<?php $_zara->getFactory()->appendSection(); ?>';
     }
 
     /**
@@ -394,7 +394,7 @@ class ZaraCompiler
      */
     protected function compileEndsection($expression)
     {
-        return '<?php $zara->factory->stopSection(); ?>';
+        return '<?php $_zara->getFactory()->stopSection(); ?>';
     }
 
     /**
@@ -403,7 +403,7 @@ class ZaraCompiler
      */
     protected function compileStop($expression)
     {
-        return '<?php $zara->factory->stopSection(); ?>';
+        return '<?php $_zara->getFactory()->stopSection(); ?>';
     }
 
     /**
@@ -416,7 +416,7 @@ class ZaraCompiler
             $expression = substr($expression, 1, -1);
         }
 
-        $data = "<?php echo \$zara->compile($expression, get_defined_vars(), \$this->factory, true)->getCompiled(); ?>";
+        $data = "<?php echo \$__view->make($expression, get_defined_vars())->render(); ?>";
 
         $this->footer[] = $data;
 

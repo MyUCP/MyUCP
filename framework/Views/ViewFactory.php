@@ -144,4 +144,12 @@ class ViewFactory
     {
         return $this->compiler;
     }
+
+    /**
+     * @return array
+     */
+    public function getShareData()
+    {
+        return $this->share;
+    }
 }

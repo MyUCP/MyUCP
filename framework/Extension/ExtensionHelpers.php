@@ -38,9 +38,12 @@ class ExtensionHelpers
 
     /**
      * Предзагрузка шаблона
+     *
+     * @param array|string $name
+     * @param string|null $path
      */
     public function view($name, $path = null)
     {
-        View::preLoad($name, $path);
+        View::preload($name, $path);
     }
 }

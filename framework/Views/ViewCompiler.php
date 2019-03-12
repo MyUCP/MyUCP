@@ -5,7 +5,6 @@ namespace MyUCP\Views;
 use MyUCP\Support\App;
 use MyUCP\Support\Str;
 use MyUCP\Views\Zara\Zara;
-use MyUCP\Views\Zara\ZaraFactory;
 
 class ViewCompiler
 {
@@ -40,6 +39,8 @@ class ViewCompiler
     {
         $path = $view->getPath();
         $compiledPath = $this->getCompiledPath($path);
+
+        App::make(ViewFactory::class)->shareData("_zara", $this->zara);
 
         if($this->isCached($compiledPath)) {
             $view->setPath($compiledPath);

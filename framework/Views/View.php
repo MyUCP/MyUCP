@@ -5,6 +5,8 @@ namespace MyUCP\Views;
 use MyUCP\Collection\Arrayable;
 use MyUCP\Collection\Renderable;
 use MyUCP\Debug\DebugException;
+use MyUCP\Support\App;
+use MyUCP\Views\Zara\Zara;
 use MyUCP\Views\Zara\ZaraFactory;
 use MyUCP\Views\Interfaces\ViewService;
 
@@ -51,6 +53,11 @@ class View implements Renderable
         $this->data = $data instanceof Arrayable ? $data->toArray() : (array) $data;
     }
 
+    /**
+     * @param callable|null $callback
+     *
+     * @return string
+     */
     public function render(callable $callback = null)
     {
         $this->factory->getService()->render($this->view, $this->data);
@@ -63,6 +70,8 @@ class View implements Renderable
      */
     public function getContents()
     {
+        $this->mergeData($this->factory->getShareData());
+
         ob_start();
 
         extract($this->data, EXTR_SKIP);
@@ -80,9 +89,29 @@ class View implements Renderable
         return $this->render();
     }
 
-    public static function preLoad($name, $path = null)
+    /**
+     * @param $name
+     * @param null $path
+     *
+     * @return ViewFactory
+     */
+    public static function preload($name, $path = null)
     {
-        // TODO
+        App::make('view')->getFileFinder()->addPreload($name, $path);
+
+        return App::make('view');
+    }
+
+    /**
+     * @param $name
+     *
+     * @return ViewFactory
+     */
+    public static function extension($name)
+    {
+        App::make('view')->getFileFinder()->addExtension($name);
+
+        return App::make('view');
     }
 
     /**
@@ -125,5 +154,16 @@ class View implements Renderable
         $data = $data instanceof Arrayable ? $data->toArray() : (array) $data;
 
         $this->data = array_merge($this->data, $data);
+    }
+
+    /**
+     * @param $key
+     * @param null $value
+     *
+     * @return ViewFactory
+     */
+    public static function share($key, $value = null)
+    {
+        return App::make(ViewFactory::class)->shareData($key, $value);
     }
 }

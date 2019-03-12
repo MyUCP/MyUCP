@@ -10,9 +10,10 @@ interface ViewService
     public function __construct();
 
     /**
-     * @param $viewName
-     * @param array $vars
+     * @param $view
+     * @param array $data
+     *
      * @return mixed
      */
-    public function render($viewName, array $vars = []);
+    public function render($view, array $data = []);
 }

@@ -4,11 +4,7 @@ namespace MyUCP\Views;
 
 use MyUCP\Collection\Arrayable;
 use MyUCP\Collection\Renderable;
-use MyUCP\Debug\DebugException;
 use MyUCP\Support\App;
-use MyUCP\Views\Zara\Zara;
-use MyUCP\Views\Zara\ZaraFactory;
-use MyUCP\Views\Interfaces\ViewService;
 
 class View implements Renderable
 {

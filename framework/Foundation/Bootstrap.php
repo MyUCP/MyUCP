@@ -19,7 +19,6 @@ use MyUCP\Routing\CsrfToken;
 use MyUCP\Routing\Router;
 use MyUCP\Routing\UrlGenerator;
 use MyUCP\Session\Session;
-use MyUCP\Views\View;
 use MyUCP\Views\ViewCompiler;
 use MyUCP\Views\ViewFactory;
 use MyUCP\Views\ViewFileFinder;

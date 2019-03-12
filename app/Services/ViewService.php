@@ -16,11 +16,11 @@ class ViewService implements ServiceContact
     }
 
     /**
-     * @param $viewName
-     * @param array $vars
-     * @return mixed
+     * @param $view
+     * @param array $data
+     * @return mixed|void
      */
-    public function render($viewName, array $vars = [])
+    public function render($view, array $data = [])
     {
         //
     }

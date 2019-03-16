@@ -6,5 +6,4 @@ use MyUCP\Routing\HttpException;
 
 class HttpResponseException extends HttpException
 {
-
 }

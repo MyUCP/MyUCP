@@ -3,9 +3,9 @@
 namespace MyUCP\Routing;
 
 use LogicException;
-use MyUCP\Foundation\Application;
 use MyUCP\Controller\Controller;
 use MyUCP\Debug\DebugException;
+use MyUCP\Foundation\Application;
 use MyUCP\Request\Request;
 use MyUCP\Support\App;
 use MyUCP\Support\Str;
@@ -25,7 +25,7 @@ class Route
     /**
      * @var array
      */
-    public  $methods;
+    public $methods;
 
     /**
      * @var array
@@ -86,9 +86,10 @@ class Route
     /**
      * Create a new Route instance.
      *
-     * @param  array|string  $methods
-     * @param  string  $uri
-     * @param  \Closure|array  $action
+     * @param array|string   $methods
+     * @param string         $uri
+     * @param \Closure|array $action
+     *
      * @return void
      */
     public function __construct($methods, $uri, $action)
@@ -102,7 +103,7 @@ class Route
     }
 
     /**
-     * Parse URI to regex pattern
+     * Parse URI to regex pattern.
      *
      * @return string
      */
@@ -114,10 +115,11 @@ class Route
     /**
      * Parse the route action into a standard array.
      *
-     * @param  callable|array|null  $action
-     * @return array
+     * @param callable|array|null $action
      *
      * @throws \UnexpectedValueException
+     *
+     * @return array
      */
     public function parseAction($action)
     {
@@ -125,7 +127,7 @@ class Route
     }
 
     /**
-     * Parse URI parameter names to array
+     * Parse URI parameter names to array.
      *
      * @return array
      */
@@ -133,8 +135,9 @@ class Route
     {
         return RouteMatch::parseParameterNames($this);
     }
+
     /**
-     * Parse URI parameter patterns to array
+     * Parse URI parameter patterns to array.
      *
      * @return array
      */
@@ -175,7 +178,8 @@ class Route
     /**
      * Set the action array for the route.
      *
-     * @param  array  $action
+     * @param array $action
+     *
      * @return $this
      */
     public function setAction(array $action)
@@ -188,8 +192,9 @@ class Route
     /**
      * Set a parameter to the given value.
      *
-     * @param  string  $name
-     * @param  mixed   $value
+     * @param string $name
+     * @param mixed  $value
+     *
      * @return void
      */
     public function setParameter($name, $value)
@@ -202,7 +207,8 @@ class Route
     /**
      * Set a parameters to the given array.
      *
-     * @param  array  $parameters
+     * @param array $parameters
+     *
      * @return void
      */
     public function setParameters(array $parameters)
@@ -211,9 +217,10 @@ class Route
     }
 
     /**
-     * Merge with a new parameters
+     * Merge with a new parameters.
      *
      * @param array $parameters
+     *
      * @return void
      */
     public function addParameters(array $parameters)
@@ -224,7 +231,8 @@ class Route
     /**
      * Unset a parameter on the route if it is set.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return void
      */
     public function forgetParameter($name)
@@ -237,9 +245,9 @@ class Route
     /**
      * Get the key / value list of parameters for the route.
      *
-     * @return array
-     *
      * @throws LogicException
+     *
+     * @return array
      */
     public function parameters()
     {
@@ -258,14 +266,15 @@ class Route
     public function parametersWithoutNulls()
     {
         return array_filter($this->parameters(), function ($p) {
-            return ! is_null($p);
+            return !is_null($p);
         });
     }
 
     /**
      * Set the router instance on the route.
      *
-     * @param  Router  $router
+     * @param Router $router
+     *
      * @return $this
      */
     public function setRouter(Router $router)
@@ -278,7 +287,8 @@ class Route
     /**
      * Set the container instance on the route.
      *
-     * @param  Request  $request
+     * @param Request $request
+     *
      * @return $this
      */
     public function setRequest(Request $request)
@@ -291,7 +301,8 @@ class Route
     /**
      * Add or change the route name.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return $this
      */
     public function name($name)
@@ -302,9 +313,10 @@ class Route
     }
 
     /**
-     * Change the route name
+     * Change the route name.
      *
      * @param $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -327,7 +339,8 @@ class Route
     /**
      * Determine whether the route's name matches the given name.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return bool
      */
     public function named($name)
@@ -338,21 +351,23 @@ class Route
     /**
      * Set the handler for the route.
      *
-     * @param  \Closure|string  $action
+     * @param \Closure|string $action
+     *
      * @return $this
      */
     public function uses($action)
     {
         return $this->setAction(array_merge($this->action, $this->parseAction([
-            'uses' => $action,
+            'uses'       => $action,
             'controller' => $action,
         ])));
     }
 
     /**
-     * Bind model to route
+     * Bind model to route.
      *
      * @param mixed ...$models
+     *
      * @return $this
      */
     public function model(...$models)
@@ -363,9 +378,10 @@ class Route
     }
 
     /**
-     * Verify CSRF token to route
+     * Verify CSRF token to route.
      *
      * @param bool $status
+     *
      * @return $this
      */
     public function csrfVerify(bool $status = true)
@@ -386,18 +402,19 @@ class Route
     }
 
     /**
-     * Compile the route
+     * Compile the route.
      *
      * @param Application $app
      *
-     * @return void
      * @throws DebugException
      * @throws HttpException
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function compileRoute($app)
     {
-        if (! $this->compiled) {
+        if (!$this->compiled) {
             $this->compiled = (new RouteCompiler($this, $app))->compile();
         }
     }
@@ -405,9 +422,9 @@ class Route
     /**
      * Get the controller instance for the route.
      *
-     * @return mixed
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function getController()
     {
@@ -451,29 +468,30 @@ class Route
     }
 
     /**
-     * Get the current route
+     * Get the current route.
      *
      * @return Route
      */
     public static function current()
     {
-        return app("router")->getCurrentRoute();
+        return app('router')->getCurrentRoute();
     }
 
     /**
-     * Get the current route name
+     * Get the current route name.
      *
      * @return string
      */
     public static function currentRouteName()
     {
-        return app("router")->currentRouteName();
+        return app('router')->currentRouteName();
     }
 
     /**
      * Determine whether the current route matches the given route.
      *
      * @param Route $route
+     *
      * @return bool
      */
     public static function isCurrent($route)
@@ -485,6 +503,7 @@ class Route
      * Determine whether the current route's name matches the given name.
      *
      * @param string $name
+     *
      * @return bool
      */
     public static function isCurrentName($name)

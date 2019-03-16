@@ -33,6 +33,7 @@ class ViewCompiler
 
     /**
      * @param View $view
+     *
      * @return string
      */
     public function compile(View $view)
@@ -40,15 +41,15 @@ class ViewCompiler
         $path = $view->getPath();
         $compiledPath = $this->getCompiledPath($path);
 
-        App::make(ViewFactory::class)->shareData("_zara", $this->zara);
+        App::make(ViewFactory::class)->shareData('_zara', $this->zara);
 
-        if($this->isCached($compiledPath)) {
+        if ($this->isCached($compiledPath)) {
             $view->setPath($compiledPath);
 
             return $view->getContents();
         }
 
-        if($this->isZara($path)) {
+        if ($this->isZara($path)) {
             $this->zara->compile($view, $compiledPath);
         } else {
             $this->cacheView($path, $compiledPath);
@@ -61,6 +62,7 @@ class ViewCompiler
 
     /**
      * @param $path
+     *
      * @return bool
      */
     protected function isZara($path)
@@ -75,7 +77,7 @@ class ViewCompiler
      */
     protected function isCached($compiled)
     {
-        if(! file_exists($compiled)) {
+        if (!file_exists($compiled)) {
             return false;
         }
 
@@ -84,7 +86,7 @@ class ViewCompiler
 
     protected function getCompiledPath($path)
     {
-        return App::assetsPath('cache/views/' . md5_file($path));
+        return App::assetsPath('cache/views/'.md5_file($path));
     }
 
     /**

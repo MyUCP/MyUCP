@@ -35,7 +35,7 @@ class CsrfToken
         $this->request = $request;
         $this->session = $session;
 
-        if(! $this->session->has($this->getTokenKey())) {
+        if (!$this->session->has($this->getTokenKey())) {
             $this->generate();
         } else {
             $this->token = $this->session->get($this->getTokenKey());
@@ -43,20 +43,21 @@ class CsrfToken
     }
 
     /**
-     * CSRF Token generating
+     * CSRF Token generating.
+     *
+     * @throws \Exception
      *
      * @return void
-     * @throws \Exception
      */
     public function generate()
     {
-        $this->token = md5($this->request->ip() . config()->app_key . random_bytes(32));
+        $this->token = md5($this->request->ip().config()->app_key.random_bytes(32));
 
         $this->session->put($this->getTokenKey(), $this->token);
     }
 
     /**
-     * Check if the token from request equal current token
+     * Check if the token from request equal current token.
      *
      * @return bool
      */
@@ -74,12 +75,10 @@ class CsrfToken
      */
     public function getTokenFromRequest($request)
     {
-        return $this->request->input("_token") ?: $request->headers["X-CSRF-TOKEN"];
+        return $this->request->input('_token') ?: $request->headers['X-CSRF-TOKEN'];
     }
 
     /**
-     *
-     *
      * @return string
      */
     public function token()
@@ -92,6 +91,6 @@ class CsrfToken
      */
     public function getTokenKey()
     {
-        return "_csrf_token";
+        return '_csrf_token';
     }
 }

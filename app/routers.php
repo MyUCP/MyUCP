@@ -11,4 +11,4 @@
 
 use MyUCP\Routing\Router;
 
-Router::view("/", "welcome");
+Router::view('/', 'welcome');

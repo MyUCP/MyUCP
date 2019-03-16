@@ -23,6 +23,7 @@ class Translator
 
     /**
      * Translator constructor.
+     *
      * @param LocalizationLoader $loader
      * @param $locale
      */
@@ -30,17 +31,19 @@ class Translator
     {
         $this->loader = $loader;
 
-        if(empty(cookie("__lang"))) {
+        if (empty(cookie('__lang'))) {
             $this->setLocale($locale);
         } else {
-            $this->setLocale(cookie("__lang"));
+            $this->setLocale(cookie('__lang'));
         }
     }
 
     /**
      * @param $key
-     * @return bool
+     *
      * @throws DebugException
+     *
+     * @return bool
      */
     public function has($key)
     {
@@ -50,8 +53,10 @@ class Translator
     /**
      * @param $key
      * @param array $replace
-     * @return mixed
+     *
      * @throws DebugException
+     *
+     * @return mixed
      */
     public function get($key, $replace = [])
     {
@@ -61,7 +66,7 @@ class Translator
 
         $line = $this->getLine($group, $item, $replace);
 
-        if (! isset($line)) {
+        if (!isset($line)) {
             return $key;
         }
 
@@ -72,6 +77,7 @@ class Translator
      * @param $group
      * @param $item
      * @param array $replace
+     *
      * @return string
      */
     protected function getLine($group, $item, $replace = [])
@@ -88,6 +94,7 @@ class Translator
     /**
      * @param $locale
      * @param $group
+     *
      * @return bool
      */
     protected function isLoaded($locale, $group)
@@ -97,6 +104,7 @@ class Translator
 
     /**
      * @param $group
+     *
      * @throws DebugException
      */
     protected function load($group)
@@ -112,16 +120,18 @@ class Translator
 
     /**
      * @param $key
+     *
      * @return array
      */
     protected function parseKey($key)
     {
-        return explode(".", $key);
+        return explode('.', $key);
     }
 
     /**
-     * @param  string  $line
-     * @param  array   $replace
+     * @param string $line
+     * @param array  $replace
+     *
      * @return string
      */
     protected function makeReplacements($line, array $replace)
@@ -135,6 +145,7 @@ class Translator
 
     /**
      * @param mixed $locale
+     *
      * @return Translator
      */
     public function setLocale($locale)
@@ -143,7 +154,7 @@ class Translator
 
         $this->loader->setLocale($locale);
 
-        cookie("__lang", $locale)->forever();
+        cookie('__lang', $locale)->forever();
 
         return $this;
     }

@@ -6,7 +6,6 @@ use MyUCP\Views\Interfaces\ViewService as ServiceContact;
 
 class ViewService implements ServiceContact
 {
-
     /**
      * ViewService constructor.
      */
@@ -18,6 +17,7 @@ class ViewService implements ServiceContact
     /**
      * @param $view
      * @param array $data
+     *
      * @return mixed|void
      */
     public function render($view, array $data = [])

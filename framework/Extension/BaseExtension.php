@@ -18,5 +18,5 @@ abstract class BaseExtension extends ExtensionHelpers
         $this->app = $app;
     }
 
-    public abstract function run();
+    abstract public function run();
 }

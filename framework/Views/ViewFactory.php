@@ -30,14 +30,15 @@ class ViewFactory
 
     /**
      * ViewFactory constructor.
+     *
      * @param ViewFileFinder $fileFinder
-     * @param ViewCompiler $compiler
+     * @param ViewCompiler   $compiler
      */
     public function __construct(ViewFileFinder $fileFinder, ViewCompiler $compiler)
     {
         $this->fileFinder = $fileFinder;
         $this->compiler = $compiler;
-        $this->service = App::make(config('services.' . ViewService::class));
+        $this->service = App::make(config('services.'.ViewService::class));
 
         $this->shareData('__view', $this);
     }
@@ -45,7 +46,7 @@ class ViewFactory
     /**
      * @param $view
      * @param array|mixed $data
-     * @param array $mergeData
+     * @param array       $mergeData
      *
      * @return View
      */
@@ -61,16 +62,15 @@ class ViewFactory
     }
 
     /**
-     * @param View $view
-     *
+     * @param View        $view
      * @param array|mixed $data
-     * @param array $mergeData
+     * @param array       $mergeData
      *
      * @return string
      */
     public function render($view, $data = [], $mergeData = [])
     {
-        if($view instanceof View) {
+        if ($view instanceof View) {
             return $view->render();
         }
 
@@ -85,7 +85,7 @@ class ViewFactory
      */
     public function shareData($key, $value = null)
     {
-        if(is_array($key)) {
+        if (is_array($key)) {
             $this->share = array_merge($this->share, $key);
         } else {
             $this->share[$key] = $value;
@@ -96,11 +96,12 @@ class ViewFactory
 
     /**
      * @param $name
+     *
      * @return mixed
      */
     public function normalize($name)
     {
-        if(! Str::contains($name, '/')) {
+        if (!Str::contains($name, '/')) {
             $name = str_replace('/', '.', $name);
         }
 
@@ -108,7 +109,7 @@ class ViewFactory
     }
 
     /**
-     * Create View instance
+     * Create View instance.
      *
      * @param $view
      * @param $path

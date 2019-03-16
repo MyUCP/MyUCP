@@ -17,7 +17,7 @@ class DBCollection extends Collection
      * @param array $items
      * @param Query $query
      */
-    public function __construct($items = [], Query $query)
+    public function __construct($items, Query $query)
     {
         parent::__construct($items);
 

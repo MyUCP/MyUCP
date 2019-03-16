@@ -10,15 +10,15 @@ use RuntimeException;
 
 class HeaderBag implements IteratorAggregate, Countable
 {
-    protected $headers = array();
-    protected $cacheControl = array();
+    protected $headers = [];
+    protected $cacheControl = [];
 
     /**
      * Constructor.
      *
      * @param array $headers An array of HTTP headers
      */
-    public function __construct(array $headers = array())
+    public function __construct(array $headers = [])
     {
         foreach ($headers as $key => $values) {
             $this->set($key, $values);
@@ -74,9 +74,9 @@ class HeaderBag implements IteratorAggregate, Countable
      *
      * @param array $headers An array of HTTP headers
      */
-    public function replace(array $headers = array())
+    public function replace(array $headers = [])
     {
-        $this->headers = array();
+        $this->headers = [];
         $this->add($headers);
     }
 
@@ -108,10 +108,10 @@ class HeaderBag implements IteratorAggregate, Countable
 
         if (!array_key_exists($key, $headers)) {
             if (null === $default) {
-                return $first ? null : array();
+                return $first ? null : [];
             }
 
-            return $first ? $default : array($default);
+            return $first ? $default : [$default];
         }
 
         if ($first) {
@@ -182,19 +182,19 @@ class HeaderBag implements IteratorAggregate, Countable
         unset($this->headers[$key]);
 
         if ('cache-control' === $key) {
-            $this->cacheControl = array();
+            $this->cacheControl = [];
         }
     }
 
     /**
      * Returns the HTTP header value converted to a date.
      *
-     * @param string    $key     The parameter key
+     * @param string   $key     The parameter key
      * @param DateTime $default The default value
      *
-     * @return null|DateTime The parsed DateTime or the default value if the header does not exist
-     *
      * @throws RuntimeException When the HTTP header is not parseable
+     *
+     * @return null|DateTime The parsed DateTime or the default value if the header does not exist
      */
     public function getDate($key, DateTime $default = null)
     {
@@ -280,7 +280,7 @@ class HeaderBag implements IteratorAggregate, Countable
 
     protected function getCacheControlHeader()
     {
-        $parts = array();
+        $parts = [];
         ksort($this->cacheControl);
         foreach ($this->cacheControl as $key => $value) {
             if (true === $value) {
@@ -306,7 +306,7 @@ class HeaderBag implements IteratorAggregate, Countable
      */
     protected function parseCacheControl($header)
     {
-        $cacheControl = array();
+        $cacheControl = [];
         preg_match_all('#([a-zA-Z][a-zA-Z_-]*)\s*(?:=(?:"([^"]*)"|([^ \t",;]*)))?#', $header, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
             $cacheControl[strtolower($match[1])] = isset($match[3]) ? $match[3] : (isset($match[2]) ? $match[2] : true);

@@ -7,7 +7,7 @@ use MyUCP\Request\Request;
 class RouteMatch
 {
     /**
-     * Parse URI to regex pattern
+     * Parse URI to regex pattern.
      *
      * @param Route $route
      *
@@ -15,14 +15,15 @@ class RouteMatch
      */
     public static function uriToRegex(Route $route)
     {
-        if($route->uri{0} == "/" && !empty($route->uri{1}))
+        if ($route->uri[0] == '/' && !empty($route->uri[1])) {
             $route->uri = substr($route->uri, 1);
+        }
 
-        $regexUri = '/^' . preg_replace('/\//', '\/', $route->uri) .  '\/?$/';
+        $regexUri = '/^'.preg_replace('/\//', '\/', $route->uri).'\/?$/';
 
-        if(preg_match_all('/\{([a-z]+):(.*?)\}/', $route->uri, $preg)){
-            for($i = 0; $i < count($preg[0]); $i++) {
-                $regexUri = str_replace($preg[0][$i], '(' . $preg[2][$i] . ')', $regexUri);
+        if (preg_match_all('/\{([a-z]+):(.*?)\}/', $route->uri, $preg)) {
+            for ($i = 0; $i < count($preg[0]); $i++) {
+                $regexUri = str_replace($preg[0][$i], '('.$preg[2][$i].')', $regexUri);
             }
         }
 
@@ -30,7 +31,7 @@ class RouteMatch
     }
 
     /**
-     * Parse URI parameter names to array
+     * Parse URI parameter names to array.
      *
      * @param Route $route
      *
@@ -42,7 +43,7 @@ class RouteMatch
 
         preg_match_all('/\{([a-z]+):(.*?)\}/', $route->uri, $preg);
 
-        for($i = 0; $i < count($preg[0]); $i++){
+        for ($i = 0; $i < count($preg[0]); $i++) {
             $params[] = $preg[1][$i];
         }
 
@@ -50,7 +51,7 @@ class RouteMatch
     }
 
     /**
-     * Parse URI parameter patterns to array
+     * Parse URI parameter patterns to array.
      *
      * @param Route $route
      *
@@ -62,7 +63,7 @@ class RouteMatch
 
         preg_match_all('/\{([a-z]+):(.*?)\}/', $route->uri, $preg);
 
-        for($i = 0; $i < count($preg[0]); $i++){
+        for ($i = 0; $i < count($preg[0]); $i++) {
             $params[] = $preg[2][$i];
         }
 
@@ -70,17 +71,16 @@ class RouteMatch
     }
 
     /**
-     * Check the pattern to reflect the current address
+     * Check the pattern to reflect the current address.
      *
-     * @param Route $route
+     * @param Route   $route
      * @param Request $request
      *
      * @return bool
      */
     public static function parseUri(Route $route, Request $request)
     {
-        if(preg_match($route->regexUri, $request->path(), $preg)) {
-
+        if (preg_match($route->regexUri, $request->path(), $preg)) {
             $route->addParameters(static::parseParameters($route, $preg));
 
             return true;
@@ -90,7 +90,7 @@ class RouteMatch
     }
 
     /**
-     * Retrieves all settings from the current address according to the pattern
+     * Retrieves all settings from the current address according to the pattern.
      *
      * @param Route $route
      * @param array $preg
@@ -101,7 +101,7 @@ class RouteMatch
     {
         $parameters = [];
 
-        for($i = 1; $i < count($preg); $i++){
+        for ($i = 1; $i < count($preg); $i++) {
             $parameters[$route->parameterNames[$i - 1]] = $preg[$i];
         }
 
@@ -109,47 +109,52 @@ class RouteMatch
     }
 
     /**
-     * Validate Route domain
+     * Validate Route domain.
      *
-     * @param Route $route
+     * @param Route   $route
      * @param Request $request
-     * @return bool
+     *
      * @throws \Exception
+     *
+     * @return bool
      */
     public static function validateDomain(Route $route, Request $request)
     {
-        if(!isset($route->action['domain']))
+        if (!isset($route->action['domain'])) {
             return true;
+        }
 
         return self::parseDomain($route, $request);
     }
 
     /**
-     * Check the pattern to reflect the current domain
+     * Check the pattern to reflect the current domain.
      *
-     * @param Route $route
+     * @param Route   $route
      * @param Request $request
-     * @return bool
+     *
      * @throws \Exception
+     *
+     * @return bool
      */
     public static function parseDomain(Route $route, Request $request)
     {
         $domain = $route->action['domain'];
 
-        if($domain == $request->domain()) {
+        if ($domain == $request->domain()) {
             return true;
         }
 
-        $regex = '/' . preg_replace('/\//', '\/', $domain) .  '/';
+        $regex = '/'.preg_replace('/\//', '\/', $domain).'/';
         $params = [];
 
-        if(preg_match_all('/\{([a-z]+):(.*?)\}/', $domain, $preg)) {
-            for($i = 0; $i < count($preg[0]); $i++){
+        if (preg_match_all('/\{([a-z]+):(.*?)\}/', $domain, $preg)) {
+            for ($i = 0; $i < count($preg[0]); $i++) {
                 $params[] = $preg[1][$i];
-                $regex = str_replace($preg[0][$i], '(' . $preg[2][$i] . ')', $regex);
+                $regex = str_replace($preg[0][$i], '('.$preg[2][$i].')', $regex);
             }
 
-            if(!(preg_match($regex, $request->domain(), $preg))) {
+            if (!(preg_match($regex, $request->domain(), $preg))) {
                 return false;
             }
 
@@ -168,16 +173,18 @@ class RouteMatch
     }
 
     /**
-     * Verify CSRF token to route, if verification needs
+     * Verify CSRF token to route, if verification needs.
      *
-     * @param Route $route
+     * @param Route     $route
      * @param CsrfToken $csrfToken
+     *
      * @return bool
      */
     public static function csrfVerify(Route $route, CsrfToken $csrfToken)
     {
-        if(false === $route->csrf_verify)
+        if (false === $route->csrf_verify) {
             return true;
+        }
 
         return $csrfToken->check();
     }

@@ -24,14 +24,16 @@ use MyUCP\Views\Zara\Zara;
 trait Bootstrap
 {
     /**
-     * @param string $basePath
+     * @param string         $basePath
      * @param Container|null $container
-     * @return Application
+     *
      * @throws Exception
+     *
+     * @return Application
      */
     public static function bootstrap($basePath = __DIR__, Container $container = null)
     {
-        if(is_null($container)) {
+        if (is_null($container)) {
             $container = Container::getInstance();
         }
 
@@ -44,16 +46,17 @@ trait Bootstrap
     }
 
     /**
-     * Initialization of the main classes for the project
+     * Initialization of the main classes for the project.
+     *
+     * @throws Exception
      *
      * @return $this
-     * @throws Exception
      */
     public function init()
     {
-        if(!file_exists(ENV . DIRECTORY_SEPARATOR . ".env")) {
-            if(!copy(ENV . DIRECTORY_SEPARATOR . ".env.example", ENV . DIRECTORY_SEPARATOR . ".env")) {
-                throw new Exception("Doest not exists [.env] or [.env.example] files.");
+        if (!file_exists(ENV.DIRECTORY_SEPARATOR.'.env')) {
+            if (!copy(ENV.DIRECTORY_SEPARATOR.'.env.example', ENV.DIRECTORY_SEPARATOR.'.env')) {
+                throw new Exception('Doest not exists [.env] or [.env.example] files.');
             }
         }
 
@@ -61,10 +64,10 @@ trait Bootstrap
 
         $this->make(Config::class, [$this]);
 
-        $this->make([HandleExceptions::class, "make"]);
+        $this->make([HandleExceptions::class, 'make']);
 
-        if(env("APP_DB", false)) {
-            $this->make(DB::class, [$this->make("config")->db]);
+        if (env('APP_DB', false)) {
+            $this->make(DB::class, [$this->make('config')->db]);
         }
 
         $this->make(Session::class);
@@ -92,7 +95,7 @@ trait Bootstrap
     public function loadEnvironment($path = ENV, $file = '.env')
     {
         try {
-            $this->make([Dotenv::class, "load"], [$path, $file]);
+            $this->make([Dotenv::class, 'load'], [$path, $file]);
         } catch (InvalidPathException $e) {
             //
         } catch (InvalidFileException $e) {
@@ -102,41 +105,41 @@ trait Bootstrap
     }
 
     /**
-     * Application launch
+     * Application launch.
      */
     public function run()
     {
-        $this->make(["extension", "boot"]);
-        $this->make(["router", "loadRouteService"]);
-        $this->make(["router", "loadRoutes"], [$this->appPath('routers.php')]);
-        $this->make(["router", "make"]);
-        $this->make(["response", "prepare"], [$this->make("request")]);
-        $this->make(["response", "send"]);
-        $this->make(["session", "unsetFlash"]);
+        $this->make(['extension', 'boot']);
+        $this->make(['router', 'loadRouteService']);
+        $this->make(['router', 'loadRoutes'], [$this->appPath('routers.php')]);
+        $this->make(['router', 'make']);
+        $this->make(['response', 'prepare'], [$this->make('request')]);
+        $this->make(['response', 'send']);
+        $this->make(['session', 'unsetFlash']);
 
         $this->booted = true;
     }
 
     /**
-     * Make default aliases
+     * Make default aliases.
      */
     protected function makeAliases()
     {
         $aliases = [
-            "dotenv" => Dotenv::class,
-            "config" => Config::class,
-            "handleException" => HandleExceptions::class,
-            "db" => DB::class,
-            "session" => Session::class,
-            "request" => Request::class,
-            "response" => Response::class,
-            "csrftoken" => CsrfToken::class,
-            "load" => Load::class,
-            "lang" => Translator::class,
-            "view" => ViewFactory::class,
-            "router" => Router::class,
-            "url" => UrlGenerator::class,
-            "extension" => Extension::class,
+            'dotenv'          => Dotenv::class,
+            'config'          => Config::class,
+            'handleException' => HandleExceptions::class,
+            'db'              => DB::class,
+            'session'         => Session::class,
+            'request'         => Request::class,
+            'response'        => Response::class,
+            'csrftoken'       => CsrfToken::class,
+            'load'            => Load::class,
+            'lang'            => Translator::class,
+            'view'            => ViewFactory::class,
+            'router'          => Router::class,
+            'url'             => UrlGenerator::class,
+            'extension'       => Extension::class,
         ];
 
         foreach ($aliases as $alias => $abstract) {

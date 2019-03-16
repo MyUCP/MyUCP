@@ -5,14 +5,14 @@ namespace MyUCP\Support;
 class App
 {
     /**
-     * Make or get instance from container
+     * Make or get instance from container.
      *
      * @param $name
      * @param null|object|string|\Closure $instance
      *
-     * @return bool|mixed|null
-     *
      * @throws \ReflectionException
+     *
+     * @return bool|mixed|null
      */
     public static function make($name, $instance = null)
     {
@@ -20,15 +20,15 @@ class App
     }
 
     /**
-     * Call method with dependencies
+     * Call method with dependencies.
      *
      * @param $instance
      * @param $method
      * @param array $parameters
      *
-     * @return mixed
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public static function call($instance, $method, $parameters = [])
     {
@@ -36,14 +36,14 @@ class App
     }
 
     /**
-     * Make new instance with parameters
+     * Make new instance with parameters.
      *
      * @param $name
      * @param array $parameters
      *
-     * @return bool|mixed|null
-     *
      * @throws \ReflectionException
+     *
+     * @return bool|mixed|null
      */
     public static function makeWith($name, $parameters = [])
     {
@@ -51,15 +51,15 @@ class App
     }
 
     /**
-     * Make alias for instance or only name
+     * Make alias for instance or only name.
      *
      * @param $alias
      * @param null $name
      * @param null $instance
      *
-     * @return bool|mixed|null
-     *
      * @throws \ReflectionException
+     *
+     * @return bool|mixed|null
      */
     public static function alias($alias, $name = null, $instance = null)
     {
@@ -67,15 +67,15 @@ class App
     }
 
     /**
-     * Make alias for new instance with parameters
+     * Make alias for new instance with parameters.
      *
      * @param $alias
      * @param $name
      * @param array $parameters
      *
-     * @return bool|mixed|null
-     *
      * @throws \ReflectionException
+     *
+     * @return bool|mixed|null
      */
     public static function aliasWith($alias, $name, $parameters = [])
     {
@@ -84,6 +84,7 @@ class App
 
     /**
      * @param null $path
+     *
      * @return string
      */
     public static function basePath($path = null)
@@ -95,6 +96,7 @@ class App
      * Get path to the app directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public static function appPath($path = null)
@@ -106,6 +108,7 @@ class App
      * Get path to the engine directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public static function frameworkPath($path = null)
@@ -117,6 +120,7 @@ class App
      * Get path to the resources directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public static function resourcesPath($path = null)
@@ -128,6 +132,7 @@ class App
      * Get path to the views directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public static function viewsPath($path = null)
@@ -139,6 +144,7 @@ class App
      * Get path to the assets directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public static function assetsPath($path = null)
@@ -150,6 +156,7 @@ class App
      * Get path to the config directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public static function configPath($path = null)

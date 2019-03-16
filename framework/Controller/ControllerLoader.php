@@ -10,10 +10,11 @@ class ControllerLoader
     protected static $alias = [];
 
     /**
-     * Set the alias of controller
+     * Set the alias of controller.
      *
      * @param $name
      * @param $abstract
+     *
      * @return null
      */
     public static function alias($name, $abstract)
@@ -22,7 +23,7 @@ class ControllerLoader
     }
 
     /**
-     * Get the name of controller
+     * Get the name of controller.
      *
      * @param $controllerName
      *
@@ -30,10 +31,10 @@ class ControllerLoader
      */
     public static function name($controllerName)
     {
-        if(isset(self::$alias[$controllerName])) {
+        if (isset(self::$alias[$controllerName])) {
             return self::$alias = $controllerName;
         }
 
-        return '\App\Controllers\\' . $controllerName;
+        return '\App\Controllers\\'.$controllerName;
     }
 }

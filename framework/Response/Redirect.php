@@ -38,9 +38,9 @@ class Redirect
 
     /**
      * @param string $path
-     * @param int $status
-     * @param array $headers
-     * @param bool $secure
+     * @param int    $status
+     * @param array  $headers
+     * @param bool   $secure
      *
      * @return Redirect
      */
@@ -56,37 +56,39 @@ class Redirect
 
     /**
      * @param string|Route $route
-     * @param array $parameters
-     * @param int $status
-     * @param array $headers
+     * @param array        $parameters
+     * @param int          $status
+     * @param array        $headers
      *
      * @return Redirect
      */
     public function route($route, $parameters = [], $status = 302, $headers = [])
     {
-        if(is_string($route)) {
+        if (is_string($route)) {
             $route = route($route);
         }
 
-        return $this->to(app("url")->toRoute($route, $parameters), $status, $headers);
+        return $this->to(app('url')->toRoute($route, $parameters), $status, $headers);
     }
 
     /**
      * @param string $action
-     * @param array $parameters
-     * @param int $status
-     * @param array $headers
+     * @param array  $parameters
+     * @param int    $status
+     * @param array  $headers
+     *
      * @return mixed
      */
     public function action($action, $parameters = [], $status = 302, $headers = [])
     {
-        $route = app("routes")->getByAction($action);
+        $route = app('routes')->getByAction($action);
 
-        return $this->to(app("url")->toRoute($route, $parameters), $status, $headers);
+        return $this->to(app('url')->toRoute($route, $parameters), $status, $headers);
     }
 
     /**
      * @param string $url
+     *
      * @return Redirect
      */
     public function away($url)
@@ -96,8 +98,8 @@ class Redirect
 
     /**
      * @param string $path
-     * @param int $status
-     * @param array $headers
+     * @param int    $status
+     * @param array  $headers
      *
      * @return Redirect
      */
@@ -108,16 +110,17 @@ class Redirect
 
     /**
      * @param int $status
+     *
      * @return Redirect
      */
     public function home($status = 302)
     {
-        return $this->route("home", [], $status);
+        return $this->route('home', [], $status);
     }
 
     /**
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return Redirect
      */
@@ -130,17 +133,17 @@ class Redirect
 
     /**
      * @param array|string $name
-     * @param mixed $value
+     * @param mixed        $value
      *
      * @return Redirect
      */
     public function with($name, $value)
     {
-        if(!is_array($name))
+        if (!is_array($name)) {
             return $this->flash($name, $value);
+        }
 
-        foreach ($name as $key => $value)
-        {
+        foreach ($name as $key => $value) {
             $this->flash($key, $value);
         }
 
@@ -148,20 +151,21 @@ class Redirect
     }
 
     /**
-     * @return Collection
      * @throws HttpException
+     *
+     * @return Collection
      */
     public function createRedirect()
     {
-        if(is_null($this->url)) {
-            throw new HttpException("Не указан адрес для переадресации");
+        if (is_null($this->url)) {
+            throw new HttpException('Не указан адрес для переадресации');
         }
 
         $result = new Collection();
 
-        $result->offsetSet("status", $this->statusCode);
-        $result->offsetSet("url", $this->url);
-        $result->offsetSet("headers", $this->headers);
+        $result->offsetSet('status', $this->statusCode);
+        $result->offsetSet('url', $this->url);
+        $result->offsetSet('headers', $this->headers);
 
         return $result;
     }

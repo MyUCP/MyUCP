@@ -65,15 +65,15 @@ class Cookie
      */
     public static function fromString($cookie, $decode = false)
     {
-        $data = array(
-            'expires' => 0,
-            'path' => '/',
-            'domain' => null,
-            'secure' => false,
+        $data = [
+            'expires'  => 0,
+            'path'     => '/',
+            'domain'   => null,
+            'secure'   => false,
             'httponly' => false,
-            'raw' => !$decode,
+            'raw'      => !$decode,
             'samesite' => null,
-        );
+        ];
 
         foreach (explode(';', $cookie) as $part) {
             if (false === strpos($part, '=')) {
@@ -105,7 +105,7 @@ class Cookie
         return new static($data['name'], $data['value'], $data['expires'], $data['path'], $data['domain'], $data['secure'], $data['httponly'], $data['raw'], $data['samesite']);
     }
 
-	public function __construct($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true, $raw = false, $sameSite = null)
+    public function __construct($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true, $raw = false, $sameSite = null)
     {
         // from PHP source code
         if (preg_match("/[=,; \t\r\n\013\014]/", $name)) {
@@ -140,14 +140,14 @@ class Cookie
             $sameSite = strtolower($sameSite);
         }
 
-        if (!in_array($sameSite, array(self::SAMESITE_LAX, self::SAMESITE_STRICT, null), true)) {
+        if (!in_array($sameSite, [self::SAMESITE_LAX, self::SAMESITE_STRICT, null], true)) {
             throw new InvalidArgumentException('The "sameSite" parameter value is not valid.');
         }
 
         $this->sameSite = $sameSite;
 
         response()->headers->setCookie($this);
-	}
+    }
 
     /**
      * Returns the cookie as a string.

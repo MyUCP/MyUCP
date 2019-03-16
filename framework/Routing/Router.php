@@ -56,117 +56,126 @@ class Router
      */
     public function __construct(Request $request = null)
     {
-        $this->routes = new RouteCollection;
-        $this->currentRequest = $request ?: app("request");
+        $this->routes = new RouteCollection();
+        $this->currentRequest = $request ?: app('request');
 
-        app()->alias("routes", RouteCollection::class, $this->routes);
+        app()->alias('routes', RouteCollection::class, $this->routes);
     }
 
     /**
      * Register a new GET route with the router.
      *
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param string                     $uri
+     * @param \Closure|array|string|null $action
+     *
      * @return Route
      */
     public static function get($uri, $action = null)
     {
-        return app("router")->addRoute(['GET', 'HEAD'], $uri, $action);
+        return app('router')->addRoute(['GET', 'HEAD'], $uri, $action);
     }
 
     /**
      * Register a new POST route with the router.
      *
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param string                     $uri
+     * @param \Closure|array|string|null $action
+     *
      * @return Route
      */
     public static function post($uri, $action = null)
     {
-        return app("router")->addRoute('POST', $uri, $action);
+        return app('router')->addRoute('POST', $uri, $action);
     }
 
     /**
      * Register a new PUT route with the router.
      *
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param string                     $uri
+     * @param \Closure|array|string|null $action
+     *
      * @return Route
      */
     public static function put($uri, $action = null)
     {
-        return app("router")->addRoute('PUT', $uri, $action);
+        return app('router')->addRoute('PUT', $uri, $action);
     }
+
     /**
      * Register a new PATCH route with the router.
      *
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param string                     $uri
+     * @param \Closure|array|string|null $action
+     *
      * @return Route
      */
-
     public static function patch($uri, $action = null)
     {
-        return app("router")->addRoute('PATCH', $uri, $action);
+        return app('router')->addRoute('PATCH', $uri, $action);
     }
 
     /**
      * Register a new DELETE route with the router.
      *
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param string                     $uri
+     * @param \Closure|array|string|null $action
+     *
      * @return Route
      */
     public static function delete($uri, $action = null)
     {
-        return app("router")->addRoute('DELETE', $uri, $action);
+        return app('router')->addRoute('DELETE', $uri, $action);
     }
 
     /**
      * Register a new OPTIONS route with the router.
      *
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param string                     $uri
+     * @param \Closure|array|string|null $action
+     *
      * @return Route
      */
     public static function options($uri, $action = null)
     {
-        return app("router")->addRoute('OPTIONS', $uri, $action);
+        return app('router')->addRoute('OPTIONS', $uri, $action);
     }
 
     /**
      * Register a new route responding to all verbs.
      *
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param string                     $uri
+     * @param \Closure|array|string|null $action
+     *
      * @return Route
      */
     public static function any($uri, $action = null)
     {
         $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'];
 
-        return app("router")->addRoute($verbs, $uri, $action);
+        return app('router')->addRoute($verbs, $uri, $action);
     }
 
     /**
      * Register a new route with the given verbs.
      *
-     * @param  array|string  $methods
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param array|string               $methods
+     * @param string                     $uri
+     * @param \Closure|array|string|null $action
+     *
      * @return Route
      */
     public static function match($methods, $uri, $action = null)
     {
-        return app("router")->addRoute(array_map('strtoupper', (array) $methods), $uri, $action);
+        return app('router')->addRoute(array_map('strtoupper', (array) $methods), $uri, $action);
     }
 
     /**
      * Register a new route responding a view.
      *
-     * @param  string $uri
-     * @param  string $viewName
-     * @param array $parameters
+     * @param string $uri
+     * @param string $viewName
+     * @param array  $parameters
+     *
      * @return Route
      */
     public static function view($uri, $viewName, $parameters = [])
@@ -179,16 +188,17 @@ class Router
     /**
      * Register a new route responding a redirect.
      *
-     * @param  string|array $uri
-     * @param  Route|string $to
-     * @param int $status
+     * @param string|array $uri
+     * @param Route|string $to
+     * @param int          $status
+     *
      * @return Route
      */
     public static function redirect($uri, $to, $status = 302)
     {
         $parameters = [];
 
-        if(is_array($uri)) {
+        if (is_array($uri)) {
             $parameters = $uri['parameters'];
             $uri = $uri['uri'];
         }
@@ -199,59 +209,65 @@ class Router
     }
 
     /**
-     * Register a new routes group
+     * Register a new routes group.
      *
-     * @param string $domain
-     * @param  \Closure|string  $routes
+     * @param string          $domain
+     * @param \Closure|string $routes
+     *
      * @return void
      */
     public static function domain($domain, $routes)
     {
-        app("router")->group(["domain" => $domain], $routes);
+        app('router')->group(['domain' => $domain], $routes);
     }
 
     /**
-     * Register a new routes group
+     * Register a new routes group.
      *
-     * @param string $name
-     * @param  \Closure|string  $routes
+     * @param string          $name
+     * @param \Closure|string $routes
+     *
      * @return void
      */
     public static function name($name, $routes)
     {
-        app("router")->group(["as" => $name], $routes);
+        app('router')->group(['as' => $name], $routes);
     }
 
     /**
-     * Register a new routes group
+     * Register a new routes group.
      *
-     * @param string $prefix
-     * @param  \Closure|string  $routes
+     * @param string          $prefix
+     * @param \Closure|string $routes
+     *
      * @return void
      */
     public static function prefix($prefix, $routes)
     {
-        app("router")->group(["prefix" => $prefix], $routes);
+        app('router')->group(['prefix' => $prefix], $routes);
     }
 
     /**
-     * Register a new routes group
+     * Register a new routes group.
      *
-     * @param bool $condition
-     * @param  \Closure|string  $routes
+     * @param bool            $condition
+     * @param \Closure|string $routes
+     *
      * @return void
      */
     public static function condition($condition, $routes)
     {
-        if($condition)
-            app("router")->group(["condition" => $condition], $routes);
+        if ($condition) {
+            app('router')->group(['condition' => $condition], $routes);
+        }
     }
 
     /**
      * Create a route group with shared attributes.
      *
-     * @param  array  $attributes
-     * @param  \Closure|string  $routes
+     * @param array           $attributes
+     * @param \Closure|string $routes
+     *
      * @return void
      */
     public function group(array $attributes, $routes)
@@ -269,12 +285,13 @@ class Router
     /**
      * Update the group stack with the given attributes.
      *
-     * @param  array  $attributes
+     * @param array $attributes
+     *
      * @return void
      */
     protected function updateGroupStack(array $attributes)
     {
-        if (! empty($this->groupStack)) {
+        if (!empty($this->groupStack)) {
             $attributes = $this->mergeWithLastGroup($attributes);
         }
 
@@ -284,7 +301,8 @@ class Router
     /**
      * Merge the given array with the last group stack.
      *
-     * @param  array  $new
+     * @param array $new
+     *
      * @return array
      */
     public function mergeWithLastGroup($new)
@@ -295,9 +313,10 @@ class Router
     /**
      * Add a route to the underlying route collection.
      *
-     * @param  array|string  $methods
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param array|string               $methods
+     * @param string                     $uri
+     * @param \Closure|array|string|null $action
+     *
      * @return Route
      */
     protected function addRoute($methods, $uri, $action)
@@ -308,9 +327,10 @@ class Router
     /**
      * Create a new route instance.
      *
-     * @param  array|string  $methods
-     * @param  string  $uri
-     * @param  mixed  $action
+     * @param array|string $methods
+     * @param string       $uri
+     * @param mixed        $action
+     *
      * @return Route
      */
     protected function createRoute($methods, $uri, $action)
@@ -319,7 +339,7 @@ class Router
             $methods, $this->getPrefix($uri), $action
         );
 
-        if($this->hasGroupStack()) {
+        if ($this->hasGroupStack()) {
             $this->mergeGroupAttributesIntoRoute($route);
         }
 
@@ -329,20 +349,22 @@ class Router
     /**
      * Create a new Route object.
      *
-     * @param  array|string  $methods
-     * @param  string  $uri
-     * @param  mixed  $action
+     * @param array|string $methods
+     * @param string       $uri
+     * @param mixed        $action
+     *
      * @return Route
      */
     protected function newRoute($methods, $uri, $action)
     {
-        return (new Route($methods, $uri, $action));
+        return new Route($methods, $uri, $action);
     }
 
     /**
      * Load the provided routes.
      *
-     * @param  Closure|string  $routes
+     * @param Closure|string $routes
+     *
      * @return void
      */
     public function loadRoutes($routes)
@@ -355,13 +377,13 @@ class Router
     }
 
     /**
-     * Load RouteService
+     * Load RouteService.
      *
      * @return void
      */
     public function loadRouteService()
     {
-        $this->service = app()->makeWith(config('services.' . RouteService::class), [$this]);
+        $this->service = app()->makeWith(config('services.'.RouteService::class), [$this]);
     }
 
     /**
@@ -385,7 +407,8 @@ class Router
     /**
      * Set the route collection instance.
      *
-     * @param  RouteCollection  $routes
+     * @param RouteCollection $routes
+     *
      * @return void
      */
     public function setRoutes(RouteCollection $routes)
@@ -428,7 +451,8 @@ class Router
     /**
      * Check if a route with the given name exists.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return bool
      */
     public function has($name)
@@ -437,9 +461,10 @@ class Router
     }
 
     /**
-     * Get a route with the given name
+     * Get a route with the given name.
      *
      * @param string $name
+     *
      * @return null|Route
      */
     public function getRouteWithName($name)
@@ -460,25 +485,24 @@ class Router
     /**
      * Make the request to the application.
      *
-     * @return mixed
      * @throws DebugException
      * @throws HttpException
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function make()
     {
-        $this->currentRequest = app("request");
+        $this->currentRequest = app('request');
 
         $this->routes->refreshNameLookups();
 
         $route = $this->findRoute();
 
-        if($route instanceof Route) {
-
+        if ($route instanceof Route) {
             $route->compileRoute(app());
 
             return $route->getCompiled();
-
         } else {
             exit($route->getResponse());
         }
@@ -487,8 +511,9 @@ class Router
     /**
      * Find the route matching a given request.
      *
-     * @return Route
      * @throws HttpException
+     *
+     * @return Route
      */
     protected function findRoute()
     {
@@ -521,17 +546,20 @@ class Router
      */
     public function getLastGroupPrefix()
     {
-        if (! empty($this->groupStack)) {
+        if (!empty($this->groupStack)) {
             $last = end($this->groupStack);
+
             return $last['prefix'] ?? '';
         }
+
         return '';
     }
 
     /**
      * Prefix the given URI with the last prefix.
      *
-     * @param  string  $uri
+     * @param string $uri
+     *
      * @return string
      */
     protected function getPrefix($uri)

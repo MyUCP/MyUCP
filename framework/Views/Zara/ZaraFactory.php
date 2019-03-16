@@ -7,23 +7,24 @@ class ZaraFactory
     /**
      * @var array
      */
-	protected $sections = [];
+    protected $sections = [];
 
     /**
      * @var array
      */
-	protected $sectionStack = [];
+    protected $sectionStack = [];
 
     /**
      * @return mixed
      */
-	public function yieldSection()
+    public function yieldSection()
     {
         return $this->yieldContent($this->stopSection());
     }
 
     /**
      * @param bool $overwrite
+     *
      * @return mixed
      */
     public function stopSection($overwrite = false)
@@ -51,6 +52,7 @@ class ZaraFactory
     /**
      * @param $section
      * @param string $default
+     *
      * @return mixed
      */
     public function yieldContent($section, $default = '')

@@ -10,17 +10,17 @@ class Application implements ArrayAccess
 
     //
 
-    const VERSION = "5.8.1";
+    const VERSION = '5.8.1';
 
     /**
-     * Application status
+     * Application status.
      *
      * @var bool
      */
     protected $initialized = false;
 
     /**
-     * Application boot status
+     * Application boot status.
      *
      * @var bool
      */
@@ -38,6 +38,7 @@ class Application implements ArrayAccess
 
     /**
      * Application constructor.
+     *
      * @param Container $container
      */
     public function __construct(Container $container)
@@ -61,9 +62,9 @@ class Application implements ArrayAccess
     /**
      * @param $name
      *
-     * @return bool|mixed
-     *
      * @throws \ReflectionException
+     *
+     * @return bool|mixed
      */
     public function __get($name)
     {
@@ -75,9 +76,9 @@ class Application implements ArrayAccess
      * @param $method
      * @param array $parameters
      *
-     * @return mixed
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function call($instance, $method, $parameters = [])
     {
@@ -88,9 +89,9 @@ class Application implements ArrayAccess
      * @param $name
      * @param null|object|string|\Closure $instance
      *
-     * @return bool|mixed|null
-     *
      * @throws \ReflectionException
+     *
+     * @return bool|mixed|null
      */
     public function make($name, $instance = null)
     {
@@ -98,14 +99,14 @@ class Application implements ArrayAccess
     }
 
     /**
-     * Make new instance with parameters
+     * Make new instance with parameters.
      *
      * @param $name
      * @param array $parameters
      *
-     * @return bool|mixed|null
-     *
      * @throws \ReflectionException
+     *
+     * @return bool|mixed|null
      */
     public function makeWith($name, $parameters = [])
     {
@@ -113,15 +114,15 @@ class Application implements ArrayAccess
     }
 
     /**
-     * Make alias for instance or only name
+     * Make alias for instance or only name.
      *
      * @param $alias
      * @param null $name
      * @param null $instance
      *
-     * @return mixed|Container
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed|Container
      */
     public function alias($alias, $name = null, $instance = null)
     {
@@ -129,15 +130,15 @@ class Application implements ArrayAccess
     }
 
     /**
-     * Make alias for new instance with parameters
+     * Make alias for new instance with parameters.
      *
      * @param $alias
      * @param $name
      * @param array $parameters
      *
-     * @return bool|mixed|null
-     *
      * @throws \ReflectionException
+     *
+     * @return bool|mixed|null
      */
     public function aliasWith($alias, $name, $parameters = [])
     {
@@ -154,35 +155,40 @@ class Application implements ArrayAccess
 
     /**
      * @param $name
+     *
      * @return bool
      */
     public function has($name)
     {
-        if(isset($this->alias[$name]))
+        if (isset($this->alias[$name])) {
             return true;
+        }
 
-        if($this->container->$name !== false)
+        if ($this->container->$name !== false) {
             return true;
+        }
 
         return false;
     }
 
     /**
-     * Service method
+     * Service method.
      *
      * @param $value
-     * @return mixed
      *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function escape($value)
     {
-        if(! env('APP_DB', false)) {
+        if (!env('APP_DB', false)) {
             return $value;
         }
 
-        if($this->has('db') && $this->make('db') !== false)
+        if ($this->has('db') && $this->make('db') !== false) {
             return $this->make('db')->escape($value);
+        }
 
         return $value;
     }
@@ -190,7 +196,8 @@ class Application implements ArrayAccess
     /**
      * Determine if a given offset exists.
      *
-     * @param  string  $key
+     * @param string $key
+     *
      * @return bool
      */
     public function offsetExists($key)
@@ -201,10 +208,11 @@ class Application implements ArrayAccess
     /**
      * Get the value at a given offset.
      *
-     * @param  string $key
-     * @return mixed
+     * @param string $key
      *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function offsetGet($key)
     {
@@ -214,12 +222,12 @@ class Application implements ArrayAccess
     /**
      * Set the value at a given offset.
      *
-     * @param  string $key
-     * @param  mixed $value
-     *
-     * @return void
+     * @param string $key
+     * @param mixed  $value
      *
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function offsetSet($key, $value)
     {
@@ -229,7 +237,8 @@ class Application implements ArrayAccess
     /**
      * Unset the value at a given offset.
      *
-     * @param  string  $key
+     * @param string $key
+     *
      * @return void
      */
     public function offsetUnset($key)
@@ -239,6 +248,7 @@ class Application implements ArrayAccess
 
     /**
      * @param $path
+     *
      * @return $this
      */
     public function setBasePath($path)
@@ -250,100 +260,107 @@ class Application implements ArrayAccess
 
     /**
      * @param null $path
+     *
      * @return string
      */
     public function basePath($path = null)
     {
-        return $this->basePath . (DIRECTORY_SEPARATOR . ($path ?? ''));
+        return $this->basePath.(DIRECTORY_SEPARATOR.($path ?? ''));
     }
 
     /**
      * Get path to the app directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public function appPath($path = null)
     {
-        if(is_null($path)) {
+        if (is_null($path)) {
             return $this->basePath('app');
         }
 
-        return $this->basePath('app') . DIRECTORY_SEPARATOR . $path;
+        return $this->basePath('app').DIRECTORY_SEPARATOR.$path;
     }
 
     /**
      * Get path to the engine directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public function frameworkPath($path = null)
     {
-        if(is_null($path)) {
+        if (is_null($path)) {
             return $this->basePath('framework');
         }
 
-        return $this->basePath('framework') . DIRECTORY_SEPARATOR . $path;
+        return $this->basePath('framework').DIRECTORY_SEPARATOR.$path;
     }
 
     /**
      * Get path to the resources directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public function resourcesPath($path = null)
     {
-        if(is_null($path)) {
+        if (is_null($path)) {
             return $this->basePath('resources');
         }
 
-        return $this->basePath('resources') . DIRECTORY_SEPARATOR . $path;
+        return $this->basePath('resources').DIRECTORY_SEPARATOR.$path;
     }
 
     /**
      * Get path to the views directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public function viewsPath($path = null)
     {
-        if(is_null($path)) {
+        if (is_null($path)) {
             return $this->resourcesPath('views');
         }
 
-        return $this->resourcesPath('views') . DIRECTORY_SEPARATOR . $path;
+        return $this->resourcesPath('views').DIRECTORY_SEPARATOR.$path;
     }
 
     /**
      * Get path to the assets directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public function assetsPath($path = null)
     {
-        if(is_null($path)) {
+        if (is_null($path)) {
             return $this->basePath('assets');
         }
 
-        return $this->basePath('assets') . DIRECTORY_SEPARATOR . $path;
+        return $this->basePath('assets').DIRECTORY_SEPARATOR.$path;
     }
 
     /**
      * Get path to the config directory.
      *
      * @param null|string $path
+     *
      * @return string
      */
     public function configPath($path = null)
     {
-        if(is_null($path)) {
+        if (is_null($path)) {
             return $this->basePath('configs');
         }
 
-        return $this->basePath('configs') . DIRECTORY_SEPARATOR . $path;
+        return $this->basePath('configs').DIRECTORY_SEPARATOR.$path;
     }
 }

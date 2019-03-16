@@ -11,6 +11,7 @@ class RawQuery
 
     /**
      * RawQuery constructor.
+     *
      * @param $query
      */
     public function __construct($query)
@@ -20,6 +21,7 @@ class RawQuery
 
     /**
      * @param $query
+     *
      * @return RawQuery
      */
     public static function raw($query)
@@ -29,6 +31,7 @@ class RawQuery
 
     /**
      * @param string $query
+     *
      * @return $this
      */
     public function setQuery($query)

@@ -9,12 +9,12 @@ class Session
     /**
      * @var array
      */
-	public $data = [];
+    public $data = [];
 
     /**
      * @var array|mixed
      */
-	private $flash = [];
+    private $flash = [];
 
     /**
      * @var bool
@@ -23,6 +23,7 @@ class Session
 
     /**
      * @param $name
+     *
      * @return mixed|null
      */
     public function __get($name)
@@ -33,22 +34,23 @@ class Session
     /**
      * Session constructor.
      */
-  	public function __construct()
-	{
-		if(!session_id())
-		    session_start();
+    public function __construct()
+    {
+        if (!session_id()) {
+            session_start();
+        }
 
-		$this->data = &$_SESSION;
+        $this->data = &$_SESSION;
 
-		$this->flash = &$this->data['_flash'];
+        $this->flash = &$this->data['_flash'];
 
         return $this;
-	}
+    }
 
     /**
      * @return array
      */
-	public function all()
+    public function all()
     {
         return $this->data;
     }
@@ -56,9 +58,10 @@ class Session
     /**
      * @param $key
      * @param null $default
+     *
      * @return mixed|null
      */
-	public function get($key, $default = null)
+    public function get($key, $default = null)
     {
         return data_get($this->data, $key, $default);
     }
@@ -66,6 +69,7 @@ class Session
     /**
      * @param $key
      * @param $value
+     *
      * @return Session
      */
     public function set($key, $value)
@@ -76,9 +80,10 @@ class Session
     /**
      * @param $key
      * @param null $value
+     *
      * @return Session
      */
-	public function put($key, $value = null)
+    public function put($key, $value = null)
     {
         if ($value instanceof Closure) {
             $this->data[$key] = $value();
@@ -92,35 +97,38 @@ class Session
     /**
      * @param $name
      * @param null $value
+     *
      * @return mixed
      */
-	public function flash($name, $value = null)
+    public function flash($name, $value = null)
     {
-        if(!is_null($value)) {
+        if (!is_null($value)) {
             $this->flash[$name] = $value;
             $this->reflash();
         }
 
-        if(isset($this->flash[$name]))
+        if (isset($this->flash[$name])) {
             return $this->flash[$name];
-
-        return null;
+        }
     }
 
     /**
      * @param null $name
+     *
      * @return bool
      */
     public function has($name = null)
     {
-        if(isset($this->data[$name]))
+        if (isset($this->data[$name])) {
             return true;
+        }
 
         return false;
     }
 
     /**
      * @param null $name
+     *
      * @return Session
      */
     public function forget($name = null)
@@ -143,7 +151,8 @@ class Session
      */
     public function unsetFlash()
     {
-        if($this->reflash == false)
-            $this->forget("_flash");
+        if ($this->reflash == false) {
+            $this->forget('_flash');
+        }
     }
 }

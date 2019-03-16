@@ -3,15 +3,16 @@
 namespace MyUCP\Model\Traits;
 
 use Exception;
-use MyUCP\Database\Query;
-use MyUCP\Database\DBCollection;
-use MyUCP\Routing\HttpException;
 use MyUCP\Database\Builder as QueryBuilder;
+use MyUCP\Database\DBCollection;
+use MyUCP\Database\Query;
+use MyUCP\Routing\HttpException;
 
 trait Builder
 {
     /**
      * @param $name
+     *
      * @return $this
      */
     public function table($name)
@@ -23,6 +24,7 @@ trait Builder
 
     /**
      * @param array $data
+     *
      * @return bool|resource
      */
     public function create(array $data)
@@ -32,9 +34,10 @@ trait Builder
 
     /**
      * @param $column
-     * @param null $operator
-     * @param null $value
+     * @param null   $operator
+     * @param null   $value
      * @param string $boolean
+     *
      * @return Query
      */
     public function where($column, $operator = null, $value = null, $boolean = 'and')
@@ -46,6 +49,7 @@ trait Builder
      * @param $column
      * @param null $operator
      * @param null $value
+     *
      * @return Query
      */
     public function orWhere($column, $operator = null, $value = null)
@@ -55,9 +59,10 @@ trait Builder
 
     /**
      * @param $column
-     * @param array $values
+     * @param array  $values
      * @param string $boolean
-     * @param bool $not
+     * @param bool   $not
+     *
      * @return Query
      */
     public function whereBetween($column, array $values, $boolean = 'and', $not = false)
@@ -67,8 +72,9 @@ trait Builder
 
     /**
      * @param $column
-     * @param array $values
+     * @param array  $values
      * @param string $boolean
+     *
      * @return Query
      */
     public function whereNotBetween($column, array $values, $boolean = 'and')
@@ -80,7 +86,8 @@ trait Builder
      * @param $column
      * @param $values
      * @param string $boolean
-     * @param bool $not
+     * @param bool   $not
+     *
      * @return Query
      */
     public function whereIn($column, $values, $boolean = 'and', $not = false)
@@ -92,6 +99,7 @@ trait Builder
      * @param $column
      * @param $values
      * @param string $boolean
+     *
      * @return Query
      */
     public function whereNotIn($column, $values, $boolean = 'and')
@@ -102,7 +110,8 @@ trait Builder
     /**
      * @param $column
      * @param string $boolean
-     * @param bool $not
+     * @param bool   $not
+     *
      * @return Query
      */
     public function whereNull($column, $boolean = 'and', $not = false)
@@ -113,6 +122,7 @@ trait Builder
     /**
      * @param $column
      * @param string $boolean
+     *
      * @return mixed
      */
     public function whereNotNull($column, $boolean = 'and')
@@ -123,6 +133,7 @@ trait Builder
     /**
      * @param $column
      * @param string $direction
+     *
      * @return Query
      */
     public function orderBy($column, $direction = 'asc')
@@ -133,6 +144,7 @@ trait Builder
     /**
      * @param $column
      * @param string $direction
+     *
      * @return Query
      */
     public function order($column, $direction = 'asc')
@@ -141,7 +153,8 @@ trait Builder
     }
 
     /**
-     * @param  string  $column
+     * @param string $column
+     *
      * @return Query
      */
     public function orderByDesc($column)
@@ -150,7 +163,8 @@ trait Builder
     }
 
     /**
-     * @param  string  $column
+     * @param string $column
+     *
      * @return Query
      */
     public function latest($column)
@@ -159,7 +173,8 @@ trait Builder
     }
 
     /**
-     * @param  string  $column
+     * @param string $column
+     *
      * @return Query
      */
     public function oldest($column)
@@ -169,20 +184,22 @@ trait Builder
 
     /**
      * @param string $column
-     * @param array $_
+     * @param array  $_
+     *
      * @return Query
      */
-    public function select($column = "*", ...$_)
+    public function select($column = '*', ...$_)
     {
         return $this->query()->select($column, ...$_);
     }
 
     /**
      * @param string $column
-     * @param array $_
+     * @param array  $_
+     *
      * @return Query
      */
-    public function addSelect($column = "*", ...$_)
+    public function addSelect($column = '*', ...$_)
     {
         return $this->query()->addSelect($column, ...$_);
     }
@@ -190,6 +207,7 @@ trait Builder
     /**
      * @param $offset
      * @param null $limit
+     *
      * @return Query
      */
     public function limit($offset, $limit = null)
@@ -199,6 +217,7 @@ trait Builder
 
     /**
      * @param array $columns
+     *
      * @return DBCollection
      */
     public function get(array $columns = ['*'])
@@ -209,15 +228,17 @@ trait Builder
     /**
      * @param $id
      * @param array $columns
+     *
      * @return mixed
      */
     public function find($id, $columns = ['*'])
     {
-        return $this->query()->where($this->primary_key, "=", $id)->first($columns);
+        return $this->query()->where($this->primary_key, '=', $id)->first($columns);
     }
 
     /**
      * @param array $columns
+     *
      * @return mixed
      */
     public function first($columns = ['*'])
@@ -226,23 +247,27 @@ trait Builder
     }
 
     /**
-     * @param array $columns
+     * @param array  $columns
      * @param string $exception
-     * @param int $code
+     * @param int    $code
      * @param string $message
-     * @return array|FALSE
+     *
      * @throws Exception|HttpException
+     *
+     * @return array|false
      */
-    public function firstOrError(array $columns = ['*'], $exception = HttpException::class, $code = 404, $message = "Страница не найдена")
+    public function firstOrError(array $columns = ['*'], $exception = HttpException::class, $code = 404, $message = 'Страница не найдена')
     {
-        return $this->query()->firstOrError($columns , $exception, $code, $message);
+        return $this->query()->firstOrError($columns, $exception, $code, $message);
     }
 
     /**
      * @param $id
      * @param array $columns
-     * @return array|FALSE
+     *
      * @throws Exception|HttpException
+     *
+     * @return array|false
      */
     public function findOrError($id, $columns = ['*'])
     {
@@ -251,6 +276,7 @@ trait Builder
 
     /**
      * @param $column
+     *
      * @return mixed
      */
     public function value($column)
@@ -260,15 +286,17 @@ trait Builder
 
     /**
      * @param string $column
+     *
      * @return int
      */
-    public function count($column = "*")
+    public function count($column = '*')
     {
         return $this->query()->count($column);
     }
 
     /**
      * @param $column
+     *
      * @return mixed
      */
     public function max($column)
@@ -278,6 +306,7 @@ trait Builder
 
     /**
      * @param $column
+     *
      * @return mixed
      */
     public function min($column)
@@ -287,6 +316,7 @@ trait Builder
 
     /**
      * @param $column
+     *
      * @return mixed
      */
     public function avg($column)
@@ -296,6 +326,7 @@ trait Builder
 
     /**
      * @param $column
+     *
      * @return mixed
      */
     public function sum($column)
@@ -305,6 +336,7 @@ trait Builder
 
     /**
      * @param array $groups
+     *
      * @return Query
      */
     public function groupBy(...$groups)
@@ -315,9 +347,10 @@ trait Builder
     /**
      * @param $table
      * @param $first
-     * @param null $operator
-     * @param null $second
+     * @param null   $operator
+     * @param null   $second
      * @param string $type
+     *
      * @return Query
      */
     public function join($table, $first, $operator = null, $second = null, $type = 'inner')
@@ -330,6 +363,7 @@ trait Builder
      * @param $first
      * @param null $operator
      * @param null $second
+     *
      * @return Query
      */
     public function leftJoin($table, $first, $operator = null, $second = null)
@@ -342,6 +376,7 @@ trait Builder
      * @param $first
      * @param null $operator
      * @param null $second
+     *
      * @return Query
      */
     public function rightJoin($table, $first, $operator = null, $second = null)
@@ -354,6 +389,7 @@ trait Builder
      * @param $first
      * @param null $operator
      * @param null $second
+     *
      * @return Query
      */
     public function crossJoin($table, $first, $operator = null, $second = null)
@@ -363,6 +399,7 @@ trait Builder
 
     /**
      * @param array $values
+     *
      * @return Query
      */
     public function set(array $values)
@@ -372,6 +409,7 @@ trait Builder
 
     /**
      * @param array $values
+     *
      * @return mixed
      */
     public function update(array $values = [])
@@ -380,7 +418,7 @@ trait Builder
     }
 
     /**
-     * @return FALSE|resource
+     * @return false|resource
      */
     public function delete()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * MyUCP:Auth
+ * MyUCP:Auth.
  */
 
 namespace Extensions\Auth\controllers;

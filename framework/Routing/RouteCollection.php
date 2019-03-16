@@ -41,7 +41,8 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Add a Route instance to the collection.
      *
-     * @param  Route  $route
+     * @param Route $route
+     *
      * @return Route
      */
     public function add(Route $route)
@@ -56,7 +57,8 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Add the given route to the arrays of routes.
      *
-     * @param  Route  $route
+     * @param Route $route
+     *
      * @return void
      */
     protected function addToCollections($route)
@@ -73,7 +75,8 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Add the route to any look-up tables if necessary.
      *
-     * @param  Route  $route
+     * @param Route $route
+     *
      * @return void
      */
     protected function addLookups($route)
@@ -98,8 +101,9 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Add a route to the controller action dictionary.
      *
-     * @param  array  $action
-     * @param  Route  $route
+     * @param array $action
+     * @param Route $route
+     *
      * @return void
      */
     protected function addToActionList($action, $route)
@@ -145,7 +149,8 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Get routes from the collection by method.
      *
-     * @param  string|null  $method
+     * @param string|null $method
+     *
      * @return array
      */
     public function get($method = null)
@@ -156,7 +161,8 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Get a route instance by its name.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return Route|null
      */
     public function getByName($name)
@@ -167,7 +173,8 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Get a route instance by its controller action.
      *
-     * @param  string  $action
+     * @param string $action
+     *
      * @return Route|null
      */
     public function getByAction($action)
@@ -228,33 +235,36 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Find the first route matching a given request.
      *
-     * @param  Request  $request
-     * @return Route|HttpException
+     * @param Request $request
+     *
      * @throws HttpException
+     *
+     * @return Route|HttpException
      */
     public function match(Request $request)
     {
         $routes = $this->get($request->method());
 
         foreach ($routes as $route) {
-            if(RouteMatch::validateDomain($route, $request)
+            if (RouteMatch::validateDomain($route, $request)
                 && RouteMatch::parseUri($route, $request)
-                && RouteMatch::csrfVerify($route, app("csrftoken"))) {
+                && RouteMatch::csrfVerify($route, app('csrftoken'))) {
                 return $route;
             }
         }
 
-        throw new HttpException(404, "Страница не найдена");
+        throw new HttpException(404, 'Страница не найдена');
     }
 
     /**
      * Determine if the route collection contains a given named route.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return bool
      */
     public function hasNamedRoute($name)
     {
-        return ! is_null($this->getByName($name));
+        return !is_null($this->getByName($name));
     }
 }

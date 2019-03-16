@@ -46,7 +46,7 @@ class Container implements ArrayAccess
     public static function getInstance()
     {
         if (is_null(static::$instance)) {
-            static::$instance = new static;
+            static::$instance = new static();
         }
 
         return static::$instance;
@@ -55,7 +55,8 @@ class Container implements ArrayAccess
     /**
      * Determine if the given abstract type has been bound.
      *
-     * @param  string  $abstract
+     * @param string $abstract
+     *
      * @return bool
      */
     public function has($abstract)
@@ -69,7 +70,8 @@ class Container implements ArrayAccess
     /**
      * Determine if a given string is an alias.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return bool
      */
     public function isAlias($name)
@@ -81,17 +83,17 @@ class Container implements ArrayAccess
      * @param $class
      * @param mixed|null $instance
      *
-     * @return mixed
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function make($class, $instance = null)
     {
-        if(is_null($instance)) {
+        if (is_null($instance)) {
             return $this->build($class);
         }
 
-        if(is_array($instance)) {
+        if (is_array($instance)) {
             return $this->build($class, $instance);
         }
 
@@ -102,9 +104,9 @@ class Container implements ArrayAccess
      * @param $class
      * @param array $parameters
      *
-     * @return mixed
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function makeWith($class, $parameters = [])
     {
@@ -113,12 +115,12 @@ class Container implements ArrayAccess
 
     /**
      * @param $class
-     * @param array $parameters
+     * @param array              $parameters
      * @param mixed|Closure|null $instance
      *
-     * @return mixed
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     protected function build($class, $parameters = [], $instance = null)
     {
@@ -128,27 +130,27 @@ class Container implements ArrayAccess
 
         // проверить интерфейс ли это
 
-        if($this->isBind($name)) {
+        if ($this->isBind($name)) {
             $name = $this->bindings[$name];
         }
 
         // проверить указан ли к интфрейсу алиас
 
-        if($this->isAlias($name)) {
+        if ($this->isAlias($name)) {
             // если алиас взять название класса
 
             $name = $this->aliases[$name];
         }
 
-        if(! is_null($instance)) {
-            $instance =  $instance instanceof Closure ? $instance : function () use ($instance) {
+        if (!is_null($instance)) {
+            $instance = $instance instanceof Closure ? $instance : function () use ($instance) {
                 return $instance;
             };
         }
 
         $object = $this->resolveInstance($name, $parameters, $instance);
 
-        if(! is_null($method)) {
+        if (!is_null($method)) {
             return $this->callMethod($object, $method, $parameters);
         }
 
@@ -162,8 +164,8 @@ class Container implements ArrayAccess
      */
     protected function bindMethod($method)
     {
-        if(is_array($method)) {
-            return $method[0] . "@" . $method[1];
+        if (is_array($method)) {
+            return $method[0].'@'.$method[1];
         }
 
         return $method;
@@ -174,19 +176,19 @@ class Container implements ArrayAccess
      * @param $method
      * @param array $parameters
      *
-     * @return mixed
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function callMethod($instance, $method, $parameters = [])
     {
-        if(is_string($instance)) {
+        if (is_string($instance)) {
             $instance = $this->make($instance);
         }
 
         $class = get_class($instance);
 
-        if(! method_exists($instance, $method)) {
+        if (!method_exists($instance, $method)) {
             throw new BadMethodCallException("Cant call [{$method}] method in [{$class}] instance.");
         }
 
@@ -204,9 +206,9 @@ class Container implements ArrayAccess
      * @param $method
      * @param array $parameters
      *
-     * @return mixed
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function call($instance, $method, $parameters = [])
     {
@@ -215,16 +217,16 @@ class Container implements ArrayAccess
 
     /**
      * @param $name
-     * @param array $parameters
-     *
+     * @param array        $parameters
      * @param null|Closure $instance
-     * @return mixed
      *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     protected function resolveInstance($name, $parameters = [], $instance = null)
     {
-        if($this->isSingleton($name)) {
+        if ($this->isSingleton($name)) {
             return $this->resolveSingleton($name, $parameters, $instance);
         }
 
@@ -235,16 +237,16 @@ class Container implements ArrayAccess
 
     /**
      * @param $name
-     * @param array $parameters
-     *
+     * @param array        $parameters
      * @param null|Closure $instance
-     * @return mixed
      *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     protected function resolveSingleton($name, $parameters = [], $instance = null)
     {
-        if(! Arr::has($this->instances, $name)) {
+        if (!Arr::has($this->instances, $name)) {
             return $this->instances[$name] = is_null($instance)
                                                 ? $this->resolve($name, $parameters)
                                                 : $instance();
@@ -257,8 +259,9 @@ class Container implements ArrayAccess
      * @param $name
      * @param array $parameters
      *
-     * @return mixed
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     protected function resolve($name, $parameters = [])
     {
@@ -266,8 +269,8 @@ class Container implements ArrayAccess
 
         $constructor = $reflector->getConstructor();
 
-        if(is_null($constructor)) {
-            return new $name;
+        if (is_null($constructor)) {
+            return new $name();
         }
 
         $dependencies = $constructor->getParameters();
@@ -282,9 +285,9 @@ class Container implements ArrayAccess
     /**
      * @param ReflectionParameter $parameter
      *
-     * @return mixed
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     protected function resolveClass(ReflectionParameter $parameter)
     {
@@ -292,14 +295,16 @@ class Container implements ArrayAccess
     }
 
     /**
-     * @param array $parameters
+     * @param array               $parameters
      * @param ReflectionParameter $parameter
-     * @return mixed
+     *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     protected function resolvePrimitiveParameter(array &$parameters, ReflectionParameter $parameter)
     {
-        if(empty($parameters) && $parameter->isOptional()) {
+        if (empty($parameters) && $parameter->isOptional()) {
             return $parameter->getDefaultValue();
         }
 
@@ -310,22 +315,21 @@ class Container implements ArrayAccess
      * @param array $dependencies
      * @param array $parameters
      *
-     * @return array
-     *
      * @throws \ReflectionException
+     *
+     * @return array
      */
     protected function resolveDependencies(array $dependencies, array $parameters = [])
     {
-        if(count($dependencies) == count($parameters)) {
+        if (count($dependencies) == count($parameters)) {
             return $parameters;
         }
 
         $results = [];
 
-        foreach($dependencies as $index => $dependency) {
-
-            if(! is_null($dependency->getClass())) {
-                if(($instance = $this->instanceInParameters($parameters, $dependency->getClass())) !== false) {
+        foreach ($dependencies as $index => $dependency) {
+            if (!is_null($dependency->getClass())) {
+                if (($instance = $this->instanceInParameters($parameters, $dependency->getClass())) !== false) {
                     $results[] = $instance;
 
                     continue;
@@ -341,7 +345,7 @@ class Container implements ArrayAccess
     }
 
     /**
-     * @param array $parameters
+     * @param array           $parameters
      * @param ReflectionClass $instance
      *
      * @return bool|mixed
@@ -349,7 +353,7 @@ class Container implements ArrayAccess
     protected function instanceInParameters(array &$parameters, ReflectionClass $instance)
     {
         foreach ($parameters as $index => $parameter) {
-            if(is_a($parameter, $instance->getName())) {
+            if (is_a($parameter, $instance->getName())) {
                 unset($parameters[$index]);
 
                 return $parameter;
@@ -390,25 +394,25 @@ class Container implements ArrayAccess
     }
 
     /**
-     * Make alias for instance or only name
+     * Make alias for instance or only name.
      *
      * @param $alias
      * @param null $name
      * @param null $instance
      *
-     * @return mixed|Container
-     *
      * @throws \ReflectionException
+     *
+     * @return mixed|Container
      */
     public function alias($alias, $name = null, $instance = null)
     {
-        if(is_null($name)) {
+        if (is_null($name)) {
             return $this->make($alias, $instance);
         }
 
         $this->aliases[$alias] = $name;
 
-        if(! is_null($instance)) {
+        if (!is_null($instance)) {
             $this->make($name, $instance);
         }
 
@@ -436,7 +440,7 @@ class Container implements ArrayAccess
      */
     public function singleton($name, $parameters = [])
     {
-        if($this->isAlias($name)) {
+        if ($this->isAlias($name)) {
             $name = $this->aliases[$name];
         }
 
@@ -450,24 +454,24 @@ class Container implements ArrayAccess
      */
     public function remove($name)
     {
-        if(is_string($name)) {
-            if($this->isAlias($name)) {
+        if (is_string($name)) {
+            if ($this->isAlias($name)) {
                 unset($this->aliases[$name]);
             }
 
-            if($this->isSingleton($name)) {
+            if ($this->isSingleton($name)) {
                 unset($this->singletons[$name]);
             }
 
-            if($this->isBind($name)) {
+            if ($this->isBind($name)) {
                 unset($this->bindings[$name]);
             }
 
-            if(Arr::has($this->instances, $name)) {
+            if (Arr::has($this->instances, $name)) {
                 unset($this->instances[$name]);
             }
         } else {
-            if(Arr::in($this->instances, $name)) {
+            if (Arr::in($this->instances, $name)) {
                 unset($this->instances[array_search($name, $this->instances)]);
             }
         }
@@ -476,7 +480,8 @@ class Container implements ArrayAccess
     /**
      * Determine if a given offset exists.
      *
-     * @param  string  $key
+     * @param string $key
+     *
      * @return bool
      */
     public function offsetExists($key)
@@ -487,10 +492,11 @@ class Container implements ArrayAccess
     /**
      * Get the value at a given offset.
      *
-     * @param  string $key
-     * @return mixed
+     * @param string $key
      *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function offsetGet($key)
     {
@@ -500,8 +506,9 @@ class Container implements ArrayAccess
     /**
      * Set the value at a given offset.
      *
-     * @param  string  $key
-     * @param  mixed   $value
+     * @param string $key
+     * @param mixed  $value
+     *
      * @return void
      */
     public function offsetSet($key, $value)
@@ -514,7 +521,7 @@ class Container implements ArrayAccess
     /**
      * Unset the value at a given offset.
      *
-     * @param  string  $key
+     * @param string $key
      *
      * @return void
      */
@@ -526,10 +533,11 @@ class Container implements ArrayAccess
     /**
      * Dynamically access container services.
      *
-     * @param  string $key
-     * @return mixed
+     * @param string $key
      *
      * @throws \ReflectionException
+     *
+     * @return mixed
      */
     public function __get($key)
     {
@@ -539,12 +547,12 @@ class Container implements ArrayAccess
     /**
      * Dynamically set container services.
      *
-     * @param  string $key
-     * @param  mixed $value
-     *
-     * @return void
+     * @param string $key
+     * @param mixed  $value
      *
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function __set($key, $value)
     {

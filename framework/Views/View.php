@@ -14,14 +14,14 @@ class View implements Renderable
     protected $factory;
 
     /**
-     * View name
+     * View name.
      *
      * @var string
      */
     protected $view;
 
     /**
-     * View file path
+     * View file path.
      *
      * @var string
      */
@@ -93,7 +93,7 @@ class View implements Renderable
      */
     public function with($key, $value)
     {
-        if(is_array($key)) {
+        if (is_array($key)) {
             $this->mergeData($key);
         } else {
             $this->data[$key] = $value;

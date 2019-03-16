@@ -28,7 +28,7 @@ class HandleExceptions
 
         register_shutdown_function([$this, 'handleShutdown']);
 
-        if(! config('debug_mode', true)) {
+        if (!config('debug_mode', true)) {
             ini_set('display_errors', 'Off');
         }
     }
@@ -37,8 +37,8 @@ class HandleExceptions
      * @param $level
      * @param $message
      * @param string $file
-     * @param int $line
-     * @param array $context
+     * @param int    $line
+     * @param array  $context
      */
     public function handleError($level, $message, $file = '', $line = 0, $context = [])
     {
@@ -52,18 +52,15 @@ class HandleExceptions
      */
     public function handleException($e)
     {
-        if($e instanceof Exception) {
+        if ($e instanceof Exception) {
             exit(new Debug($e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode(), $e->getTrace()));
         }
 
-        if($e instanceof Error) {
+        if ($e instanceof Error) {
             exit(new Debug($e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode(), $e->getTrace()));
         }
     }
 
-    /**
-     *
-     */
     public function handleShutdown()
     {
         if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
@@ -74,7 +71,8 @@ class HandleExceptions
     /**
      * Determine if the error type is fatal.
      *
-     * @param  int  $type
+     * @param int $type
+     *
      * @return bool
      */
     protected static function isFatal($type)

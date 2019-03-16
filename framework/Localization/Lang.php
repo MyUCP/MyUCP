@@ -3,12 +3,13 @@
 namespace MyUCP\Localization;
 
 /**
- * Alias Translator
+ * Alias Translator.
  */
 class Lang
 {
     /**
      * @param $key
+     *
      * @return bool
      */
     public function has($key)
@@ -19,6 +20,7 @@ class Lang
     /**
      * @param $key
      * @param array $replace
+     *
      * @return mixed
      */
     public static function get($key, $replace = [])
@@ -28,6 +30,7 @@ class Lang
 
     /**
      * @param $locale
+     *
      * @return mixed
      */
     public static function setLocale($locale)

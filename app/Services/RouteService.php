@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use MyUCP\Routing\Router;
 use MyUCP\Routing\Interfaces\RouteService as ServiceContract;
+use MyUCP\Routing\Router;
 
 class RouteService implements ServiceContract
 {

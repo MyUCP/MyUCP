@@ -33,6 +33,13 @@ class HandleExceptions
         }
     }
 
+    /**
+     * @param $level
+     * @param $message
+     * @param string $file
+     * @param int $line
+     * @param array $context
+     */
     public function handleError($level, $message, $file = '', $line = 0, $context = [])
     {
         if (error_reporting() & $level) {
@@ -40,6 +47,9 @@ class HandleExceptions
         }
     }
 
+    /**
+     * @param $e
+     */
     public function handleException($e)
     {
         if($e instanceof Exception) {
@@ -51,6 +61,9 @@ class HandleExceptions
         }
     }
 
+    /**
+     *
+     */
     public function handleShutdown()
     {
         if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {

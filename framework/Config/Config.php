@@ -69,7 +69,7 @@ class Config implements Arrayable, Jsonable
         array_shift($configs);
 
         foreach ($configs as $item) {
-            if ($item != 'main.php' && $item != 'autoload_classes.php') {
+            if ($item != 'main.php') {
                 if (is_readable(app()->configPath($item))) {
                     $config = require_once app()->configPath($item);
 

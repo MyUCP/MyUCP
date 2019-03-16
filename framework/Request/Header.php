@@ -10,13 +10,14 @@ class Header
      * Gets the HTTP headers.
      *
      * @param array $parameters
+     *
      * @return Collection
      */
     public static function getHeaders(array $parameters)
     {
-        $headers = array();
+        $headers = [];
 
-        $contentHeaders = array('CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true);
+        $contentHeaders = ['CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true];
 
         foreach ($parameters as $key => $value) {
             if (0 === strpos($key, 'HTTP_')) {

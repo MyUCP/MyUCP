@@ -9,70 +9,73 @@ class File
     /**
      * @var string
      */
-	protected $originalName;
+    protected $originalName;
 
     /**
      * @var int
      */
-	protected $size;
+    protected $size;
 
     /**
      * @var string
      */
-	protected $mimeType;
+    protected $mimeType;
 
     /**
      * @var int
      */
-	protected $error;
+    protected $error;
 
     /**
      * @var string
      */
-	protected $dirName;
+    protected $dirName;
 
     /**
      * @var string
      */
-	protected $tmpPath;
+    protected $tmpPath;
 
     /**
      * @var string
      */
-	protected $md5_file;
+    protected $md5_file;
 
     /**
      * @var string
      */
-	protected $extension;
+    protected $extension;
 
     /**
      * @var array
      */
-	protected $file;
+    protected $file;
 
     /**
      * File constructor.
+     *
      * @param array $file
      */
-	public function __construct($file)
+    public function __construct($file)
     {
-		$this->file = $file;
+        $this->file = $file;
 
-		$this->getInfoFile();
+        $this->getInfoFile();
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * @param bool $throw
-     * @return bool
+     *
      * @throws UploadException
+     *
+     * @return bool
      */
-	public function isUploaded($throw = false)
+    public function isUploaded($throw = false)
     {
-        if($this->getError() != UPLOAD_ERR_OK) {
-            if($throw) {
+        if ($this->getError() != UPLOAD_ERR_OK) {
+            if ($throw) {
                 throw new UploadException($this->getError());
             }
 
@@ -85,44 +88,51 @@ class File
     /**
      * @param null|string $path
      * @param null|string $name
-     * @return bool
+     *
      * @throws UploadException
+     *
+     * @return bool
      */
-	public function move($path = null, $name = null)
+    public function move($path = null, $name = null)
     {
         $this->isUploaded(true);
 
         $defaultPath = 'files/';
 
-		$filePath = ($path == null) ? app()->assetsPath($defaultPath) : $path;
+        $filePath = ($path == null) ? app()->assetsPath($defaultPath) : $path;
 
-		$name = ($name == null) ? md5($this->getOriginalName() . time()). "." . $this->getExtension() : $name;
+        $name = ($name == null) ? md5($this->getOriginalName().time()).'.'.$this->getExtension() : $name;
 
-		if(copy($this->getTmpPath(), $filePath.$name))
-		    return ($path ?? $defaultPath) . $name;
+        if (copy($this->getTmpPath(), $filePath.$name)) {
+            return ($path ?? $defaultPath).$name;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
     /**
-     * Alias: move()
+     * Alias: move().
      *
      * @param null $path
      * @param null $name
-     * @return bool
+     *
      * @throws UploadException
+     *
+     * @return bool
      */
-	public function save($path = null, $name = null)
+    public function save($path = null, $name = null)
     {
         return $this->move($path, $name);
     }
 
     /**
-     * Save with some name
+     * Save with some name.
      *
      * @param null $name
-     * @return bool
+     *
      * @throws UploadException
+     *
+     * @return bool
      */
     public function saveAs($name = null)
     {
@@ -130,105 +140,109 @@ class File
     }
 
     /**
-     * @return string
      * @throws UploadException
-     */
-	public function getExtension()
-    {
-        $this->isUploaded(true);
-
-		return $this->extension;
-	}
-
-    /**
-     * @return string
-     * @throws UploadException
-     */
-	public function getMd5()
-    {
-        $this->isUploaded(true);
-
-		return $this->md5_file;
-	}
-
-    /**
-     * @return mixed
-     * @throws UploadException
-     */
-	public function getTmpPath()
-    {
-        $this->isUploaded(true);
-
-		return str_replace('\\\\\\\\', "\\", $this->tmpPath);
-	}
-
-    /**
-     * @return string
-     * @throws UploadException
-     */
-	public function getPath()
-    {
-        $this->isUploaded(true);
-
-		return $this->dirName;
-	}
-
-    /**
-     * @return int
-     */
-	public function getError()
-    {
-		return $this->error;
-	}
-
-    /**
-     * @return string
-     * @throws UploadException
-     */
-	public function getMimeType()
-    {
-        $this->isUploaded(true);
-
-		return $this->mimeType;
-	}
-
-    /**
-     * @return int
-     * @throws UploadException
-     */
-	public function getSize()
-    {
-        $this->isUploaded(true);
-
-		return $this->size;
-	}
-
-    /**
-     * @return string
-     * @throws UploadException
-     */
-	public function getOriginalName()
-    {
-        $this->isUploaded(true);
-
-		return $this->originalName;
-	}
-
-    /**
      *
+     * @return string
      */
-  	protected function getInfoFile()
+    public function getExtension()
     {
-  		$file = new SplFileInfo($this->file['tmp_name']);
-  		$originalFile = new SplFileInfo($this->file['name']);
+        $this->isUploaded(true);
 
-  		$this->originalName = $originalFile->getFilename();
-  		$this->size = $this->file['size'];
-  		$this->mimeType = $this->file['type'];
-  		$this->error = $this->file['error'];
-  		$this->dirName = $file->getPath();
-  		$this->tmpPath = $this->file['tmp_name'];
-  		$this->md5_file = md5($this->file['tmp_name']);
-  		$this->extension = $originalFile->getExtension();
-  	}
+        return $this->extension;
+    }
+
+    /**
+     * @throws UploadException
+     *
+     * @return string
+     */
+    public function getMd5()
+    {
+        $this->isUploaded(true);
+
+        return $this->md5_file;
+    }
+
+    /**
+     * @throws UploadException
+     *
+     * @return mixed
+     */
+    public function getTmpPath()
+    {
+        $this->isUploaded(true);
+
+        return str_replace('\\\\\\\\', '\\', $this->tmpPath);
+    }
+
+    /**
+     * @throws UploadException
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        $this->isUploaded(true);
+
+        return $this->dirName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getError()
+    {
+        return $this->error;
+    }
+
+    /**
+     * @throws UploadException
+     *
+     * @return string
+     */
+    public function getMimeType()
+    {
+        $this->isUploaded(true);
+
+        return $this->mimeType;
+    }
+
+    /**
+     * @throws UploadException
+     *
+     * @return int
+     */
+    public function getSize()
+    {
+        $this->isUploaded(true);
+
+        return $this->size;
+    }
+
+    /**
+     * @throws UploadException
+     *
+     * @return string
+     */
+    public function getOriginalName()
+    {
+        $this->isUploaded(true);
+
+        return $this->originalName;
+    }
+
+    protected function getInfoFile()
+    {
+        $file = new SplFileInfo($this->file['tmp_name']);
+        $originalFile = new SplFileInfo($this->file['name']);
+
+        $this->originalName = $originalFile->getFilename();
+        $this->size = $this->file['size'];
+        $this->mimeType = $this->file['type'];
+        $this->error = $this->file['error'];
+        $this->dirName = $file->getPath();
+        $this->tmpPath = $this->file['tmp_name'];
+        $this->md5_file = md5($this->file['tmp_name']);
+        $this->extension = $originalFile->getExtension();
+    }
 }

@@ -76,7 +76,7 @@
                 <pre class="brush: php; highlight: [<?=$this->line?>]; first-line: <?=(($this->line - 11) >= 0 ? ($this->line - 11) : 1)?>;"><?=$lines?></pre>
 
                 <ul class="traces">
-                    <?php foreach($traces as $trace): ?>
+                    <?php foreach ($traces as $trace): ?>
                     <li>
                         <?=$trace['at']?> в <a title="<?=$trace['full_in']?>" ondblclick="var f=this.innerHTML;this.innerHTML=this.title;this.title=f;"><?=$trace['in']?></a>
                     </li>

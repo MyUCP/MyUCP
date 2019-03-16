@@ -12,8 +12,9 @@ class RouteAction
     /**
      * Parse the given action into an array.
      *
-     * @param  string  $uri
-     * @param  mixed  $action
+     * @param string $uri
+     * @param mixed  $action
+     *
      * @return array
      */
     public static function parse($uri, $action)
@@ -38,17 +39,17 @@ class RouteAction
         // Closure instance within this list. We will set the first Closure we come
         // across into the "uses" property that will get fired off by this route.
 
-        elseif (! isset($action['uses'])) {
-            if(is_string($action)) {
+        elseif (!isset($action['uses'])) {
+            if (is_string($action)) {
                 $action = [
-                    "uses" => $action
+                    'uses' => $action,
                 ];
             } else {
                 $action['uses'] = static::findCallable(Arr::wrap($action['uses']));
             }
         }
 
-        if (is_string($action['uses']) && ! Str::contains($action['uses'], '@')) {
+        if (is_string($action['uses']) && !Str::contains($action['uses'], '@')) {
             $action['uses'] = static::makeInvokable($action['uses']);
         }
 
@@ -58,7 +59,8 @@ class RouteAction
     /**
      * Get an action for a route that has no action.
      *
-     * @param  string  $uri
+     * @param string $uri
+     *
      * @return array
      */
     protected static function missingAction($uri)
@@ -71,7 +73,8 @@ class RouteAction
     /**
      * Find the callable in an action array.
      *
-     * @param  array  $action
+     * @param array $action
+     *
      * @return callable
      */
     protected static function findCallable(array $action)
@@ -84,14 +87,16 @@ class RouteAction
     /**
      * Make an action for an invokable controller.
      *
-     * @param  string $action
+     * @param string $action
+     *
      * @return string
      */
     protected static function makeInvokable($action)
     {
-        if (! method_exists($action, '__invoke')) {
+        if (!method_exists($action, '__invoke')) {
             throw new UnexpectedValueException("Invalid route action: [{$action}].");
         }
+
         return $action.'@__invoke';
     }
 }

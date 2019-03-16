@@ -24,27 +24,28 @@ class ViewFileFinder
     /**
      * ViewFileFinder constructor.
      *
-     * @param array $preloaded
+     * @param array      $preloaded
      * @param array|null $extensions
      */
     public function __construct(array $preloaded = [], array $extensions = null)
     {
         $this->preloaded = array_map([$this, 'resolvePath'], $preloaded);
 
-        if(! is_null($extensions)) {
+        if (!is_null($extensions)) {
             $this->extensions = $extensions;
         }
     }
 
     /**
-     * Find the view
+     * Find the view.
      *
      * @param string $name
+     *
      * @return string
      */
     public function find($name)
     {
-        if(isset($this->views[$name])) {
+        if (isset($this->views[$name])) {
             return $this->views[$name];
         }
 
@@ -53,13 +54,13 @@ class ViewFileFinder
 
     /**
      * @param array|string $viewName
-     * @param string|null $path
+     * @param string|null  $path
      *
      * @return ViewFileFinder
      */
     public function addPreload($viewName, $path = null)
     {
-        if(is_array($viewName) && is_null($path)) {
+        if (is_array($viewName) && is_null($path)) {
             $this->preloaded = array_merge($this->preloaded, $viewName);
         } else {
             $this->preloaded[$viewName] = $path;
@@ -71,7 +72,8 @@ class ViewFileFinder
     /**
      * Register an extension with the view finder.
      *
-     * @param  string  $extension
+     * @param string $extension
+     *
      * @return void
      */
     public function addExtension($extension)
@@ -116,7 +118,8 @@ class ViewFileFinder
     /**
      * Resolve the path.
      *
-     * @param  string  $path
+     * @param string $path
+     *
      * @return string
      */
     protected function resolvePath($path)
@@ -126,18 +129,19 @@ class ViewFileFinder
 
     /**
      * @param $name
+     *
      * @return mixed|string
      */
     protected function getFilePath($name)
     {
         foreach ($this->getPossibleViewFiles($name) as $file) {
-            if(file_exists(app()->viewsPath($file))) {
+            if (file_exists(app()->viewsPath($file))) {
                 return app()->viewsPath($file);
             }
         }
 
-        if(isset($this->preloaded[$name])) {
-            if(file_exists($this->preloaded[$name])) {
+        if (isset($this->preloaded[$name])) {
+            if (file_exists($this->preloaded[$name])) {
                 return $this->preloaded[$name];
             }
         }
@@ -148,13 +152,14 @@ class ViewFileFinder
     /**
      * Get an array of possible view files.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return array
      */
     protected function getPossibleViewFiles($name)
     {
         return array_map(function ($extension) use ($name) {
-            return $name . '.' . $extension;
+            return $name.'.'.$extension;
         }, $this->extensions);
     }
 }

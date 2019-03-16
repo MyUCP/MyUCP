@@ -1,12 +1,12 @@
 <?php
 /**
- * MyUCP
+ * MyUCP.
  */
 
 namespace Extensions\ExampleBoot;
 
-use MyUCP\Foundation\Application;
 use MyUCP\Extension\BootExtension;
+use MyUCP\Foundation\Application;
 
 class ExampleBoot extends BootExtension
 {

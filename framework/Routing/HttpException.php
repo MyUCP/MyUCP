@@ -58,6 +58,6 @@ class HttpException extends Exception
      */
     protected function loadView()
     {
-        return view("errors/" . $this->code, ['message' => $this->message, "code" => $this->code], true);
+        return view('errors/'.$this->code, ['message' => $this->message, 'code' => $this->code], true);
     }
 }

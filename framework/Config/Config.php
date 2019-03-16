@@ -7,89 +7,92 @@ use MyUCP\Collection\Collection;
 use MyUCP\Collection\Jsonable;
 use MyUCP\Debug\DebugException;
 use MyUCP\Foundation\Application;
-use MyUCP\Foundation\Container;
 
 class Config implements Arrayable, Jsonable
 {
     /**
      * @var Collection
      */
-	protected $data;
+    protected $data;
 
     /**
      * Config constructor.
+     *
      * @param Application $application
+     *
      * @throws DebugException
      */
-	public function __construct(Application $application)
+    public function __construct(Application $application)
     {
-		if(is_readable($application->configPath('main.php'))) {
-			$config = require_once($application->configPath('main.php'));
+        if (is_readable($application->configPath('main.php'))) {
+            $config = require_once $application->configPath('main.php');
 
-			$this->data = new Collection($config);
+            $this->data = new Collection($config);
 
-			$this->loadConfigs();
+            $this->loadConfigs();
             $this->loadCustomFiles();
 
-			return true;
-		}
+            return true;
+        }
 
-		throw new DebugException('Cannot load main configuration file [main.php]');
-	}
+        throw new DebugException('Cannot load main configuration file [main.php]');
+    }
 
     /**
      * @param $key
      * @param $val
      */
-	public function __set($key, $val)
+    public function __set($key, $val)
     {
-		$this->data->put($key, $val);
-	}
+        $this->data->put($key, $val);
+    }
 
     /**
      * @param mixed $key
+     *
      * @return mixed|null
      */
-	public function __get($key)
+    public function __get($key)
     {
         return $this->data->get($key);
-	}
+    }
 
     /**
-     * @return bool
      * @throws DebugException
+     *
+     * @return bool
      */
-	public function loadConfigs()
+    public function loadConfigs()
     {
-		$configs = scandir(app()->configPath());
-		array_shift($configs);
-		array_shift($configs);
+        $configs = scandir(app()->configPath());
+        array_shift($configs);
+        array_shift($configs);
 
-		foreach($configs as $item){
-			if($item != "main.php" && $item != "autoload_classes.php"){
-				if(is_readable(app()->configPath($item))) {
-					$config = require_once(app()->configPath($item));
+        foreach ($configs as $item) {
+            if ($item != 'main.php' && $item != 'autoload_classes.php') {
+                if (is_readable(app()->configPath($item))) {
+                    $config = require_once app()->configPath($item);
 
-					$configName = substr($item, 0, -4);
+                    $configName = substr($item, 0, -4);
 
-					$this->data->put($configName, $config);
-				} else {
+                    $this->data->put($configName, $config);
+                } else {
                     throw new DebugException("Cannot load [{$item}] configuration file");
                 }
-			}
-		}
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
     /**
      * @return void
      */
-	private function loadCustomFiles()
+    private function loadCustomFiles()
     {
-        foreach($this->data->get('load_files', []) as $path) {
+        foreach ($this->data->get('load_files', []) as $path) {
             if (file_exists($path) && is_readable($path)) {
-                require_once($path);
+                require_once $path;
             }
         }
     }
@@ -104,6 +107,7 @@ class Config implements Arrayable, Jsonable
 
     /**
      * @param int $options
+     *
      * @return string
      */
     public function toJson($options = 0)

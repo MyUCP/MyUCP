@@ -1,6 +1,6 @@
 <?php
 /**
- * MyUCP
+ * MyUCP.
  */
 
 namespace Extensions\Example;

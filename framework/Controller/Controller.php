@@ -12,41 +12,40 @@ abstract class Controller
     /**
      * @var Application
      */
-	private $app;
+    private $app;
 
     /**
      * Controller constructor.
      *
      * @param Application $application
      */
-	public function __construct(Application $application)
+    public function __construct(Application $application)
     {
-		$this->app = $application;
-	}
+        $this->app = $application;
+    }
 
     /**
      * @param $key
-     *
-     * @return bool|mixed
      *
      * @throws \ReflectionException
+     *
+     * @return bool|mixed
      */
-	public function __get($key)
+    public function __get($key)
     {
-		return $this->app->make($key);
-	}
+        return $this->app->make($key);
+    }
 
     /**
      * @param $key
-     *
      * @param $value
      *
      * @throws \ReflectionException
      */
-	public function __set($key, $value)
+    public function __set($key, $value)
     {
-		$this->app->make($key, $value);
-	}
+        $this->app->make($key, $value);
+    }
 
     /**
      * @param $name
@@ -69,9 +68,8 @@ abstract class Controller
 
     /**
      * @param Route|string|null $value
-     *
-     * @param array $parameters if $path is a route
-     * @param int $status
+     * @param array             $parameters if $path is a route
+     * @param int               $status
      *
      * @return Redirect
      */
@@ -92,6 +90,7 @@ abstract class Controller
 
     /**
      * @param mixed ...$models
+     *
      * @return mixed
      */
     public function model(...$models)
@@ -128,7 +127,7 @@ abstract class Controller
     /**
      * @param $name
      * @param array $parameters
-     * @param null $response
+     * @param null  $response
      */
     protected function calledAction($name, $parameters = [], $response = null)
     {
@@ -136,9 +135,10 @@ abstract class Controller
     }
 
     /**
-     * Get the name of controller from path
+     * Get the name of controller from path.
      *
      * @param $controllerName
+     *
      * @return mixed
      */
     public static function name($controllerName)
@@ -147,10 +147,11 @@ abstract class Controller
     }
 
     /**
-     * Set the alias of controller
+     * Set the alias of controller.
      *
      * @param $name
      * @param null $path
+     *
      * @return null
      */
     public static function alias($name, $path = null)

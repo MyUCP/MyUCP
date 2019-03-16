@@ -15,31 +15,31 @@ return [
     /*
      * Таблица где храняться пользователи
      */
-    "table" => "users",
+    'table' => 'users',
 
     /*
      * Поля таблицы
      */
-    "rows" => [
+    'rows' => [
 
         /*
          * Поле с уникальным идентефикатором пользтователя
          */
-        "id" => "user_id",
+        'id' => 'user_id',
 
         /*
          * Поле с паролем пользователя
          */
-        "password" => "user_password",
+        'password' => 'user_password',
 
         /*
          * Поле с E-mail пользователя
          */
-        "email" => "user_email",
+        'email' => 'user_email',
     ],
 
     /*
      * Адрес для переадресации после успешной авторизации
      */
-    "redirect" => "/",
+    'redirect' => '/',
 ];

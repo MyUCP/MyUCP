@@ -7,7 +7,6 @@ use InvalidArgumentException;
 use JsonSerializable;
 use MyUCP\Collection\Jsonable;
 use MyUCP\Collection\Renderable;
-use MyUCP\Debug\DebugException;
 use MyUCP\Request\Request;
 use MyUCP\Routing\HttpException;
 use UnexpectedValueException;
@@ -120,7 +119,7 @@ class Response
      *
      * @var array
      */
-    public static $statusTexts = array(
+    public static $statusTexts = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',            // RFC2518
@@ -182,18 +181,18 @@ class Response
         508 => 'Loop Detected',                                               // RFC5842
         510 => 'Not Extended',                                                // RFC2774
         511 => 'Network Authentication Required',                             // RFC6585
-    );
+    ];
 
     /**
      * Constructor.
      *
      * @param mixed $content The response content, see setContent()
-     * @param int $status The response status code
+     * @param int   $status  The response status code
      * @param array $headers An array of response headers
      *
      * @throws HttpException
      */
-    public function __construct($content = '', $status = 200, $headers = array())
+    public function __construct($content = '', $status = 200, $headers = [])
     {
         $this->headers = new ResponseHeader($headers);
         $this->setContent($content);
@@ -205,13 +204,14 @@ class Response
      * Factory method for chainability.
      *
      * @param mixed $content The response content, see setContent()
-     * @param int $status The response status code
+     * @param int   $status  The response status code
      * @param array $headers An array of response headers
      *
-     * @return static
      * @throws HttpException
+     *
+     * @return static
      */
-    public static function create($content = '', $status = 200, $headers = array())
+    public static function create($content = '', $status = 200, $headers = [])
     {
         return new static($content, $status, $headers);
     }
@@ -244,8 +244,9 @@ class Response
      *
      * @param Request $request A Request instance
      *
-     * @return $this
      * @throws HttpException
+     *
+     * @return $this
      */
     public function prepare(Request $request)
     {
@@ -311,8 +312,9 @@ class Response
      *
      * @param mixed $content Content that can be cast to string
      *
-     * @return $this
      * @throws HttpException
+     *
+     * @return $this
      */
     public function setContent($content)
     {
@@ -343,8 +345,7 @@ class Response
             $content = $this->morphToRedirect($content);
         }
 
-
-        if (null !== $content && !is_string($content) && !is_numeric($content) && !is_callable(array($content, '__toString'))) {
+        if (null !== $content && !is_string($content) && !is_numeric($content) && !is_callable([$content, '__toString'])) {
             throw new UnexpectedValueException(sprintf('The Response content must be a string or object implementing __toString(), "%s" given.', gettype($content)));
         }
 
@@ -354,9 +355,10 @@ class Response
     }
 
     /**
-     * Determine if the given content its Redirect
+     * Determine if the given content its Redirect.
      *
      * @param mixed $content
+     *
      * @return bool
      */
     protected function isRedirectContent($content)
@@ -368,24 +370,27 @@ class Response
      * Morph the given content into Redirect.
      *
      * @param Redirect $content
-     * @return string
+     *
      * @throws HttpException
+     *
+     * @return string
      */
     protected function morphToRedirect($content)
     {
         $redirect = $content->createRedirect();
 
-        $this->setStatusCode($redirect->get("status"));
-        $this->header("Location", $redirect->get("url"));
-        $this->headers->add($redirect->get("headers"));
+        $this->setStatusCode($redirect->get('status'));
+        $this->header('Location', $redirect->get('url'));
+        $this->headers->add($redirect->get('headers'));
 
-        return "";
+        return '';
     }
 
     /**
      * Determine if the given content should be turned into JSON.
      *
-     * @param  mixed  $content
+     * @param mixed $content
+     *
      * @return bool
      */
     protected function shouldBeJson($content)
@@ -399,7 +404,8 @@ class Response
     /**
      * Morph the given content into JSON.
      *
-     * @param  mixed   $content
+     * @param mixed $content
+     *
      * @return string
      */
     protected function morphToJson($content)
@@ -476,6 +482,7 @@ class Response
 
     /**
      * Cleans or flushes output buffers up to target level.
+     *
      * @param int  $targetLevel The target output buffering level
      * @param bool $flush       Whether to flush or clean the buffers
      */
@@ -510,9 +517,9 @@ class Response
      * @param int   $code HTTP status code
      * @param mixed $text HTTP status text
      *
-     * @return $this
-     *
      * @throws InvalidArgumentException When the HTTP status code is not valid
+     *
+     * @return $this
      */
     public function setStatusCode($code, $text = null)
     {
@@ -697,7 +704,7 @@ class Response
      */
     public function isRedirect($location = null)
     {
-        return in_array($this->statusCode, array(201, 301, 302, 303, 307, 308)) && (null === $location ?: $location == $this->headers->get('Location'));
+        return in_array($this->statusCode, [201, 301, 302, 303, 307, 308]) && (null === $location ?: $location == $this->headers->get('Location'));
     }
 
     /**
@@ -707,13 +714,14 @@ class Response
      */
     public function isEmpty()
     {
-        return in_array($this->statusCode, array(204, 304));
+        return in_array($this->statusCode, [204, 304]);
     }
 
     /**
      * Checks if we need to remove Cache-Control for SSL encrypted downloads when using IE < 9.
      *
      * @see http://support.microsoft.com/kb/323308
+     *
      * @param Request $request
      */
     protected function ensureIEOverSSLCompatibility(Request $request)
@@ -726,12 +734,13 @@ class Response
     }
 
     /**
-     * Page not found
+     * Page not found.
      *
      * @param string $message
+     *
      * @return HttpException
      */
-    public function notFound($message = "Страница не найдена")
+    public function notFound($message = 'Страница не найдена')
     {
         return new HttpException(404, $message);
     }

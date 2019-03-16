@@ -19,6 +19,7 @@ class LocalizationLoader
 
     /**
      * LocalizationLoader constructor.
+     *
      * @param $locale
      * @param $fallback_locale
      */
@@ -30,15 +31,17 @@ class LocalizationLoader
 
     /**
      * @param $path
-     * @return array|mixed
+     *
      * @throws DebugException
+     *
+     * @return array|mixed
      */
     public function load($path)
     {
-        if($this->checkLocaleDir($this->locale)) {
+        if ($this->checkLocaleDir($this->locale)) {
             return $this->loadLocalizationFile($this->locale, $path);
         } else {
-            if($this->checkLocaleDir($this->fallback_locale)) {
+            if ($this->checkLocaleDir($this->fallback_locale)) {
                 return $this->loadLocalizationFile($this->fallback_locale, $path);
             } else {
                 throw new DebugException("Fallback locale [{$this->fallback_locale}] not found!");
@@ -51,15 +54,17 @@ class LocalizationLoader
     /**
      * @param $locale
      * @param $file
-     * @return mixed
+     *
      * @throws DebugException
+     *
+     * @return mixed
      */
     private function loadLocalizationFile($locale, $file)
     {
-        $file_to_load = App::resourcesPath('lang/' . $locale . DIRECTORY_SEPARATOR . $file . ".php");
+        $file_to_load = App::resourcesPath('lang/'.$locale.DIRECTORY_SEPARATOR.$file.'.php');
 
-        if(file_exists($file_to_load)) {
-            return require_once($file_to_load);
+        if (file_exists($file_to_load)) {
+            return require_once $file_to_load;
         } else {
             throw new DebugException("Cannot load localization file [$file]");
         }
@@ -67,15 +72,17 @@ class LocalizationLoader
 
     /**
      * @param $locale
+     *
      * @return bool
      */
     private function checkLocaleDir($locale)
     {
-        return is_dir(App::resourcesPath('lang/' . $locale));
+        return is_dir(App::resourcesPath('lang/'.$locale));
     }
 
     /**
      * @param mixed $locale
+     *
      * @return LocalizationLoader
      */
     public function setLocale($locale)
@@ -87,6 +94,7 @@ class LocalizationLoader
 
     /**
      * @param mixed $fallback_locale
+     *
      * @return LocalizationLoader
      */
     public function setFallbackLocale($fallback_locale)

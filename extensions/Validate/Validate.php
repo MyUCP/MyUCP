@@ -1,6 +1,6 @@
 <?php
 /**
- * MyUCP
+ * MyUCP.
  */
 
 namespace Extensions\Validate;
@@ -16,30 +16,33 @@ class Validate extends BaseExtension
 
     /**
      * Разрешенные символы: А-Я а-я
-     * Длина: 2-16
+     * Длина: 2-16.
      *
      * @param string $firstname
+     *
      * @return bool
      */
     public function firstName($firstname)
     {
-        return (bool) preg_match("/^([А-ЯЁ]{1})([а-яё]{1,15})$/u", $firstname);
+        return (bool) preg_match('/^([А-ЯЁ]{1})([а-яё]{1,15})$/u', $firstname);
     }
 
     /**
      * Разрешенные символы: А-Я а-я
-     * Длина: 2-16
+     * Длина: 2-16.
      *
      * @param string $lastname
+     *
      * @return bool
      */
     public function lastName($lastname)
     {
-        return (bool) preg_match("/^([А-ЯЁ]{1})([а-яё]{1,15})$/u", $lastname);
+        return (bool) preg_match('/^([А-ЯЁ]{1})([а-яё]{1,15})$/u', $lastname);
     }
 
     /**
      * @param string $email
+     *
      * @return bool
      */
     public function email($email)
@@ -49,9 +52,10 @@ class Validate extends BaseExtension
 
     /**
      * Разрешенные символы: A-Z a-z 0-9
-     * Длина: 6-32
+     * Длина: 6-32.
      *
      * @param string $password
+     *
      * @return bool
      */
     public function password($password)
@@ -61,9 +65,10 @@ class Validate extends BaseExtension
 
     /**
      * Разрешенные символы: 0-9 и .
-     * Длина: 1
+     * Длина: 1.
      *
      * @param $value
+     *
      * @return bool
      */
     public function money($value)
@@ -73,9 +78,10 @@ class Validate extends BaseExtension
 
     /**
      * Разрешенные символы: 0-9 и .
-     * Длина: 1
+     * Длина: 1.
      *
      * @param string $ip
+     *
      * @return bool
      */
     public function ip($ip)
@@ -85,13 +91,14 @@ class Validate extends BaseExtension
 
     /**
      * Разрешенные символы: a-f и 0-9
-     * Длина: 32
+     * Длина: 32.
      *
      * @param string $md
+     *
      * @return bool
      */
     public function md5($md)
     {
-        return (bool) preg_match("/^([a-f0-9]{32})$/", $md);
+        return (bool) preg_match('/^([a-f0-9]{32})$/', $md);
     }
 }

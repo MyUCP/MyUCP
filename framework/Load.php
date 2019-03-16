@@ -9,68 +9,69 @@ class Load
     /**
      * @var Application
      */
-	private $app;
+    private $app;
 
     /**
      * Load constructor.
      */
-	public function __construct()
+    public function __construct()
     {
-		$this->app = app();
-	}
+        $this->app = app();
+    }
 
     /**
-     * @return array
      * @throws DebugException
+     *
+     * @return array
      */
-	public function model()
+    public function model()
     {
-		$names = func_get_args();
+        $names = func_get_args();
 
-		$loaded = [];
+        $loaded = [];
 
-		foreach($names[0] as $name) {
-			if(!file_exists($this->app->appPath('Models' . DIRECTORY_SEPARATOR . $name . 'Model.php'))) {
-			    if(!file_exists($this->app->appPath('Models' . DIRECTORY_SEPARATOR . $name . '.php')))
+        foreach ($names[0] as $name) {
+            if (!file_exists($this->app->appPath('Models'.DIRECTORY_SEPARATOR.$name.'Model.php'))) {
+                if (!file_exists($this->app->appPath('Models'.DIRECTORY_SEPARATOR.$name.'.php'))) {
                     throw new DebugException("Не удалось загрузить модель [{$name}]");
+                }
+                require_once $this->app->appPath('Models'.DIRECTORY_SEPARATOR.$name.'.php');
 
-                require_once($this->app->appPath('Models' . DIRECTORY_SEPARATOR . $name . '.php'));
-
-                if(class_exists($name)){
+                if (class_exists($name)) {
                     $this->app->$name = new $name($this->app);
                     $loaded[] = $this->app->$name;
                 }
             } else {
-                if(!file_exists($this->app->appPath('Models' . DIRECTORY_SEPARATOR . $name . 'Model.php')))
+                if (!file_exists($this->app->appPath('Models'.DIRECTORY_SEPARATOR.$name.'Model.php'))) {
                     throw new DebugException("Не удалось загрузить модель [{$name}Model]");
+                }
+                require_once $this->app->appPath('Models'.DIRECTORY_SEPARATOR.$name.'Model.php');
 
-                require_once($this->app->appPath('Models' . DIRECTORY_SEPARATOR . $name . 'Model.php'));
+                $modelClass = $name.'Model';
 
-                $modelClass = $name . "Model";
-
-                if(class_exists($modelClass)){
+                if (class_exists($modelClass)) {
                     $this->app->$modelClass = new $modelClass($this->app);
                     $loaded[] = $this->app->$modelClass;
                 }
             }
-		}
+        }
 
-		return $loaded;
-	}
+        return $loaded;
+    }
 
     /**
      * @return bool
      */
-	public function inject()
+    public function inject()
     {
-		$names = func_get_args();
+        $names = func_get_args();
 
-		foreach($names[0] as $name){
-			if(class_exists($name)){
-				$this->app->$name = new $name($this->app);
-			}
-		}
+        foreach ($names[0] as $name) {
+            if (class_exists($name)) {
+                $this->app->$name = new $name($this->app);
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

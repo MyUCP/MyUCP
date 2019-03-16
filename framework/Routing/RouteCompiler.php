@@ -2,8 +2,8 @@
 
 namespace MyUCP\Routing;
 
-use MyUCP\Foundation\Application;
 use MyUCP\Debug\DebugException;
+use MyUCP\Foundation\Application;
 use MyUCP\Support\App;
 use ReflectionException;
 use ReflectionFunction;
@@ -29,8 +29,9 @@ class RouteCompiler
     /**
      * Create a new Route compiler instance.
      *
-     * @param  Route $route
-     * @param  Application $app
+     * @param Route       $route
+     * @param Application $app
+     *
      * @return void
      */
     public function __construct(Route $route, Application $app)
@@ -42,11 +43,11 @@ class RouteCompiler
     /**
      * Compile the route.
      *
-     * @return CompiledRoute
-     *
      * @throws DebugException
      * @throws HttpException
      * @throws ReflectionException
+     *
+     * @return CompiledRoute
      */
     public function compile()
     {
@@ -63,15 +64,16 @@ class RouteCompiler
     }
 
     /**
-     * Bind models to route
+     * Bind models to route.
      *
      * @param array $models
+     *
      * @return void
      */
     public function bindModels($models)
     {
-        if(!empty($models)) {
-            call_user_func_array("model", $models);
+        if (!empty($models)) {
+            call_user_func_array('model', $models);
         }
     }
 
@@ -83,7 +85,7 @@ class RouteCompiler
     public function parametersWithoutNulls()
     {
         return array_filter($this->route->parameters(), function ($p) {
-            return ! is_null($p);
+            return !is_null($p);
         });
     }
 
@@ -100,9 +102,10 @@ class RouteCompiler
     /**
      * Run the route action and return the response.
      *
-     * @return CompiledRoute
      * @throws HttpException
      * @throws ReflectionException
+     *
+     * @return CompiledRoute
      */
     protected function runCallable()
     {
@@ -119,10 +122,10 @@ class RouteCompiler
      * @param object $controller
      * @param string $method
      *
-     * @return CompiledRoute
-     *
      * @throws ReflectionException
      * @throws HttpException
+     *
+     * @return CompiledRoute
      */
     protected function runController($controller, $method)
     {
@@ -138,18 +141,20 @@ class RouteCompiler
     }
 
     /**
-     * Get Response
+     * Get Response.
      *
      * @param $content
-     * @return CompiledRoute
+     *
      * @throws HttpException
+     *
+     * @return CompiledRoute
      */
     public function getCompiledResponse($content)
     {
-        return (new CompiledRoute(
+        return new CompiledRoute(
             $this->route,
             $this->app,
             $content
-        ));
+        );
     }
 }

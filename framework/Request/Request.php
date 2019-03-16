@@ -33,27 +33,27 @@ class Request implements Arrayable
     /**
      * @var Collection
      */
-	public $get;
+    public $get;
 
     /**
      * @var Collection
      */
-	public $post;
+    public $post;
 
     /**
      * @var Collection
      */
-	public $cookie;
+    public $cookie;
 
     /**
      * @var Collection
      */
-	public $files;
+    public $files;
 
     /**
      * @var Collection
      */
-	public $server;
+    public $server;
 
     /**
      * @var Collection
@@ -63,12 +63,12 @@ class Request implements Arrayable
     /**
      * @var Collection
      */
-	public $headers;
+    public $headers;
 
     /**
      * @var string
      */
-	public $method;
+    public $method;
 
     /**
      * @var bool
@@ -107,26 +107,27 @@ class Request implements Arrayable
 
     /**
      * Request constructor.
+     *
      * @throws UploadException
      */
-	public function __construct()
+    public function __construct()
     {
-		$_GET = $this->collect($_GET);
-		$_POST = $this->collect($_POST);
-		$_REQUEST = $this->collect($_REQUEST);
-		$_COOKIE = $this->collect($_COOKIE);
-		$_FILES = $this->collectFiles($_FILES);
-		$_SERVER = $this->collect($_SERVER);
+        $_GET = $this->collect($_GET);
+        $_POST = $this->collect($_POST);
+        $_REQUEST = $this->collect($_REQUEST);
+        $_COOKIE = $this->collect($_COOKIE);
+        $_FILES = $this->collectFiles($_FILES);
+        $_SERVER = $this->collect($_SERVER);
 
-		$this->attributes = new Collection();
-		$this->get = $_GET;
-		$this->post = $_POST;
-		$this->request = $_REQUEST;
-		$this->cookie = $_COOKIE;
-		$this->files = $_FILES;
-		$this->server = $_SERVER;
+        $this->attributes = new Collection();
+        $this->get = $_GET;
+        $this->post = $_POST;
+        $this->request = $_REQUEST;
+        $this->cookie = $_COOKIE;
+        $this->files = $_FILES;
+        $this->server = $_SERVER;
 
-		$this->headers = Header::getHeaders($this->server->all());
+        $this->headers = Header::getHeaders($this->server->all());
 
         if (0 === Str::contains($this->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
             && Arr::in(['PUT', 'DELETE', 'PATCH'], Str::upper($this->server->get('REQUEST_METHOD', 'GET')))
@@ -135,37 +136,40 @@ class Request implements Arrayable
 
             $this->request = new Collection($data);
         }
-	}
+    }
 
     /**
      * @param array $items
+     *
      * @return Collection
      */
-	private function collect(array $items)
+    private function collect(array $items)
     {
         return new Collection($this->clean($items));
     }
 
     /**
      * @param array $files
-     * @return Collection
+     *
      * @throws UploadException
+     *
+     * @return Collection
      */
     protected function collectFiles(array $files)
     {
         $collect = new Collection([]);
 
         foreach ($files as $name => $file) {
-            if(is_array($file['name'])) {
+            if (is_array($file['name'])) {
                 $collectOfFiles = new Collection([]);
 
                 foreach ($file['name'] as $index => $value) {
                     $collectOfFiles->put($index, new File([
-                        'name' => $file['name'][$index],
-                        'type' => $file['type'][$index],
+                        'name'     => $file['name'][$index],
+                        'type'     => $file['type'][$index],
                         'tmp_name' => $file['tmp_name'][$index],
-                        'error' => $file['error'][$index],
-                        'size' => $file['size'][$index],
+                        'error'    => $file['error'][$index],
+                        'size'     => $file['size'][$index],
                     ]));
                 }
 
@@ -180,79 +184,85 @@ class Request implements Arrayable
 
     /**
      * @param string|array $data
+     *
      * @return array
      */
-  	private static function clean($data)
+    private static function clean($data)
     {
-		if (is_array($data)) {
-	  		foreach ($data as $key => $value) {
-				unset($data[$key]);
-				$data[$key] = app()->escape(self::clean($value));
-	  		}
-		} else {
-	  		$data = app()->escape(htmlspecialchars($data, ENT_COMPAT));
-		}
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                unset($data[$key]);
+                $data[$key] = app()->escape(self::clean($value));
+            }
+        } else {
+            $data = app()->escape(htmlspecialchars($data, ENT_COMPAT));
+        }
 
-		return $data;
-	}
+        return $data;
+    }
 
     /**
-     * @param string $name
+     * @param string     $name
      * @param mixed|null $default
+     *
      * @return mixed
      */
-	public static function get($name, $default = null)
+    public static function get($name, $default = null)
     {
-	    return data_get(request()->get, $name, $default);
-	}
+        return data_get(request()->get, $name, $default);
+    }
 
     /**
-     * @param string $name
+     * @param string     $name
      * @param mixed|null $default
+     *
      * @return mixed
      */
-	public static function post($name, $default = null)
+    public static function post($name, $default = null)
     {
         return data_get(request()->post, $name, $default);
-	}
+    }
 
     /**
-     * @param string $name
+     * @param string      $name
      * @param string|null $value
-     * @param int|null $time
+     * @param int|null    $time
+     *
      * @return Cookie|string
      */
-	public static function cookie($name, $value = null, $time = null)
+    public static function cookie($name, $value = null, $time = null)
     {
-		return cookie($name, $value, $time);
-	}
+        return cookie($name, $value, $time);
+    }
 
     /**
-     * @param string $name
+     * @param string     $name
      * @param mixed|null $default
+     *
      * @return mixed
      */
-	public static function server($name, $default = null)
+    public static function server($name, $default = null)
     {
         return data_get(request()->server, $name, $default);
-	}
+    }
 
     /**
      * @return string
      */
-	public static function ip()
+    public static function ip()
     {
         return request()->server->get('REMOTE_ADDR');
     }
 
     /**
      * @param string $name
+     *
      * @return File
      */
-	public static function file($name)
+    public static function file($name)
     {
         return data_get(request()->files, $name);
-	}
+    }
 
     /**
      * @return bool
@@ -295,10 +305,11 @@ class Request implements Arrayable
     }
 
     /**
-     * Get the value of request
+     * Get the value of request.
      *
      * @param string|null $key
      * @param string|null $defaults
+     *
      * @return mixed
      */
     public static function input($key = null, $defaults = null)
@@ -309,7 +320,8 @@ class Request implements Arrayable
     /**
      * Determine if the request contains a given input item key.
      *
-     * @param  string|array  $key
+     * @param string|array $key
+     *
      * @return bool
      */
     public static function exists($key)
@@ -319,7 +331,7 @@ class Request implements Arrayable
         $input = request()->all();
 
         foreach ($keys as $value) {
-            if (! $input->has($value)) {
+            if (!$input->has($value)) {
                 return false;
             }
         }
@@ -329,9 +341,10 @@ class Request implements Arrayable
 
     /**
      * Determine if the request contains a given input item key.
-     * Alias ::exists()
+     * Alias ::exists().
      *
-     * @param  string|array  $key
+     * @param string|array $key
+     *
      * @return bool
      */
     public static function has($key)
@@ -343,6 +356,7 @@ class Request implements Arrayable
      * Determine if the request contains a given file.
      *
      * @param $name
+     *
      * @return bool
      */
     public static function hasFile($name)
@@ -352,10 +366,10 @@ class Request implements Arrayable
         $files = request()->files;
 
         foreach ($names as $value) {
-            if (! $files->has($value)) {
+            if (!$files->has($value)) {
                 return false;
             } else {
-                if(! $files->get($value)->isUploaded()) {
+                if (!$files->get($value)->isUploaded()) {
                     return false;
                 }
             }
@@ -373,7 +387,7 @@ class Request implements Arrayable
     }
 
     /**
-     * Returns real method name
+     * Returns real method name.
      *
      * @return string
      */
@@ -387,21 +401,23 @@ class Request implements Arrayable
     }
 
     /**
-     * Returns method name
+     * Returns method name.
      *
      * @return mixed|string
      */
     public function method()
     {
-        if(!$this->isMethod("POST"))
+        if (!$this->isMethod('POST')) {
             return $this->getMethod();
+        }
 
         $verbs = ['PUT', 'PATCH', 'DELETE'];
 
-        if(!in_array($this->post->get("_method", "POST"), $verbs))
+        if (!in_array($this->post->get('_method', 'POST'), $verbs)) {
             return $this->getMethod();
+        }
 
-        return $this->post->get("_method");
+        return $this->post->get('_method');
     }
 
     /**
@@ -490,7 +506,7 @@ class Request implements Arrayable
             do {
                 $seg = $segs[$index];
                 $baseUrl = '/'.$seg.$baseUrl;
-                ++$index;
+                $index++;
             } while ($last > $index && (false !== $pos = strpos($path, $baseUrl)) && 0 != $pos);
         }
 
@@ -527,7 +543,7 @@ class Request implements Arrayable
             $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
         }
 
-        return rtrim($baseUrl, '/' . DIRECTORY_SEPARATOR);
+        return rtrim($baseUrl, '/'.DIRECTORY_SEPARATOR);
     }
 
     /**
@@ -552,9 +568,10 @@ class Request implements Arrayable
     /**
      * Generates a normalized URI (URL) for the Request.
      *
+     * @throws Exception
+     *
      * @return string A normalized URI (URL) for the Request
      *
-     * @throws Exception
      * @see getQueryString()
      */
     public function getUri()
@@ -603,7 +620,6 @@ class Request implements Arrayable
             $this->server->remove('UNENCODED_URL');
 
             $this->server->remove('IIS_WasUrlRewritten');
-
         } elseif ($this->headers->has('X_REWRITE_URL')) {
             // IIS with ISAPI_Rewrite
             $requestUri = $this->headers->get('X_REWRITE_URL');
@@ -648,13 +664,15 @@ class Request implements Arrayable
      * If the URL was called with basic authentication, the user
      * and the password are not added to the generated string.
      *
-     * @return string The scheme and HTTP host
      * @throws Exception
+     *
+     * @return string The scheme and HTTP host
      */
     public function getSchemeAndHttpHost()
     {
         return $this->getScheme().'://'.$this->getHttpHost();
     }
+
     /**
      * Gets the request's scheme.
      *
@@ -670,8 +688,9 @@ class Request implements Arrayable
      *
      * The port name will be appended to the host if it's non-standard.
      *
-     * @return string
      * @throws Exception
+     *
+     * @return string
      */
     public function getHttpHost()
     {
@@ -725,9 +744,9 @@ class Request implements Arrayable
      *
      * The "X-Forwarded-Host" header must contain the client host name.
      *
-     * @return string
-     *
      * @throws Exception when the host name is invalid or not trusted
+     *
+     * @return string
      */
     public function getHost()
     {
@@ -745,7 +764,6 @@ class Request implements Arrayable
         // check that it does not contain forbidden characters (see RFC 952 and RFC 2181)
         // use preg_replace() instead of preg_match() to prevent DoS attacks with long host names
         if ($host && '' !== preg_replace('/(?:^\[)?[a-zA-Z0-9-:\]_]+\.?/', '', $host)) {
-
             if (!$this->isHostValid) {
                 return '';
             }
@@ -759,10 +777,11 @@ class Request implements Arrayable
     }
 
     /**
-     * Get the current domain of application
+     * Get the current domain of application.
+     *
+     * @throws Exception
      *
      * @return string
-     * @throws Exception
      */
     public function getDomain()
     {
@@ -770,10 +789,11 @@ class Request implements Arrayable
     }
 
     /**
-     * Get the current domain of application
+     * Get the current domain of application.
+     *
+     * @throws Exception
      *
      * @return string
-     * @throws Exception
      */
     public function domain()
     {
@@ -785,9 +805,9 @@ class Request implements Arrayable
      *
      * @param bool $asResource If true, a resource will be returned
      *
-     * @return string|resource The request body content or a resource to read the body stream
-     *
      * @throws \LogicException
+     *
+     * @return string|resource The request body content or a resource to read the body stream
      */
     public function getContent($asResource = false)
     {
@@ -805,6 +825,7 @@ class Request implements Arrayable
                 $resource = fopen('php://temp', 'r+');
                 fwrite($resource, $this->content);
                 rewind($resource);
+
                 return $resource;
             }
 
@@ -842,8 +863,8 @@ class Request implements Arrayable
             return '';
         }
 
-        $parts = array();
-        $order = array();
+        $parts = [];
+        $order = [];
 
         foreach (explode('&', $qs) as $param) {
             if ('' === $param || '=' === $param[0]) {
@@ -960,18 +981,18 @@ class Request implements Arrayable
      */
     protected static function initializeFormats()
     {
-        return static::$formats = array(
-            'html' => array('text/html', 'application/xhtml+xml'),
-            'txt' => array('text/plain'),
-            'js' => array('application/javascript', 'application/x-javascript', 'text/javascript'),
-            'css' => array('text/css'),
-            'json' => array('application/json', 'application/x-json'),
-            'xml' => array('text/xml', 'application/xml', 'application/x-xml'),
-            'rdf' => array('application/rdf+xml'),
-            'atom' => array('application/atom+xml'),
-            'rss' => array('application/rss+xml'),
-            'form' => array('application/x-www-form-urlencoded'),
-        );
+        return static::$formats = [
+            'html' => ['text/html', 'application/xhtml+xml'],
+            'txt'  => ['text/plain'],
+            'js'   => ['application/javascript', 'application/x-javascript', 'text/javascript'],
+            'css'  => ['text/css'],
+            'json' => ['application/json', 'application/x-json'],
+            'xml'  => ['text/xml', 'application/xml', 'application/x-xml'],
+            'rdf'  => ['application/rdf+xml'],
+            'atom' => ['application/atom+xml'],
+            'rss'  => ['application/rss+xml'],
+            'form' => ['application/x-www-form-urlencoded'],
+        ];
     }
 
     /**
@@ -1002,6 +1023,7 @@ class Request implements Arrayable
 
     /**
      * Returns the URL referrer.
+     *
      * @return string|null URL referrer, null if not available
      */
     public function getReferrer()
@@ -1017,6 +1039,7 @@ class Request implements Arrayable
     public function path()
     {
         $pattern = trim($this->getPathInfo(), '/');
+
         return $pattern == '' ? '/' : $pattern;
     }
 
@@ -1031,7 +1054,7 @@ class Request implements Arrayable
     }
 
     /**
-     * Get current route instance
+     * Get current route instance.
      *
      * @return null|Route
      */
@@ -1041,7 +1064,7 @@ class Request implements Arrayable
     }
 
     /**
-     * Get current route instance
+     * Get current route instance.
      *
      * @return null|Route
      */

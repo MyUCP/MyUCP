@@ -9,24 +9,26 @@ use MyUCP\Views\View;
 class ExtensionHelpers
 {
     /**
-     * Получить путь к расширению
+     * Получить путь к расширению.
      *
      * @param $path
-     * @return string
+     *
      * @throws \ReflectionException
+     *
+     * @return string
      */
     public function path($path)
     {
         $currentExtensions = basename((new \ReflectionClass($this))->getFileName());
 
-        $directory = Str::replaceLast($currentExtensions, "", (new \ReflectionClass($this))->getFileName());
-        $directory = Str::replaceLast("\\", "", $directory);
+        $directory = Str::replaceLast($currentExtensions, '', (new \ReflectionClass($this))->getFileName());
+        $directory = Str::replaceLast('\\', '', $directory);
 
-        return $directory . DIRECTORY_SEPARATOR . ltrim($path, '/');
+        return $directory.DIRECTORY_SEPARATOR.ltrim($path, '/');
     }
 
     /**
-     * Предзагрузка контроллера
+     * Предзагрузка контроллера.
      *
      * @param $name
      * @param null $path
@@ -37,10 +39,10 @@ class ExtensionHelpers
     }
 
     /**
-     * Предзагрузка шаблона
+     * Предзагрузка шаблона.
      *
      * @param array|string $name
-     * @param string|null $path
+     * @param string|null  $path
      */
     public function view($name, $path = null)
     {

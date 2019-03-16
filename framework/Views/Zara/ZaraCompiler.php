@@ -10,12 +10,12 @@ class ZaraCompiler
     /**
      * @var array
      */
-	protected $rawTags = ['{!!', '!!}'];
+    protected $rawTags = ['{!!', '!!}'];
 
     /**
      * @var array
      */
-	protected $contentTags = ['{{', '}}'];
+    protected $contentTags = ['{{', '}}'];
 
     /**
      * @var array
@@ -90,11 +90,12 @@ class ZaraCompiler
     {
         $contents = $this->compileString($contents);
 
-		file_put_contents($compiledPath, $contents);
+        file_put_contents($compiledPath, $contents);
     }
 
     /**
      * @param string $value
+     *
      * @return string
      */
     public function compileString($value)
@@ -123,6 +124,7 @@ class ZaraCompiler
 
     /**
      * @param string $token
+     *
      * @return mixed
      */
     protected function parseToken($token)
@@ -140,6 +142,7 @@ class ZaraCompiler
 
     /**
      * @param string $value
+     *
      * @return mixed
      */
     protected function compileExtensions($value)
@@ -153,6 +156,7 @@ class ZaraCompiler
 
     /**
      * @param string $value
+     *
      * @return mixed
      */
     protected function compileStatements($value)
@@ -165,14 +169,15 @@ class ZaraCompiler
 
     /**
      * @param $match
+     *
      * @return string
      */
     protected function compileStatement($match)
     {
         if (method_exists($this, $method = 'compile'.ucfirst($match[1]))) {
-            $match[0] = $this->$method((isset($match[3]) ? $match[3] : ""));
+            $match[0] = $this->$method((isset($match[3]) ? $match[3] : ''));
         } elseif (isset($this->customDirectives[$match[1]])) {
-            $match[0] = $this->callCustomDirective($match[1], (isset($match[3]) ? $match[3] : ""));
+            $match[0] = $this->callCustomDirective($match[1], (isset($match[3]) ? $match[3] : ''));
         }
 
         return isset($match[3]) ? $match[0] : $match[0].$match[2];
@@ -181,8 +186,9 @@ class ZaraCompiler
     /**
      * Call the given directive with the given value.
      *
-     * @param  string  $name
-     * @param  string|null  $value
+     * @param string      $name
+     * @param string|null $value
+     *
      * @return string
      */
     protected function callCustomDirective($name, $value)
@@ -197,7 +203,8 @@ class ZaraCompiler
     /**
      * Compile Zara comments into valid PHP.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     protected function compileComments($value)
@@ -210,7 +217,8 @@ class ZaraCompiler
     /**
      * Compile Zara echos into valid PHP.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     protected function compileEchos($value)
@@ -224,6 +232,7 @@ class ZaraCompiler
 
     /**
      * @param string $value
+     *
      * @return mixed
      */
     protected function compileRawEchos($value)
@@ -247,7 +256,7 @@ class ZaraCompiler
     protected function getEchoMethods()
     {
         $methods = [
-            'compileRawEchos' => strlen(stripcslashes($this->rawTags[0])),
+            'compileRawEchos'     => strlen(stripcslashes($this->rawTags[0])),
             'compileEscapedEchos' => strlen(stripcslashes($this->escapedTags[0])),
             'compileRegularEchos' => strlen(stripcslashes($this->contentTags[0])),
         ];
@@ -283,6 +292,7 @@ class ZaraCompiler
     /**
      * @param $haystack
      * @param $needles
+     *
      * @return bool
      */
     protected function startsWith($haystack, $needles)
@@ -298,12 +308,13 @@ class ZaraCompiler
 
     /**
      * @param $value
+     *
      * @return mixed
      */
     protected function compileRegularEchos($value)
     {
         $pattern = sprintf('/(@)?%s\s*(.+?)\s*%s(\r?\n)?/s', $this->contentTags[0], $this->contentTags[1]);
-      	
+
         $callback = function ($matches) {
             $whitespace = empty($matches[3]) ? '' : $matches[3].$matches[3];
 
@@ -317,6 +328,7 @@ class ZaraCompiler
 
     /**
      * @param $value
+     *
      * @return mixed
      */
     protected function compileEscapedEchos($value)
@@ -334,6 +346,7 @@ class ZaraCompiler
 
     /**
      * @param $value
+     *
      * @return mixed
      */
     public function compileEchoDefaults($value)
@@ -343,17 +356,19 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileInject($expression)
     {
         $segments = explode(',', preg_replace("/[\(\)\\\"\']/", '', $expression));
 
-        return '<?php $'.trim($segments[0])." = new ".trim($segments[1])."; ?>";
+        return '<?php $'.trim($segments[0]).' = new '.trim($segments[1]).'; ?>';
     }
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileYield($expression)
@@ -363,6 +378,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileShow($expression)
@@ -372,6 +388,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileSection($expression)
@@ -381,6 +398,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileAppend($expression)
@@ -390,6 +408,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileEndsection($expression)
@@ -399,6 +418,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileStop($expression)
@@ -408,6 +428,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileExtends($expression)
@@ -425,6 +446,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileUnless($expression)
@@ -434,6 +456,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileEndunless($expression)
@@ -443,6 +466,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileFor($expression)
@@ -452,6 +476,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileForeach($expression)
@@ -461,6 +486,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileForelse($expression)
@@ -472,6 +498,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileIf($expression)
@@ -481,6 +508,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileElseif($expression)
@@ -490,6 +518,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileEmpty($expression)
@@ -501,6 +530,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileWhile($expression)
@@ -510,6 +540,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileEndwhile($expression)
@@ -519,6 +550,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileEndfor($expression)
@@ -528,6 +560,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileEndforeach($expression)
@@ -537,6 +570,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileEndcan($expression)
@@ -546,6 +580,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileEndcannot($expression)
@@ -555,6 +590,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileEndif($expression)
@@ -564,6 +600,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileEndforelse($expression)
@@ -573,6 +610,7 @@ class ZaraCompiler
 
     /**
      * @param $expression
+     *
      * @return string
      */
     protected function compileElse($expression)
@@ -584,6 +622,7 @@ class ZaraCompiler
      * @method()
      *
      * @param $expression
+     *
      * @return string
      */
     protected function compileMethod($expression)
@@ -595,6 +634,7 @@ class ZaraCompiler
      * @lang()
      *
      * @param $expression
+     *
      * @return string
      */
     protected function compileLang($expression)
@@ -606,28 +646,31 @@ class ZaraCompiler
      * @csrf_token()
      *
      * @param $expression
+     *
      * @return string
      */
     protected function compileCsrf_token($expression)
     {
-        return "<?php echo csrf_token(); ?>";
+        return '<?php echo csrf_token(); ?>';
     }
 
     /**
      * @csrf_field()
      *
      * @param $expression
+     *
      * @return string
      */
     protected function compileCsrf_field($expression)
     {
-        return "<?php echo csrf_field(); ?>";
+        return '<?php echo csrf_field(); ?>';
     }
 
     /**
      * @asset()
      *
      * @param $expression
+     *
      * @return string
      */
     protected function compileAsset($expression)
@@ -639,6 +682,7 @@ class ZaraCompiler
      * @include()
      *
      * @param $expression
+     *
      * @return string
      */
     protected function compileInclude($expression)
@@ -651,8 +695,9 @@ class ZaraCompiler
     /**
      * Register a handler for custom directives.
      *
-     * @param  string  $name
-     * @param  callable  $handler
+     * @param string   $name
+     * @param callable $handler
+     *
      * @return void
      */
     public function directive($name, callable $handler)
@@ -663,8 +708,9 @@ class ZaraCompiler
     /**
      * Register an "if" statement directive.
      *
-     * @param  string  $name
-     * @param  callable  $callback
+     * @param string   $name
+     * @param callable $callback
+     *
      * @return void
      */
     public function if($name, callable $callback)
@@ -691,8 +737,9 @@ class ZaraCompiler
     /**
      * Check the result of a condition.
      *
-     * @param  string  $name
-     * @param  array  $parameters
+     * @param string $name
+     * @param array  $parameters
+     *
      * @return bool
      */
     public function check($name, ...$parameters)
@@ -703,7 +750,8 @@ class ZaraCompiler
     /**
      * Strip the parentheses from the given expression.
      *
-     * @param  string  $expression
+     * @param string $expression
+     *
      * @return string
      */
     public function stripParentheses($expression)

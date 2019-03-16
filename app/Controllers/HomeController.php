@@ -9,8 +9,8 @@ class HomeController extends Controller
     /**
      * @return mixed
      */
-	public function welcome()
+    public function welcome()
     {
-		return view("welcome");
-	}
+        return view('welcome');
+    }
 }

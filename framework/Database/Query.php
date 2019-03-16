@@ -41,12 +41,12 @@ class Query
     protected $tables = [];
 
     /**
-     * @var integer
+     * @var int
      */
     protected $limit = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $offset = null;
 
@@ -87,20 +87,22 @@ class Query
 
     /**
      * Query constructor.
+     *
      * @param null $table
      */
     public function __construct($table = null)
     {
         $this->db = app()->db;
 
-        if(!is_null($table)) {
+        if (!is_null($table)) {
             $this->from($table);
         }
     }
 
     /**
      * @param string $table
-     * @param array $_
+     * @param array  $_
+     *
      * @return Query
      */
     public static function table($table, ...$_)
@@ -110,14 +112,15 @@ class Query
 
     /**
      * @param string $table
-     * @param array $_
+     * @param array  $_
+     *
      * @return Query
      */
     public function from($table, ...$_)
     {
         // Определяем, является ли переданное значение выражением
         // если оно таковым есть, получаем его значение
-        if($this->isRaw($table)) {
+        if ($this->isRaw($table)) {
             $this->tables[] = $this->getValue($table);
         } else {
             $this->tables[] = $table;
@@ -125,9 +128,9 @@ class Query
 
         // Если остальные переданные параметры не пусты
         // то добавляем их как отдельные элементы
-        if(!empty($_)) {
+        if (!empty($_)) {
             foreach ($_ as $table) {
-                if($this->isRaw($table)) {
+                if ($this->isRaw($table)) {
                     $this->tables[] = $this->getValue($table);
                 } else {
                     $this->tables[] = $table;
@@ -141,22 +144,24 @@ class Query
     /**
      * @param $table
      * @param $as
+     *
      * @return Query
      */
     public function fromAs($table, $as)
     {
-        $query = $this->raw('('. $table .') as ' . $as);
+        $query = $this->raw('('.$table.') as '.$as);
 
         return $this->from($query);
     }
 
     /**
      * @param array $data
+     *
      * @return bool|resource
      */
     public function insert(array $data)
     {
-        if(empty($data)) {
+        if (empty($data)) {
             return true;
         }
 
@@ -171,6 +176,7 @@ class Query
 
     /**
      * @param array $data
+     *
      * @return int
      */
     public function insertGetId(array $data)
@@ -182,15 +188,16 @@ class Query
 
     /**
      * @param string $column
-     * @param array $_
+     * @param array  $_
+     *
      * @return $this
      */
-    public function select($column = "*", ...$_)
+    public function select($column = '*', ...$_)
     {
-        if(!in_array($column, $this->columns)) {
+        if (!in_array($column, $this->columns)) {
             // Определяем, является ли переданное значение выражением
             // если оно таковым есть, получаем его значение
-            if($this->isRaw($column)) {
+            if ($this->isRaw($column)) {
                 $this->columns[] = $this->getValue($column);
             } else {
                 $this->columns[] = $column;
@@ -199,12 +206,12 @@ class Query
 
         // Если остальные переданные параметры не пусты
         // то добавляем их как отдельные элементы
-        if(!empty($_)) {
+        if (!empty($_)) {
             foreach ($_ as $column) {
-                if(!in_array($column, $this->columns)) {
+                if (!in_array($column, $this->columns)) {
                     // Определяем, является ли переданное значение выражением
                     // если оно таковым есть, получаем его значение
-                    if($this->isRaw($column)) {
+                    if ($this->isRaw($column)) {
                         $this->columns[] = $this->getValue($column);
                     } else {
                         $this->columns[] = $column;
@@ -219,6 +226,7 @@ class Query
     /**
      * @param $column
      * @param array $_
+     *
      * @return Query
      */
     public function addSelect($column, ...$_)
@@ -229,17 +237,19 @@ class Query
     /**
      * @param string $column
      * @param string $as
+     *
      * @return Query
      */
     public function selectAs($column, $as)
     {
-        $query = $this->raw('('. $column .') as ' . $as);
+        $query = $this->raw('('.$column.') as '.$as);
 
         return $this->select($query);
     }
 
     /**
      * @param string $raw
+     *
      * @return Query
      */
     public function selectRaw($raw)
@@ -249,6 +259,7 @@ class Query
 
     /**
      * @param int $value
+     *
      * @return Query
      */
     public function take($value)
@@ -258,6 +269,7 @@ class Query
 
     /**
      * @param int $value
+     *
      * @return Query
      */
     public function skip($value)
@@ -267,6 +279,7 @@ class Query
 
     /**
      * @param int $value
+     *
      * @return Query
      */
     public function offset($value)
@@ -275,13 +288,14 @@ class Query
     }
 
     /**
-     * @param int $offset
+     * @param int      $offset
      * @param int|null $limit
+     *
      * @return $this
      */
     public function limit($offset, $limit = null)
     {
-        if(is_null($limit)) {
+        if (is_null($limit)) {
             $this->limit = $offset;
         } else {
             $this->offset = $offset;
@@ -293,6 +307,7 @@ class Query
 
     /**
      * @param mixed ...$groups
+     *
      * @return $this
      */
     public function groupBy(...$groups)
@@ -305,14 +320,15 @@ class Query
     }
 
     /**
-     * @param  string  $column
-     * @param  string  $direction
+     * @param string $column
+     * @param string $direction
+     *
      * @return $this
      */
     public function orderBy($column, $direction = 'asc')
     {
         $this->orders[] = [
-            'column' => $column,
+            'column'    => $column,
             'direction' => strtolower($direction) === 'asc' ? 'asc' : 'desc',
         ];
 
@@ -320,7 +336,8 @@ class Query
     }
 
     /**
-     * @param  string  $column
+     * @param string $column
+     *
      * @return $this
      */
     public function orderByDesc($column)
@@ -329,7 +346,8 @@ class Query
     }
 
     /**
-     * @param  string  $column
+     * @param string $column
+     *
      * @return Query
      */
     public function latest($column)
@@ -338,7 +356,8 @@ class Query
     }
 
     /**
-     * @param  string  $column
+     * @param string $column
+     *
      * @return Query
      */
     public function oldest($column)
@@ -347,10 +366,11 @@ class Query
     }
 
     /**
-     * @param string $column
+     * @param string     $column
      * @param null|mixed $operator
      * @param null|mixed $value
-     * @param string $boolean
+     * @param string     $boolean
+     *
      * @return $this
      */
     public function having($column, $operator = null, $value = null, $boolean = 'and')
@@ -377,6 +397,7 @@ class Query
      * @param $column
      * @param null $operator
      * @param null $value
+     *
      * @return Query
      */
     public function orHaving($column, $operator = null, $value = null)
@@ -390,9 +411,10 @@ class Query
 
     /**
      * @param $column
-     * @param array $values
+     * @param array  $values
      * @param string $boolean
-     * @param bool $not
+     * @param bool   $not
+     *
      * @return $this
      */
     public function havingBetween($column, array $values, $boolean = 'and', $not = false)
@@ -406,7 +428,8 @@ class Query
 
     /**
      * @param string|RawQuery $sql
-     * @param string $boolean
+     * @param string          $boolean
+     *
      * @return $this
      */
     public function havingRaw($sql, $boolean = 'and')
@@ -420,6 +443,7 @@ class Query
 
     /**
      * @param string|RawQuery $sql
+     *
      * @return Query
      */
     public function orHavingRaw($sql)
@@ -429,9 +453,10 @@ class Query
 
     /**
      * @param $column
-     * @param null $operator
-     * @param null $value
+     * @param null   $operator
+     * @param null   $value
      * @param string $boolean
+     *
      * @return $this
      */
     public function where($column, $operator = null, $value = null, $boolean = 'and')
@@ -467,6 +492,7 @@ class Query
      * @param $column
      * @param null $operator
      * @param null $value
+     *
      * @return Query
      */
     public function orWhere($column, $operator = null, $value = null)
@@ -480,9 +506,10 @@ class Query
 
     /**
      * @param $column
-     * @param array $values
+     * @param array  $values
      * @param string $boolean
-     * @param bool $not
+     * @param bool   $not
+     *
      * @return $this
      */
     public function whereBetween($column, array $values, $boolean = 'and', $not = false)
@@ -497,6 +524,7 @@ class Query
     /**
      * @param $column
      * @param array $values
+     *
      * @return Query
      */
     public function orWhereBetween($column, array $values)
@@ -506,8 +534,9 @@ class Query
 
     /**
      * @param $column
-     * @param array $values
+     * @param array  $values
      * @param string $boolean
+     *
      * @return Query
      */
     public function whereNotBetween($column, array $values, $boolean = 'and')
@@ -518,6 +547,7 @@ class Query
     /**
      * @param $column
      * @param array $values
+     *
      * @return Query
      */
     public function orWhereNotBetween($column, array $values)
@@ -528,7 +558,8 @@ class Query
     /**
      * @param $column
      * @param string $boolean
-     * @param bool $not
+     * @param bool   $not
+     *
      * @return $this
      */
     public function whereNull($column, $boolean = 'and', $not = false)
@@ -543,6 +574,7 @@ class Query
     /**
      * @param $column
      * @param string $boolean
+     *
      * @return mixed
      */
     public function whereNotNull($column, $boolean = 'and')
@@ -551,7 +583,8 @@ class Query
     }
 
     /**
-     * @param  string  $column
+     * @param string $column
+     *
      * @return Query
      */
     public function orWhereNotNull($column)
@@ -563,7 +596,8 @@ class Query
      * @param $column
      * @param $values
      * @param string $boolean
-     * @param bool $not
+     * @param bool   $not
+     *
      * @return $this
      */
     public function whereIn($column, $values, $boolean = 'and', $not = false)
@@ -581,6 +615,7 @@ class Query
     /**
      * @param $column
      * @param $values
+     *
      * @return Query
      */
     public function orWhereIn($column, $values)
@@ -592,6 +627,7 @@ class Query
      * @param $column
      * @param $values
      * @param string $boolean
+     *
      * @return Query
      */
     public function whereNotIn($column, $values, $boolean = 'and')
@@ -602,6 +638,7 @@ class Query
     /**
      * @param $column
      * @param $values
+     *
      * @return Query
      */
     public function orWhereNotIn($column, $values)
@@ -615,6 +652,7 @@ class Query
      * @param $operator
      * @param $value
      * @param string $boolean
+     *
      * @return $this
      */
     protected function addDateBasedWhere($type, $column, $operator, $value, $boolean = 'and')
@@ -627,8 +665,9 @@ class Query
     /**
      * @param $column
      * @param $operator
-     * @param null $value
+     * @param null   $value
      * @param string $boolean
+     *
      * @return Query
      */
     public function whereDate($column, $operator, $value = null, $boolean = 'and')
@@ -648,6 +687,7 @@ class Query
      * @param $column
      * @param $operator
      * @param null $value
+     *
      * @return Query
      */
     public function orWhereDate($column, $operator, $value = null)
@@ -662,8 +702,9 @@ class Query
     /**
      * @param $column
      * @param $operator
-     * @param null $value
+     * @param null   $value
      * @param string $boolean
+     *
      * @return Query
      */
     public function whereTime($column, $operator, $value = null, $boolean = 'and')
@@ -683,6 +724,7 @@ class Query
      * @param $column
      * @param $operator
      * @param null $value
+     *
      * @return Query
      */
     public function orWhereTime($column, $operator, $value = null)
@@ -697,8 +739,9 @@ class Query
     /**
      * @param $column
      * @param $operator
-     * @param null $value
+     * @param null   $value
      * @param string $boolean
+     *
      * @return Query
      */
     public function whereDay($column, $operator, $value = null, $boolean = 'and')
@@ -715,9 +758,10 @@ class Query
     }
 
     /**
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  \DateTimeInterface|string  $value
+     * @param string                    $column
+     * @param string                    $operator
+     * @param \DateTimeInterface|string $value
+     *
      * @return Query|static
      */
     public function orWhereDay($column, $operator, $value = null)
@@ -725,14 +769,16 @@ class Query
         [$value, $operator] = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
+
         return $this->addDateBasedWhere('Day', $column, $operator, $value, 'or');
     }
 
     /**
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  \DateTimeInterface|string  $value
-     * @param  string  $boolean
+     * @param string                    $column
+     * @param string                    $operator
+     * @param \DateTimeInterface|string $value
+     * @param string                    $boolean
+     *
      * @return Query|static
      */
     public function whereMonth($column, $operator, $value = null, $boolean = 'and')
@@ -749,9 +795,10 @@ class Query
     }
 
     /**
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  \DateTimeInterface|string  $value
+     * @param string                    $column
+     * @param string                    $operator
+     * @param \DateTimeInterface|string $value
+     *
      * @return Query|static
      */
     public function orWhereMonth($column, $operator, $value = null)
@@ -764,10 +811,11 @@ class Query
     }
 
     /**
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  \DateTimeInterface|string|int  $value
-     * @param  string  $boolean
+     * @param string                        $column
+     * @param string                        $operator
+     * @param \DateTimeInterface|string|int $value
+     * @param string                        $boolean
+     *
      * @return Query|static
      */
     public function whereYear($column, $operator, $value = null, $boolean = 'and')
@@ -784,9 +832,10 @@ class Query
     }
 
     /**
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  \DateTimeInterface|string|int  $value
+     * @param string                        $column
+     * @param string                        $operator
+     * @param \DateTimeInterface|string|int $value
+     *
      * @return Query
      */
     public function orWhereYear($column, $operator, $value = null)
@@ -801,6 +850,7 @@ class Query
     /**
      * @param $raw
      * @param string $boolean
+     *
      * @return $this
      */
     public function whereRaw($raw, $boolean = 'and')
@@ -812,6 +862,7 @@ class Query
 
     /**
      * @param $sql
+     *
      * @return Query
      */
     public function orWhereRaw($sql)
@@ -822,20 +873,21 @@ class Query
     /**
      * @param $table
      * @param $first
-     * @param null $operator
-     * @param null $second
+     * @param null   $operator
+     * @param null   $second
      * @param string $type
+     *
      * @return $this
      */
     public function join($table, $first, $operator = null, $second = null, $type = 'inner')
     {
-        if(is_null($second)) {
+        if (is_null($second)) {
             $second = $operator;
-            $operator = "=";
+            $operator = '=';
         }
 
-        if($this->invalidOperator($operator)) {
-            $operator = "=";
+        if ($this->invalidOperator($operator)) {
+            $operator = '=';
         }
 
         $this->joins[] = compact(
@@ -850,6 +902,7 @@ class Query
      * @param $first
      * @param null $operator
      * @param null $second
+     *
      * @return Query
      */
     public function leftJoin($table, $first, $operator = null, $second = null)
@@ -862,6 +915,7 @@ class Query
      * @param $first
      * @param null $operator
      * @param null $second
+     *
      * @return Query
      */
     public function rightJoin($table, $first, $operator = null, $second = null)
@@ -874,6 +928,7 @@ class Query
      * @param $first
      * @param null $operator
      * @param null $second
+     *
      * @return Query
      */
     public function crossJoin($table, $first, $operator = null, $second = null)
@@ -886,7 +941,7 @@ class Query
      */
     public function toSql()
     {
-        if(!empty($this->sets)) {
+        if (!empty($this->sets)) {
             return $this->getUpdateSql();
         }
 
@@ -895,6 +950,7 @@ class Query
 
     /**
      * @param array $values
+     *
      * @return Query
      */
     public function set(array $values)
@@ -908,23 +964,26 @@ class Query
 
     /**
      * @param array $values
+     *
      * @return string
      */
     public function update(array $values = [])
     {
-        if(!empty($values))
+        if (!empty($values)) {
             $this->set($values);
+        }
 
         return $this->db->query($this->getUpdateSql());
     }
 
     /**
      * @param array $columns
+     *
      * @return DBCollection
      */
     public function get(array $columns = ['*'])
     {
-        if($columns != ["*"]) {
+        if ($columns != ['*']) {
             $this->select(...$columns);
         }
 
@@ -935,11 +994,12 @@ class Query
 
     /**
      * @param array $columns
-     * @return array|FALSE
+     *
+     * @return array|false
      */
     public function first(array $columns = ['*'])
     {
-        if($columns != ["*"]) {
+        if ($columns != ['*']) {
             $this->select(...$columns);
         }
 
@@ -949,25 +1009,28 @@ class Query
     }
 
     /**
-     * @param array $columns
+     * @param array  $columns
      * @param string $exception
-     * @param int $code
+     * @param int    $code
      * @param string $message
-     * @return array|FALSE
+     *
      * @throws Exception|HttpException
+     *
+     * @return array|false
      */
-    public function firstOrError(array $columns = ['*'], $exception = HttpException::class, $code = 404, $message = "Страница не найдена")
+    public function firstOrError(array $columns = ['*'], $exception = HttpException::class, $code = 404, $message = 'Страница не найдена')
     {
         $result = $this->first($columns);
 
-        if($this->db->affectedRows() == 0)
+        if ($this->db->affectedRows() == 0) {
             throw new $exception($code, $message);
-
+        }
         return $result;
     }
 
     /**
      * @param $column
+     *
      * @return mixed|null
      */
     public function value($column)
@@ -981,16 +1044,18 @@ class Query
 
     /**
      * @param string $column
-     * @return FALSE|int
+     *
+     * @return false|int
      */
-    public function count($column = "*")
+    public function count($column = '*')
     {
         return (int) $this->getAggregate($column, __FUNCTION__);
     }
 
     /**
      * @param $column
-     * @return FALSE|mixed
+     *
+     * @return false|mixed
      */
     public function max($column)
     {
@@ -999,7 +1064,8 @@ class Query
 
     /**
      * @param $column
-     * @return FALSE|mixed
+     *
+     * @return false|mixed
      */
     public function min($column)
     {
@@ -1008,7 +1074,8 @@ class Query
 
     /**
      * @param $column
-     * @return FALSE|mixed
+     *
+     * @return false|mixed
      */
     public function avg($column)
     {
@@ -1019,7 +1086,8 @@ class Query
      * Alias for the "avg" method.
      *
      * @param $column
-     * @return FALSE|mixed
+     *
+     * @return false|mixed
      */
     public function average($column)
     {
@@ -1028,7 +1096,8 @@ class Query
 
     /**
      * @param $column
-     * @return FALSE|mixed
+     *
+     * @return false|mixed
      */
     public function sum($column)
     {
@@ -1036,7 +1105,7 @@ class Query
     }
 
     /**
-     * @return FALSE|resource
+     * @return false|resource
      */
     public function delete()
     {
@@ -1051,13 +1120,14 @@ class Query
 
     /**
      * @param $column
-     * @param int $amount
+     * @param int   $amount
      * @param array $extra
+     *
      * @return string
      */
     public function increment($column, $amount = 1, array $extra = [])
     {
-        if (! is_numeric($amount)) {
+        if (!is_numeric($amount)) {
             throw new InvalidArgumentException('Передано не числовое значение в метод инкремента.');
         }
 
@@ -1070,13 +1140,14 @@ class Query
 
     /**
      * @param $column
-     * @param int $amount
+     * @param int   $amount
      * @param array $extra
+     *
      * @return string
      */
     public function decrement($column, $amount = 1, array $extra = [])
     {
-        if (! is_numeric($amount)) {
+        if (!is_numeric($amount)) {
             throw new InvalidArgumentException('Передано не числовое значение в метод декрмента.');
         }
 
@@ -1088,7 +1159,7 @@ class Query
     }
 
     /**
-     * @return FALSE|resource
+     * @return false|resource
      */
     public function truncate()
     {
@@ -1101,6 +1172,7 @@ class Query
 
     /**
      * @param $value
+     *
      * @return RawQuery
      */
     public function raw($value)
@@ -1127,13 +1199,14 @@ class Query
     /**
      * @param $column
      * @param $function
-     * @return FALSE|mixed
+     *
+     * @return false|mixed
      */
     protected function getAggregate($column, $function)
     {
         $column = $this->getColumn($column);
 
-        $this->select($this->raw($function . "({$column}) as aggregate"));
+        $this->select($this->raw($function."({$column}) as aggregate"));
 
         $sql = $this->getSelectSql();
 
@@ -1165,7 +1238,7 @@ class Query
     {
         $columns = $this->columnize($this->columns);
 
-        $columns = empty($columns) ? "*" : $columns;
+        $columns = empty($columns) ? '*' : $columns;
 
         $table = $this->getTable();
 
@@ -1186,19 +1259,21 @@ class Query
 
     /**
      * @param bool $first
+     *
      * @return string
      */
     public function getTable($first = false)
     {
-        if($first === true) {
+        if ($first === true) {
             return Arr::first($this->tables);
         }
 
-        return implode(", ", $this->tables);
+        return implode(', ', $this->tables);
     }
 
     /**
      * @param mixed $value
+     *
      * @return bool
      */
     public function isRaw($value)
@@ -1208,6 +1283,7 @@ class Query
 
     /**
      * @param RawQuery $raw
+     *
      * @return string
      */
     public function getValue($raw)
@@ -1217,6 +1293,7 @@ class Query
 
     /**
      * @param $value
+     *
      * @return string
      */
     public function getParameter($value)
@@ -1225,7 +1302,7 @@ class Query
             return implode(', ', array_map([__CLASS__, __FUNCTION__], $value));
         }
 
-        if($this->isRaw($value)) {
+        if ($this->isRaw($value)) {
             return $this->getValue($value);
         }
 
@@ -1234,18 +1311,19 @@ class Query
 
     /**
      * @param $value
+     *
      * @return string
      */
     public function getColumn($value)
     {
-        if($this->isRaw($value)) {
+        if ($this->isRaw($value)) {
             return $this->getValue($value);
         }
 
-        if(false !== mb_stripos($value, ".")) {
-            [$table, $column] = explode(".", $value);
+        if (false !== mb_stripos($value, '.')) {
+            [$table, $column] = explode('.', $value);
 
-            return $table . "." . $this->getColumn($column);
+            return $table.'.'.$this->getColumn($column);
         }
 
         return $value;
@@ -1253,15 +1331,17 @@ class Query
 
     /**
      * @param array $columns
+     *
      * @return string
      */
     public function columnize(array $columns)
     {
-        return implode(', ',  array_map([$this, 'getColumn'], $columns));
+        return implode(', ', array_map([$this, 'getColumn'], $columns));
     }
 
     /**
      * @param array $values
+     *
      * @return string
      */
     public function parameterize(array $values)
@@ -1274,7 +1354,7 @@ class Query
      */
     protected function getOrders()
     {
-        if (! empty($this->orders)) {
+        if (!empty($this->orders)) {
             return 'order by '.implode(', ', $this->getOrdersToArray($this->orders));
         }
 
@@ -1282,13 +1362,14 @@ class Query
     }
 
     /**
-     * @param  array $orders
+     * @param array $orders
+     *
      * @return array
      */
     protected function getOrdersToArray($orders)
     {
         return array_map(function ($order) {
-            return ! isset($order['sql'])
+            return !isset($order['sql'])
                 ? $this->getColumn($order['column']).' '.$order['direction']
                 : $order['sql'];
         }, $orders);
@@ -1296,6 +1377,7 @@ class Query
 
     /**
      * @param $having
+     *
      * @return string
      */
     protected function getBasicHaving($having)
@@ -1309,6 +1391,7 @@ class Query
 
     /**
      * @param $having
+     *
      * @return string
      */
     protected function getHavingBetween($having)
@@ -1326,6 +1409,7 @@ class Query
 
     /**
      * @param array $having
+     *
      * @return string
      */
     protected function getHaving(array $having)
@@ -1344,12 +1428,13 @@ class Query
      */
     protected function getHavings()
     {
-        if(empty($this->havings))
+        if (empty($this->havings)) {
             return '';
+        }
 
         $sql = implode(' ', array_map([$this, 'getHaving'], $this->havings));
 
-        return 'having '. $this->removeLeadingBoolean($sql);
+        return 'having '.$this->removeLeadingBoolean($sql);
     }
 
     /**
@@ -1357,25 +1442,29 @@ class Query
      */
     protected function getLimit()
     {
-        if(is_null($this->limit) && is_null($this->offset))
+        if (is_null($this->limit) && is_null($this->offset)) {
             return '';
+        }
 
-        if(is_null($this->offset) && !is_null($this->limit))
-            return 'limit '. $this->limit;
+        if (is_null($this->offset) && !is_null($this->limit)) {
+            return 'limit '.$this->limit;
+        }
 
-        if(is_null($this->limit) && !is_null($this->offset))
-            return 'offset '. $this->offset;
+        if (is_null($this->limit) && !is_null($this->offset)) {
+            return 'offset '.$this->offset;
+        }
 
-        return 'limit'. $this->offset .' '. $this->limit;
+        return 'limit'.$this->offset.' '.$this->limit;
     }
 
     /**
-     * @param  string  $value
-     * @param  string  $operator
-     * @param  bool  $useDefault
-     * @return array
+     * @param string $value
+     * @param string $operator
+     * @param bool   $useDefault
      *
      * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     public function prepareValueAndOperator($value, $operator, $useDefault = false)
     {
@@ -1389,8 +1478,9 @@ class Query
     }
 
     /**
-     * @param  string  $operator
-     * @param  mixed  $value
+     * @param string $operator
+     * @param mixed  $value
+     *
      * @return bool
      */
     protected function invalidOperatorAndValue($operator, $value)
@@ -1400,7 +1490,8 @@ class Query
     }
 
     /**
-     * @param  string  $operator
+     * @param string $operator
+     *
      * @return bool
      */
     protected function invalidOperator($operator)
@@ -1411,6 +1502,7 @@ class Query
 
     /**
      * @param $wheres
+     *
      * @return array
      */
     protected function getWheresToArray($wheres)
@@ -1422,6 +1514,7 @@ class Query
 
     /**
      * @param $value
+     *
      * @return null|string|string[]
      */
     protected function removeLeadingBoolean($value)
@@ -1431,6 +1524,7 @@ class Query
 
     /**
      * @param $sql
+     *
      * @return string
      */
     protected function concatenateWhereClauses($sql)
@@ -1455,7 +1549,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereRaw($where)
@@ -1464,7 +1559,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereBasic($where)
@@ -1475,7 +1571,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereIn($where)
@@ -1488,12 +1585,13 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereNotIn($where)
     {
-        if (! empty($where['values'])) {
+        if (!empty($where['values'])) {
             return $this->getColumn($where['column']).' not in ('.$this->parameterize($where['values']).')';
         }
 
@@ -1501,12 +1599,13 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereNotInRaw($where)
     {
-        if (! empty($where['values'])) {
+        if (!empty($where['values'])) {
             return $this->getColumn($where['column']).' not in ('.implode(', ', $where['values']).')';
         }
 
@@ -1514,7 +1613,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereInRaw($where)
@@ -1527,7 +1627,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereNull($where)
@@ -1536,7 +1637,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereNotNull($where)
@@ -1545,7 +1647,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereBetween($where)
@@ -1560,7 +1663,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereDate($where)
@@ -1569,17 +1673,20 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereTime($where)
     {
         return $this->getDateBasedWhere('time', $where);
     }
+
     /**
      * Compile a "where day" clause.
      *
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereDay($where)
@@ -1588,7 +1695,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereMonth($where)
@@ -1597,7 +1705,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function getWhereYear($where)
@@ -1606,8 +1715,9 @@ class Query
     }
 
     /**
-     * @param  string  $type
-     * @param  array  $where
+     * @param string $type
+     * @param array  $where
+     *
      * @return string
      */
     protected function getDateBasedWhere($type, $where)
@@ -1618,7 +1728,8 @@ class Query
     }
 
     /**
-     * @param  array  $where
+     * @param array $where
+     *
      * @return string
      */
     protected function whereColumn($where)

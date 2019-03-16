@@ -31,7 +31,7 @@ class CompiledRoute implements Serializable
     /**
      * CompiledRoute constructor.
      *
-     * @param Route $route
+     * @param Route       $route
      * @param Application $app
      * @param $compileResult
      *
@@ -50,7 +50,7 @@ class CompiledRoute implements Serializable
     }
 
     /**
-     * Get Response
+     * Get Response.
      *
      * @return mixed
      */
@@ -65,10 +65,11 @@ class CompiledRoute implements Serializable
     public function serialize()
     {
         return serialize([
-            'uri'           =>  $this->uri,
-            'parameters'    =>  $this->parameters,
+            'uri'           => $this->uri,
+            'parameters'    => $this->parameters,
         ]);
     }
+
     /**
      * {@inheritdoc}
      */

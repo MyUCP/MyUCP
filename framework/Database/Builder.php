@@ -19,18 +19,20 @@ class Builder
      */
     public static function getInstance()
     {
-        return app()->make(Builder::class);
+        return app()->make(self::class);
     }
 
     /**
      * @param $name
      * @param $arguments
+     *
      * @return mixed
      */
     public function __call($name, $arguments)
     {
-        if($name == 'lastQuery')
+        if ($name == 'lastQuery') {
             return $this->lastQuery($arguments);
+        }
 
         dd($name);
 
@@ -40,20 +42,23 @@ class Builder
     /**
      * @param $name
      * @param $arguments
+     *
      * @return Builder|mixed
      */
     public static function __callStatic($name, $arguments = null)
     {
         $instance = self::getInstance();
 
-        if($name == 'lastQuery')
+        if ($name == 'lastQuery') {
             return $instance->lastQuery(empty($arguments) ? null : $arguments);
+        }
 
         return $instance;
     }
 
     /**
      * @param $table
+     *
      * @return Query
      */
     public static function table($table)
@@ -65,6 +70,7 @@ class Builder
 
     /**
      * @param null|string|RawQuery $table
+     *
      * @return Query
      */
     public static function query($table = null)
@@ -76,7 +82,8 @@ class Builder
 
     /**
      * @param string|RawQuery $table
-     * @param array $data
+     * @param array           $data
+     *
      * @return bool|resource
      */
     public static function insert($table, array $data)
@@ -86,7 +93,8 @@ class Builder
 
     /**
      * @param $table
-     * @return FALSE|resource
+     *
+     * @return false|resource
      */
     public static function truncate($table)
     {
@@ -96,6 +104,7 @@ class Builder
     /**
      * @param array $result
      * @param Query $query
+     *
      * @return DBCollection
      */
     public static function collection(array $result, Query $query)
@@ -105,12 +114,14 @@ class Builder
 
     /**
      * @param Query $query
+     *
      * @return Query
      */
     protected function lastQuery(Query $query = null)
     {
-        if(is_null($query))
+        if (is_null($query)) {
             return $this->lastQuery;
+        }
 
         return $this->lastQuery = $query;
     }

@@ -2,9 +2,9 @@
 
 namespace MyUCP\Model;
 
-use MyUCP\Support\Str;
 use MyUCP\Foundation\Application;
 use MyUCP\Model\Traits\Builder as ModelBuilder;
+use MyUCP\Support\Str;
 
 class Model
 {
@@ -23,7 +23,7 @@ class Model
     /**
      * @var string
      */
-    protected $primary_key = "id";
+    protected $primary_key = 'id';
 
     /**
      * Model constructor.
@@ -45,7 +45,7 @@ class Model
         if (is_null($this->table)) {
             return str_replace(
                 '\\', '', Str::snake(plural_phrase(
-                    str_replace("Model", "", class_basename($this))
+                    str_replace('Model', '', class_basename($this))
                 ))
             );
         }
@@ -55,6 +55,7 @@ class Model
 
     /**
      * @param $key
+     *
      * @return bool|mixed
      */
     public function __get($key)

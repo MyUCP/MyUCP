@@ -5,7 +5,7 @@ namespace MyUCP\Collection;
 interface Renderable
 {
     /**
-     * Render
+     * Render.
      *
      * @param callable|null $callback
      *

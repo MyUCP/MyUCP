@@ -74,7 +74,18 @@ abstract class Controller
      */
     public function callAction($method, $parameters)
     {
+        $this->callAction($method, $parameters);
+
         return call_user_func_array([$this, $method], $parameters);
+    }
+
+    /**
+     * @param $name
+     * @param array $parameters
+     */
+    protected function calledAction($name, $parameters = [])
+    {
+        //
     }
 
     /**

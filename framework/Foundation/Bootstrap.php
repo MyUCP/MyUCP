@@ -61,7 +61,7 @@ trait Bootstrap
 
         $this->make(Config::class, [$this]);
 
-        $this->call(HandleExceptions::class, "make");
+        $this->make([HandleExceptions::class, "make"]);
 
         if(env("APP_DB", false)) {
             $this->make(DB::class, [$this->make("config")->db]);
@@ -92,7 +92,7 @@ trait Bootstrap
     public function loadEnvironment($path = ENV, $file = '.env')
     {
         try {
-            $this->make(Dotenv::class . "@load", [$path, $file]);
+            $this->make([Dotenv::class, "load"], [$path, $file]);
         } catch (InvalidPathException $e) {
             //
         } catch (InvalidFileException $e) {
@@ -106,13 +106,13 @@ trait Bootstrap
      */
     public function run()
     {
-        $this->make("extension")->boot();
-        $this->make("router")->loadRouteService();
-        $this->make("router")->loadRoutes($this->appPath('routers.php'));
-        $this->make("router")->make();
-        $this->make("response")->prepare($this->make("request"));
-        $this->make("response")->send();
-        $this->make("session")->unsetFlash();
+        $this->make(["extension", "boot"]);
+        $this->make(["router", "loadRouteService"]);
+        $this->make(["router", "loadRoutes"], [$this->appPath('routers.php')]);
+        $this->make(["router", "make"]);
+        $this->make(["response", "prepare"], [$this->make("request")]);
+        $this->make(["response", "send"]);
+        $this->make(["session", "unsetFlash"]);
 
         $this->booted = true;
     }

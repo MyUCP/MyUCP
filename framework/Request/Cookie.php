@@ -7,14 +7,49 @@ use InvalidArgumentException;
 
 class Cookie
 {
+    /**
+     * @var
+     */
     protected $name;
+
+    /**
+     * @var null
+     */
     protected $value;
+
+    /**
+     * @var null
+     */
     protected $domain;
+
+    /**
+     * @var int
+     */
     protected $expire;
+
+    /**
+     * @var string
+     */
     protected $path;
+
+    /**
+     * @var bool
+     */
     protected $secure;
+
+    /**
+     * @var bool
+     */
     protected $httpOnly;
+
+    /**
+     * @var bool
+     */
     private $raw;
+
+    /**
+     * @var string|null
+     */
     private $sameSite;
 
     const SAMESITE_LAX = 'lax';

@@ -3,12 +3,10 @@
 namespace MyUCP\Foundation;
 
 use ArrayAccess;
-use MyUCP\Foundation\Traits\DependencyResolverTrait;
 
 class Application implements ArrayAccess
 {
     use Bootstrap;
-    use DependencyResolverTrait;
 
     //
 
@@ -24,11 +22,6 @@ class Application implements ArrayAccess
      * @var Container
      */
     protected $container;
-
-    /**
-     * @var array
-     */
-    protected $alias = [];
 
     /**
      * @var string
@@ -49,28 +42,38 @@ class Application implements ArrayAccess
     /**
      * @param $name
      * @param $value
+     *
+     * @throws \ReflectionException
      */
     public function __set($name, $value)
     {
-        $this->container->$name = $value;
+        $this->container->make($name, $value);
     }
 
     /**
      * @param $name
+     *
      * @return bool|mixed
+     *
+     * @throws \ReflectionException
      */
     public function __get($name)
     {
-        if(isset($this->alias[$name])) {
-            $alias = $this->alias[$name];
+        return $this->container->make($name);
+    }
 
-            return $this->container->$alias;
-        }
-
-        if($this->container->$name !== false)
-            return $this->container->$name;
-
-        return false;
+    /**
+     * @param $instance
+     * @param $method
+     * @param array $parameters
+     *
+     * @return mixed
+     *
+     * @throws \ReflectionException
+     */
+    public function call($instance, $method, $parameters = [])
+    {
+        return $this->container->callMethod($instance, $method, $parameters);
     }
 
     /**
@@ -161,6 +164,8 @@ class Application implements ArrayAccess
      *
      * @param $value
      * @return mixed
+     *
+     * @throws \ReflectionException
      */
     public function escape($value)
     {
@@ -188,8 +193,10 @@ class Application implements ArrayAccess
     /**
      * Get the value at a given offset.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return mixed
+     *
+     * @throws \ReflectionException
      */
     public function offsetGet($key)
     {
@@ -199,9 +206,12 @@ class Application implements ArrayAccess
     /**
      * Set the value at a given offset.
      *
-     * @param  string  $key
-     * @param  mixed   $value
+     * @param  string $key
+     * @param  mixed $value
+     *
      * @return void
+     *
+     * @throws \ReflectionException
      */
     public function offsetSet($key, $value)
     {
@@ -216,7 +226,7 @@ class Application implements ArrayAccess
      */
     public function offsetUnset($key)
     {
-        unset($this->container->$key);
+        $this->container->remove($key);
     }
 
     /**

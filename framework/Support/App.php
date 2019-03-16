@@ -5,13 +5,34 @@ namespace MyUCP\Support;
 class App
 {
     /**
+     * Make or get instance from container
+     *
      * @param $name
      * @param null|object|string|\Closure $instance
+     *
      * @return bool|mixed|null
+     *
+     * @throws \ReflectionException
      */
     public static function make($name, $instance = null)
     {
         return app()->make($name, $instance);
+    }
+
+    /**
+     * Call method with dependencies
+     *
+     * @param $instance
+     * @param $method
+     * @param array $parameters
+     *
+     * @return mixed
+     *
+     * @throws \ReflectionException
+     */
+    public static function call($instance, $method, $parameters = [])
+    {
+        return app()->call($instance, $method, $parameters);
     }
 
     /**
@@ -21,6 +42,8 @@ class App
      * @param array $parameters
      *
      * @return bool|mixed|null
+     *
+     * @throws \ReflectionException
      */
     public static function makeWith($name, $parameters = [])
     {
@@ -35,6 +58,8 @@ class App
      * @param null $instance
      *
      * @return bool|mixed|null
+     *
+     * @throws \ReflectionException
      */
     public static function alias($alias, $name = null, $instance = null)
     {
@@ -49,6 +74,8 @@ class App
      * @param array $parameters
      *
      * @return bool|mixed|null
+     *
+     * @throws \ReflectionException
      */
     public static function aliasWith($alias, $name, $parameters = [])
     {

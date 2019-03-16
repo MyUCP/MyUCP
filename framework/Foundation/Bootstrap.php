@@ -65,7 +65,7 @@ trait Bootstrap
 
         $this->make(Config::class, [$this]);
 
-        $this->make(HandleExceptions::class)->make($this);
+        $this->call(HandleExceptions::class, "make");
 
         if(env("APP_DB", false)) {
             $this->makeWith(DB::class, [$this->make("config")->db]);

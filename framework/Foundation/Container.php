@@ -3,10 +3,12 @@
 namespace MyUCP\Foundation;
 
 use ArrayAccess;
+use BadMethodCallException;
 use Closure;
 use MyUCP\Support\Arr;
 use MyUCP\Support\Str;
 use ReflectionClass;
+use ReflectionMethod;
 use ReflectionParameter;
 
 class Container implements ArrayAccess
@@ -59,6 +61,8 @@ class Container implements ArrayAccess
     public function has($abstract)
     {
         return isset($this->instances[$abstract]) ||
+                $this->isBind($abstract) ||
+                $this->isSingleton($abstract) ||
                 $this->isAlias($abstract);
     }
 
@@ -165,9 +169,48 @@ class Container implements ArrayAccess
         return $method;
     }
 
-    protected function callMethod($instance, $method, $parameters = [])
+    /**
+     * @param $instance
+     * @param $method
+     * @param array $parameters
+     *
+     * @return mixed
+     *
+     * @throws \ReflectionException
+     */
+    public function callMethod($instance, $method, $parameters = [])
     {
-        //
+        if(is_string($instance)) {
+            $instance = $this->make($instance);
+        }
+
+        $class = get_class($instance);
+
+        if(! method_exists($instance, $method)) {
+            throw new BadMethodCallException("Cant call [{$method}] method in [{$class}] instance.");
+        }
+
+        $method = new ReflectionMethod($instance, $method);
+
+        $dependencies = $method->getParameters();
+
+        $instances = $this->resolveDependencies($dependencies, $parameters);
+
+        return call_user_func_array([$instance, $method->getName()], $instances);
+    }
+
+    /**
+     * @param $instance
+     * @param $method
+     * @param array $parameters
+     *
+     * @return mixed
+     *
+     * @throws \ReflectionException
+     */
+    public function call($instance, $method, $parameters = [])
+    {
+        return $this->callMethod($instance, $method, $parameters);
     }
 
     /**
@@ -403,6 +446,34 @@ class Container implements ArrayAccess
     }
 
     /**
+     * @param $name
+     */
+    public function remove($name)
+    {
+        if(is_string($name)) {
+            if($this->isAlias($name)) {
+                unset($this->aliases[$name]);
+            }
+
+            if($this->isSingleton($name)) {
+                unset($this->singletons[$name]);
+            }
+
+            if($this->isBind($name)) {
+                unset($this->bindings[$name]);
+            }
+
+            if(Arr::has($this->instances, $name)) {
+                unset($this->instances[$name]);
+            }
+        } else {
+            if(Arr::in($this->instances, $name)) {
+                unset($this->instances[array_search($name, $this->instances)]);
+            }
+        }
+    }
+
+    /**
      * Determine if a given offset exists.
      *
      * @param  string  $key
@@ -444,33 +515,39 @@ class Container implements ArrayAccess
      * Unset the value at a given offset.
      *
      * @param  string  $key
+     *
      * @return void
      */
     public function offsetUnset($key)
     {
-        unset($this->bindings[$key], $this->instances[$key], $this->aliases[$key]);
+        $this->remove($key);
     }
 
     /**
      * Dynamically access container services.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return mixed
+     *
+     * @throws \ReflectionException
      */
     public function __get($key)
     {
-        return $this[$key];
+        return $this->make($key);
     }
 
     /**
      * Dynamically set container services.
      *
-     * @param  string  $key
-     * @param  mixed   $value
+     * @param  string $key
+     * @param  mixed $value
+     *
      * @return void
+     *
+     * @throws \ReflectionException
      */
     public function __set($key, $value)
     {
-        $this[$key] = $value;
+        $this->make($key, $value);
     }
 }

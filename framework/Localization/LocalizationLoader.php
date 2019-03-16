@@ -3,6 +3,7 @@
 namespace MyUCP\Localization;
 
 use MyUCP\Debug\DebugException;
+use MyUCP\Support\App;
 
 class LocalizationLoader
 {
@@ -21,9 +22,10 @@ class LocalizationLoader
      * @param $locale
      * @param $fallback_locale
      */
-    public function __construct($locale, $fallback_locale)
+    public function __construct($locale = null, $fallback_locale = null)
     {
-        $this->setLocale($locale)->setFallbackLocale($fallback_locale);
+        $this->setLocale($locale ?? config('locale'))
+             ->setFallbackLocale($fallback_locale ?? config('fallback_locale'));
     }
 
     /**
@@ -39,7 +41,7 @@ class LocalizationLoader
             if($this->checkLocaleDir($this->fallback_locale)) {
                 return $this->loadLocalizationFile($this->fallback_locale, $path);
             } else {
-                throw new DebugException("Резервный язык локализации не найден!");
+                throw new DebugException("Fallback locale [{$this->fallback_locale}] not found!");
             }
         }
 
@@ -54,12 +56,12 @@ class LocalizationLoader
      */
     private function loadLocalizationFile($locale, $file)
     {
-        $file_to_load = RESOURCES_DIR . "lang/" . $locale . "/" . $file . ".php";
+        $file_to_load = App::resourcesPath('lang/' . $locale . DIRECTORY_SEPARATOR . $file . ".php");
 
         if(file_exists($file_to_load)) {
             return require_once($file_to_load);
         } else {
-            throw new DebugException("Не удалось загрузить файл локализации ". $file);
+            throw new DebugException("Cannot load localization file [$file]");
         }
     }
 
@@ -69,7 +71,7 @@ class LocalizationLoader
      */
     private function checkLocaleDir($locale)
     {
-        return is_dir(RESOURCES_DIR . "lang/" . $locale);
+        return is_dir(App::resourcesPath('lang/' . $locale));
     }
 
     /**

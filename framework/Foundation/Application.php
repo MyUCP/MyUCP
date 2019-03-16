@@ -14,9 +14,17 @@ class Application implements ArrayAccess
 
     /**
      * Application status
+     *
      * @var bool
      */
     protected $initialized = false;
+
+    /**
+     * Application boot status
+     *
+     * @var bool
+     */
+    protected $booted = false;
 
     /**
      * @var Container
@@ -111,7 +119,7 @@ class Application implements ArrayAccess
      * @param null $name
      * @param null $instance
      *
-     * @return bool|mixed|null
+     * @return mixed|Container
      *
      * @throws \ReflectionException
      */

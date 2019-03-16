@@ -396,7 +396,7 @@ class Container implements ArrayAccess
      * @param null $name
      * @param null $instance
      *
-     * @return bool|mixed|null
+     * @return mixed|Container
      *
      * @throws \ReflectionException
      */

@@ -3,6 +3,8 @@
 namespace MyUCP\Controller;
 
 use MyUCP\Foundation\Application;
+use MyUCP\Response\Redirect;
+use MyUCP\Routing\Route;
 use MyUCP\Views\View;
 
 abstract class Controller
@@ -55,6 +57,37 @@ abstract class Controller
     public function view($name, $parameters = [])
     {
         return view($name, $parameters);
+    }
+
+    /**
+     * @return Route
+     */
+    public function currentRoute()
+    {
+        return Route::current();
+    }
+
+    /**
+     * @param Route|string|null $value
+     *
+     * @param array $parameters if $path is a route
+     * @param int $status
+     *
+     * @return Redirect
+     */
+    public function redirect($path = null, $parameters = [], $status = 302)
+    {
+        return redirect($path, $parameters, $status);
+    }
+
+    /**
+     * @param null $content
+     *
+     * @return \MyUCP\Response\Response
+     */
+    public function response($content = null)
+    {
+        return response($content);
     }
 
     /**

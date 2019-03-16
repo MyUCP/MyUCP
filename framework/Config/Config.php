@@ -6,6 +6,8 @@ use MyUCP\Collection\Arrayable;
 use MyUCP\Collection\Collection;
 use MyUCP\Collection\Jsonable;
 use MyUCP\Debug\DebugException;
+use MyUCP\Foundation\Application;
+use MyUCP\Foundation\Container;
 
 class Config implements Arrayable, Jsonable
 {
@@ -16,12 +18,13 @@ class Config implements Arrayable, Jsonable
 
     /**
      * Config constructor.
+     * @param Application $application
      * @throws DebugException
      */
-	public function __construct() 
+	public function __construct(Application $application)
     {
-		if(is_readable(app()->configPath('main.php'))) {
-			$config = require_once(app()->configPath('main.php'));
+		if(is_readable($application->configPath('main.php'))) {
+			$config = require_once($application->configPath('main.php'));
 
 			$this->data = new Collection($config);
 

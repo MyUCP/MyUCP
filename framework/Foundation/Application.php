@@ -3,10 +3,12 @@
 namespace MyUCP\Foundation;
 
 use ArrayAccess;
+use MyUCP\Foundation\Traits\DependencyResolverTrait;
 
 class Application implements ArrayAccess
 {
     use Bootstrap;
+    use DependencyResolverTrait;
 
     //
 
@@ -16,12 +18,12 @@ class Application implements ArrayAccess
      * Application status
      * @var bool
      */
-    private $initialized = false;
+    protected $initialized = false;
 
     /**
-     * @var Registry
+     * @var Container
      */
-    private $registry;
+    protected $container;
 
     /**
      * @var array
@@ -35,11 +37,11 @@ class Application implements ArrayAccess
 
     /**
      * Application constructor.
-     * @param Registry $registry
+     * @param Container $container
      */
-    public function __construct($registry)
+    public function __construct(Container $container)
     {
-        $this->registry = $registry;
+        $this->container = $container;
 
         $this->makeAliases();
     }
@@ -50,7 +52,7 @@ class Application implements ArrayAccess
      */
     public function __set($name, $value)
     {
-        $this->registry->$name = $value;
+        $this->container->$name = $value;
     }
 
     /**
@@ -62,11 +64,11 @@ class Application implements ArrayAccess
         if(isset($this->alias[$name])) {
             $alias = $this->alias[$name];
 
-            return $this->registry->$alias;
+            return $this->container->$alias;
         }
 
-        if($this->registry->$name !== false)
-            return $this->registry->$name;
+        if($this->container->$name !== false)
+            return $this->container->$name;
 
         return false;
     }
@@ -74,23 +76,14 @@ class Application implements ArrayAccess
     /**
      * @param $name
      * @param null|object|string|\Closure $instance
+     *
      * @return bool|mixed|null
+     *
+     * @throws \ReflectionException
      */
     public function make($name, $instance = null)
     {
-        if(is_null($instance)) {
-            if(!$this->has($name)) {
-                if($instance instanceof \Closure) {
-                    return $this->make($name, $instance());
-                }
-
-                return $this->make($name, new $name);
-            }
-
-            return $this->$name;
-        }
-
-        return $this->$name = $instance;
+        return $this->container->make($name, $instance);
     }
 
     /**
@@ -98,14 +91,14 @@ class Application implements ArrayAccess
      *
      * @param $name
      * @param array $parameters
+     *
      * @return bool|mixed|null
+     *
+     * @throws \ReflectionException
      */
     public function makeWith($name, $parameters = [])
     {
-        if($this->has($name) && empty($parameters))
-            return $this->make($name);
-
-        return $this->make($name, new $name(...$parameters));
+        return $this->container->makeWith($name, $parameters);
     }
 
     /**
@@ -114,20 +107,14 @@ class Application implements ArrayAccess
      * @param $alias
      * @param null $name
      * @param null $instance
+     *
      * @return bool|mixed|null
+     *
+     * @throws \ReflectionException
      */
     public function alias($alias, $name = null, $instance = null)
     {
-        if(is_null($name)) {
-            return $this->make($alias);
-        }
-
-        $this->alias[$alias] = $name;
-
-        if(is_null($instance))
-            return $this->make($name);
-
-        return $this->make($name, $instance);
+        return $this->container->alias($alias, $name, $instance);
     }
 
     /**
@@ -136,7 +123,10 @@ class Application implements ArrayAccess
      * @param $alias
      * @param $name
      * @param array $parameters
+     *
      * @return bool|mixed|null
+     *
+     * @throws \ReflectionException
      */
     public function aliasWith($alias, $name, $parameters = [])
     {
@@ -144,11 +134,11 @@ class Application implements ArrayAccess
     }
 
     /**
-     * @return Registry
+     * @return Container
      */
-    public function getRegistry()
+    public function getContainer()
     {
-        return $this->registry;
+        return $this->container;
     }
 
     /**
@@ -160,7 +150,7 @@ class Application implements ArrayAccess
         if(isset($this->alias[$name]))
             return true;
 
-        if($this->registry->$name !== false)
+        if($this->container->$name !== false)
             return true;
 
         return false;
@@ -174,6 +164,10 @@ class Application implements ArrayAccess
      */
     public function escape($value)
     {
+        if(! env('APP_DB', false)) {
+            return $value;
+        }
+
         if($this->has('db') && $this->make('db') !== false)
             return $this->make('db')->escape($value);
 
@@ -188,7 +182,7 @@ class Application implements ArrayAccess
      */
     public function offsetExists($key)
     {
-        return $this->registry->$key !== false;
+        return $this->container->$key !== false;
     }
 
     /**
@@ -222,7 +216,7 @@ class Application implements ArrayAccess
      */
     public function offsetUnset($key)
     {
-        unset($this->registry->$key);
+        unset($this->container->$key);
     }
 
     /**

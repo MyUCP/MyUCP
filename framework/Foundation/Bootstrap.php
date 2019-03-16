@@ -29,17 +29,21 @@ trait Bootstrap
 {
     /**
      * @param string $basePath
-     * @param Registry|null $registry
+     * @param Container|null $container
      * @return Application
      * @throws Exception
      */
-    public static function bootstrap($basePath = __DIR__, Registry $registry = null)
+    public static function bootstrap($basePath = __DIR__, Container $container = null)
     {
-        if(is_null($registry)) {
-            $registry = new Registry();
+        if(is_null($container)) {
+            $container = Container::getInstance();
         }
 
-        return (new Application($registry))
+        $container->make(Container::class, $container);
+        $container->singleton(Application::class, [$container])
+                    ->alias('app', Application::class);
+
+        return $container->make('app', [$container])
             ->setBasePath($basePath);
     }
 
@@ -59,7 +63,7 @@ trait Bootstrap
 
         $this->loadEnvironment();
 
-        $this->make(Config::class);
+        $this->make(Config::class, [$this]);
 
         $this->make(HandleExceptions::class)->make($this);
 
@@ -70,27 +74,19 @@ trait Bootstrap
         $this->make(Session::class);
         $this->make(Request::class);
         $this->make(Response::class);
-        $this->makeWith(CsrfToken::class,[$this['request']]);
+        $this->make(CsrfToken::class);
         $this->make(Load::class);
         $this->makeWith(Translator::class, [
             new LocalizationLoader(config()->locale,
                 config()->fallback_locale),
             config()->locale
         ]);
-
-        $this->makeWith(Zara::class, [
-            $this->make(ZaraFactory::class)
-        ]);
-
-        $this->makeWith(ViewFactory::class, [
-            $this->make(ViewFileFinder::class),
-            $this->make(ViewCompiler::class)
-        ]);
-
+        $this->make(Zara::class);
+        $this->make(ViewFactory::class);
         $this->make(Router::class);
-        $this->makeWith(UrlGenerator::class, [$this["routes"], $this["request"]]);
+        $this->make(UrlGenerator::class);
 
-        $this->makeWith(Extension::class, [$this]);
+        $this->make(Extension::class);
 
         $this->initialized = true;
 
@@ -104,7 +100,7 @@ trait Bootstrap
     public function loadEnvironment($path = ENV, $file = '.env')
     {
         try {
-            (new Dotenv($path, $file))->load();
+            $this->make(Dotenv::class, [$path, $file])->load();
         } catch (InvalidPathException $e) {
             //
         } catch (InvalidFileException $e) {
@@ -132,7 +128,7 @@ trait Bootstrap
      */
     protected function makeAliases()
     {
-        $this->alias = [
+        $aliases = [
             "dotenv" => Dotenv::class,
             "config" => Config::class,
             "handleException" => HandleExceptions::class,
@@ -148,5 +144,10 @@ trait Bootstrap
             "url" => UrlGenerator::class,
             "extension" => Extension::class,
         ];
+
+        foreach ($aliases as $alias => $abstract) {
+            $this->container->alias($alias, $abstract)
+                            ->singleton($alias);
+        }
     }
 }

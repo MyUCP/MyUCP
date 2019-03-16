@@ -3,6 +3,7 @@
 namespace MyUCP\Routing;
 
 use MyUCP\Request\Request;
+use MyUCP\Session\Session;
 
 class CsrfToken
 {
@@ -17,18 +18,27 @@ class CsrfToken
     protected $request;
 
     /**
-     * CsrfToken constructor.
-     * @param Request $request=
-     * @throws \Exception=
+     * @var Session
      */
-    public function __construct(Request $request)
+    protected $session;
+
+    /**
+     * CsrfToken constructor.
+     *
+     * @param Request $request
+     * @param Session $session
+     *
+     * @throws \Exception
+     */
+    public function __construct(Request $request, Session $session)
     {
         $this->request = $request;
+        $this->session = $session;
 
-        if(! session()->has("_csrf_token")) {
+        if(! $this->session->has($this->getTokenKey())) {
             $this->generate();
         } else {
-            $this->token = session("_csrf_token");
+            $this->token = $this->session->get($this->getTokenKey());
         }
     }
 
@@ -42,7 +52,7 @@ class CsrfToken
     {
         $this->token = md5($this->request->ip() . config()->app_key . random_bytes(32));
 
-        session()->put("_csrf_token", $this->token);
+        $this->session->put($this->getTokenKey(), $this->token);
     }
 
     /**
@@ -75,5 +85,13 @@ class CsrfToken
     public function token()
     {
         return $this->token;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTokenKey()
+    {
+        return "_csrf_token";
     }
 }

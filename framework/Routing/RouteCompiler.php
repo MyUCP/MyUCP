@@ -108,8 +108,6 @@ class RouteCompiler
     {
         $callable = $this->route->action['uses'];
 
-        dd($callable);
-
         return $this->getCompiledResponse($callable(...array_values($this->resolveMethodDependencies(
             $this->parametersWithoutNulls(), new ReflectionFunction($this->route->action['uses'])
         ))));

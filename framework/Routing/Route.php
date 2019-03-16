@@ -7,6 +7,7 @@ use MyUCP\Foundation\Application;
 use MyUCP\Controller\Controller;
 use MyUCP\Debug\DebugException;
 use MyUCP\Request\Request;
+use MyUCP\Support\App;
 use MyUCP\Support\Str;
 
 class Route
@@ -405,32 +406,18 @@ class Route
      * Get the controller instance for the route.
      *
      * @return mixed
-     * @throws DebugException
+     *
+     * @throws \ReflectionException
      */
     public function getController()
     {
-        $class = $this->loadController();
+        $controllerName = Controller::name($this->parseControllerCallback()[0]);
 
         if (!$this->controller) {
-            $this->controller = app()->make($class, new $class(app()));
+            $this->controller = App::make($controllerName);
         }
 
         return $this->controller;
-    }
-
-    /**
-     * Load controller class file.
-     *
-     * @return string
-     * @throws DebugException
-     */
-    public function loadController()
-    {
-        $controllerName = $this->parseControllerCallback()[0];
-
-        $controller = Controller::load($controllerName);
-
-        return $controller;
     }
 
     /**

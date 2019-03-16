@@ -4,6 +4,7 @@ namespace MyUCP\Routing;
 
 use MyUCP\Foundation\Application;
 use MyUCP\Debug\DebugException;
+use MyUCP\Support\App;
 use ReflectionException;
 use ReflectionFunction;
 
@@ -69,8 +70,9 @@ class RouteCompiler
      */
     public function bindModels($models)
     {
-        if(!empty($models))
+        if(!empty($models)) {
             call_user_func_array("model", $models);
+        }
     }
 
     /**
@@ -106,6 +108,8 @@ class RouteCompiler
     {
         $callable = $this->route->action['uses'];
 
+        dd($callable);
+
         return $this->getCompiledResponse($callable(...array_values($this->resolveMethodDependencies(
             $this->parametersWithoutNulls(), new ReflectionFunction($this->route->action['uses'])
         ))));
@@ -132,7 +136,7 @@ class RouteCompiler
             return $this->getCompiledResponse($controller->callAction($method, $parameters));
         }
 
-        return $this->getCompiledResponse($controller->{$method}(...array_values($parameters)));
+        return $this->getCompiledResponse(App::call($controller, $method, $parameters));
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace MyUCP\Routing;
 
+use MyUCP\Support\App;
 use MyUCP\Support\Arr;
 use ReflectionException;
 use ReflectionFunctionAbstract;
@@ -24,6 +25,7 @@ trait RouteDependencyResolverTrait
         if (! method_exists($instance, $method)) {
             return $parameters;
         }
+
         return $this->resolveMethodDependencies(
             $parameters, new ReflectionMethod($instance, $method)
         );
@@ -40,35 +42,44 @@ trait RouteDependencyResolverTrait
     public function resolveMethodDependencies(array $parameters, ReflectionFunctionAbstract $reflector)
     {
         $instanceCount = 0;
+
         $values = array_values($parameters);
+
         foreach ($reflector->getParameters() as $key => $parameter) {
             $instance = $this->transformDependency(
                 $parameter, $parameters
             );
+
             if (! is_null($instance)) {
                 $instanceCount++;
+
                 $this->spliceIntoParameters($parameters, $key, $instance);
             } elseif (! isset($values[$key - $instanceCount]) &&
                 $parameter->isDefaultValueAvailable()) {
+
                 $this->spliceIntoParameters($parameters, $key, $parameter->getDefaultValue());
             }
         }
+
         return $parameters;
     }
 
     /**
      * Attempt to transform the given parameter into a class instance.
      *
-     * @param  \ReflectionParameter  $parameter
-     * @param  array  $parameters
+     * @param  \ReflectionParameter $parameter
+     * @param  array $parameters
+     *
      * @return mixed
+     *
+     * @throws ReflectionException
      */
     protected function transformDependency(ReflectionParameter $parameter, $parameters)
     {
         $class = $parameter->getClass();
 
         if ($class && ! $this->alreadyInParameters($class->name, $parameters)) {
-            return app()->makeWith($class->name, $parameters);
+            return App::make($class->name, $parameters);
         }
     }
 

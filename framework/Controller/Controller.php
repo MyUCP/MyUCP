@@ -3,6 +3,7 @@
 namespace MyUCP\Controller;
 
 use MyUCP\Foundation\Application;
+use MyUCP\Views\View;
 
 abstract class Controller
 {
@@ -13,16 +14,20 @@ abstract class Controller
 
     /**
      * Controller constructor.
-     * @param $app
+     *
+     * @param Application $application
      */
-	public function __construct($app)
+	public function __construct(Application $application)
     {
-		$this->app = $app;
+		$this->app = $application;
 	}
 
     /**
      * @param $key
+     *
      * @return bool|mixed
+     *
+     * @throws \ReflectionException
      */
 	public function __get($key)
     {
@@ -31,7 +36,10 @@ abstract class Controller
 
     /**
      * @param $key
+     *
      * @param $value
+     *
+     * @throws \ReflectionException
      */
 	public function __set($key, $value)
     {
@@ -40,12 +48,13 @@ abstract class Controller
 
     /**
      * @param $name
-     * @param array $paramters
-     * @return mixed
+     * @param array $parameters
+     *
+     * @return View
      */
-    public function view($name, $paramters = [])
+    public function view($name, $parameters = [])
     {
-        return view($name, $paramters);
+        return view($name, $parameters);
     }
 
     /**
@@ -58,26 +67,14 @@ abstract class Controller
     }
 
     /**
-     * Load controller file
+     * @param $method
+     * @param $parameters
      *
-     * @param $name
-     * @return mixed
-     * @throws \MyUCP\Debug\DebugException
-     */
-    public static function load($name)
-    {
-        return ControllerLoader::load($name);
-    }
-
-    /**
-     * Get the path of controller
-     *
-     * @param $controllerName
      * @return mixed
      */
-    public static function path($controllerName)
+    public function callAction($method, $parameters)
     {
-        return ControllerLoader::path($controllerName);
+        return call_user_func_array([$this, $method], $parameters);
     }
 
     /**

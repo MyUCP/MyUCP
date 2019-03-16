@@ -28,7 +28,7 @@ class HandleExceptions
 
         register_shutdown_function([$this, 'handleShutdown']);
 
-        if(!$app->config->debug_mode) {
+        if(! config('debug_mode', true)) {
             ini_set('display_errors', 'Off');
         }
     }

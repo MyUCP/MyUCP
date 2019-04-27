@@ -993,6 +993,22 @@ class Query
     }
 
     /**
+     * @return bool
+     */
+    public function exists()
+    {
+        return $this->count() != 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function doesntExist()
+    {
+        return ! $this->exists();
+    }
+
+    /**
      * @param array $columns
      *
      * @return array|false
